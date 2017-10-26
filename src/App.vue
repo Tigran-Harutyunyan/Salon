@@ -7,6 +7,8 @@
 
 <script>
 import Header from './components/Header/Header.vue';
+import loginSignup from './components/LoginSignup/LoginSignup.vue';
+import { EventBus } from './event-bus.js';
 export default {
     name: 'app',
     data() {
@@ -19,11 +21,11 @@ export default {
     methods: {},
     components: {
         'top-header': Header,
-       // 'login-signup': loginSignup
+        'login-signup': loginSignup
             //contacts
-    },
+    }, 
     created() {
-        EventBus.$on('setparent', show => {
+        EventBus.$on('setparent', show => { 
             this.showHeader = show;
         });
         fetch('http://api.mysalonla.com/api/getAllData', {
