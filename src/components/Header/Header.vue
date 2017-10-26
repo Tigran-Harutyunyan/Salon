@@ -1,0 +1,93 @@
+<template>
+    <header id="appHeader" class="header">
+        <nav class="nav-bar">
+            <div class="container nav-container">
+                <div class="header-row container"> 
+                    <a href="" class="logo-link">
+                        <img src="../../../static/images/salon-logo.svg" >
+                    </a>  
+                    <ul class="nav sidemenu" id="top-nav">
+                        <li><router-link class="menu-item" exact to="/">Home <span></span> </router-link> </li>
+                        <li><a class="menu-item" href="/">About Us<span></span> </a></li>
+                        <li><router-link class="menu-item" to="/hair-services">Hair Services<span></span> </router-link></li>
+                        <li><router-link class="menu-item" to="/makeup-services">Makeup Services<span></span> </router-link></li>
+                        <li><router-link class="menu-item" to="/hair-services">Your Own Booking<span></span> </router-link></li>
+                        <li><a class="menu-item" v-on:click="toContactSection">Contact Us<span></span> </a></li>
+                        <li><a class="menu-item login-link" @click="openAuth('login')">Log In/</a></li>
+                        <li><a class="menu-item signup-link" @click="openAuth('signup')">Sign Up</a></li>
+                    </ul>
+                </div> 
+            </div>
+        </nav>
+        <!--MOBILE DROPDOWN-->
+            <div class="button_container" id="toggleMobileMEnu" @click="toggleMobileMenu" :class="{'active' :isMobileMenuVisible}"> 
+                <span></span>
+                <span></span>
+                <span></span>
+            </div> 
+        <div class="overlay" id="overlay" :class="{'open' :isMobileMenuVisible}">
+            <nav class="overlay-menu">
+                <ul>
+                    <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/">Home</router-link></li>
+                    <li v-on:click="hideMobileMenu"><a href="/#/about" class="link2">About Us</a></li>
+                    <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/hair-services">Hair Services</router-link></li>
+                    <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/makeup-services">Makeup Services</router-link></li>
+                    <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/hair-services">Your Own booking</router-link></li> 
+                    <li v-on:click="hideMobileMenu"><a v-on:click="toContactSection"class="link2">Contact Us</a></li> 
+                    <li v-on:click="hideMobileMenu"><a @click="openAuth('login')" class="link2">Log In</a></li>
+                    <li v-on:click="hideMobileMenu"><a @click="openAuth('signup')"class="link2">Sign Up</a></li>
+                </ul>
+            </nav> 
+        </div>
+        <div class="mobile-backdrop" v-show="isMobileMenuVisible" @click="isMobileMenuVisible=false"></div>
+        <!--MOBILE DROPDOWN-->
+    </header>
+</template>    
+<script>
+import { EventBus } from '../../event-bus.js';
+export default {
+    data: function() {
+        return {
+            routes: [
+                { route: '/', text: "Home", visible: false },
+                { route: '/gallery', text: "Gallery", visible: false },
+                { route: '/food', text: "Food", visible: false },
+                { route: '/drink', text: "Drink", visible: false } 
+            ], 
+            parentElements: $("html, body"),
+            isMobileMenuVisible: false 
+        }
+    },
+    methods: {
+        hideMobileMenu() {
+            this.isMobileMenuVisible = false;
+        },
+        scrollToTop() {
+            if (this.$router.history) {
+                if (this.$router.history.current.fullPath === "/about") {
+                    this.parentElements.stop().animate({ scrollTop: $("#about").offset().top }, 500, 'swing', function() {});
+                } else {
+                    this.parentElements.stop().animate({ scrollTop: 0 }, 500, 'swing', function() {});
+                }
+            }
+        },
+        toContactSection() {
+            this.parentElements.stop().animate({ scrollTop: $("#contacts").offset().top }, 500, 'swing', function() {});
+        },
+        toggleMobileMenu() {
+            this.isMobileMenuVisible = !this.isMobileMenuVisible;
+        },
+        openAuth(authPopupType){
+            EventBus.$emit('openAuth', authPopupType);
+        }
+    },
+    watch: {
+        '$route': function(to, from) {
+            this.scrollToTop();
+        }
+    },
+    mounted() { 
+        this.scrollToTop();
+    }
+}
+</script>

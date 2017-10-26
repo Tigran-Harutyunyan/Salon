@@ -1,0 +1,14 @@
+<div id="slider-template">
+    <div class="slider-wrapper">
+        <div class="slider-overflow">
+            <div v-for="slide in slides" v-assign-image="$index"
+             :slide-id="$index" :prev-slide="prevSlide"
+              class="slide slide-transition" v-show="currentSlide">
+            </div>
+            <div class="slider-controls">
+                <div @click="changeSlidePrev " class="slider-control slider-control-prev"></div>
+                <div @click="changeSlideNext " class="slider-control slider-control-next"></div>
+            </div>
+        </div>
+    </div>
+</div>

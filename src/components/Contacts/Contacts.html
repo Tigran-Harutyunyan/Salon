@@ -1,0 +1,52 @@
+<div>
+    <!-- CONTACTS  -->
+    <section id="contacts" class="contact-section">
+        <img src="../../../static/images/contact-bg.jpg"  v-parallax.absY="0.2">
+        <div class="contacts-inner"> 
+            <div class="contact-left">
+                <div class="section-title">
+                    <h1>Salon Hours</h1>
+                    <span class="diz-elem elem-left"></span>
+                    <span class="diz-elem elem-right"></span>
+                </div>
+                <ul class="working-hours">
+                    <li>Mon: 8am - 9pm </li>
+                    <li>Tue: 8am - 9pm</li>
+                    <li>Wed: 8am - 9pm</li>
+                    <li>Thu: 8am - 9pm</li>
+                    <li>Fri: 8am - 9pm</li>
+                    <li>Sat: 8am - 9pm </li>
+                </ul>
+            </div>
+            <div class="contact-right">
+                <div class="form-place">
+                    <div class="section-title">
+                        <h1>Get In Touch</h1>
+                        <span class="diz-elem elem-left"></span>
+                        <span class="diz-elem elem-right"></span>
+                    </div>
+                    <div class="form-container">
+                        <form v-on:submit.prevent="onSubmit" class="contact-form" id="form-contact-us" name="contact_form" @submit="$v.contactEmail.$touch();$v.message.$touch();$v.subject.$touch()">
+                            <div class="contact-form-referral ref1">
+                                <div class="form-row">
+                                    <div class="default-inp-row ">
+                                        <input class="def-input" type="text" placeholder="Your name" name="contact_subject" v-model="subject" :class="{'has-error': $v.subject.$error}">
+                                    </div>
+                                    <div class="default-inp-row ">
+                                        <input class="def-input" type="email" placeholder="Your email" name="contact_email" v-model="contactEmail" :class="{'has-error': $v.contactEmail.$error}">
+                                    </div>
+                                </div>
+                                <div class="default-inp-row ">
+                                    <textarea class="def-input" placeholder="Message" cols="30" rows="10" name="contact_message" v-model="message" :class="{'has-error': $v.message.$error}"></textarea>
+                                </div>
+                                <div class="default-inp-row row-btn">
+                                    <input type="submit" class="btn-submit btn btn-transparent" value="Send">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> 
+</div>

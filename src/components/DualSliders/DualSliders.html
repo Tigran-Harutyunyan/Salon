@@ -1,0 +1,24 @@
+<div class="slider-container home-slider" v-if="slides.length>0">
+    <div class="slider-inner">
+        <div class="owl-carousel owl-theme" id="slider2">
+            <div class="item" v-for="item in slides">
+                <div class="main-banner banner-large" v-bind:style="item.style"></div>
+                <div class="main-banner banner-medium" v-bind:style="item.style2"></div>
+            </div>
+        </div>
+        <div class="owl-carousel owl-theme" id="slider1">
+            <div class="item" v-for="item in slides">
+                <div class="slider-text-info-place">
+                    <span class="slide-caption slide-text-part1">{{ item.caption[0] }}</span>
+                    <span class="slide-caption slide-text-part2">{{ item.caption[1] }}</span>
+                    <p>{{ item.content }}
+                    </p>
+                    <a href="" class="btn">Book now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="home-slider-nav-container">
+        <div class="home-slider-nav"></div>
+    </div> 
+</div>

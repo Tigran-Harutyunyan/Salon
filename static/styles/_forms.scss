@@ -1,0 +1,359 @@
+.subscription-form {
+    position: relative;
+    .def-input {
+        width: 240px;
+    }
+    .btn {
+        margin-left: 15px;
+    }
+}
+
+.def-input.error {
+    border-color: red !important;
+}
+
+.default-inp-row label {
+    display: none !important;
+}
+
+label.error {
+    display: none !important
+}
+
+.contact-form-subscription {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.subscription-place {
+    float: left;
+    margin-left: 215px;
+    margin-right: 65px;
+}
+
+textarea.def-input {
+    overflow: hidden;
+    height: 130px;
+    resize: none;
+    padding-top: 11px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.btn {
+    @extend .main-font;
+    border-radius: 25px;
+    color: #fff;
+    background-color: $color1;
+    font-size: 30px;
+    display: inline-block;
+    padding: 7px 30px 8px;
+    line-height: 40px;
+    border-radius: 5px;
+    margin-top: 34px;
+    border: 1px solid #4e342e;
+    &:hover {
+        color: #4e342e;
+        background-color: #f5f0ed;
+    }
+}
+
+.def-input {
+    @extend .main-font;
+    border-radius: 5px;
+    background: transparent;
+    color: #f5f0ed;
+    padding: 8px 13px 8px 19px;
+    font-size: 14px;
+    line-height: 20px;
+    position: relative;
+    margin-bottom: 30px;
+    width: 100%;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -webkit-appearance: none;
+    -webkit-appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid #f5f0ed;
+    &:focus {
+        border-color: #b69584;
+        -webkit-transition: border-color 0.3s linear, color 0.3s linear;
+        transition: border-color 0.3s linear, color 0.3s linear;
+    }
+}
+
+.contact-right {
+    .section-title span {
+        width: 230px;
+        background-color: white;
+        margin-top: 25px;
+    }
+    .elem-left {
+        left: -73px;
+    }
+    .elem-right {
+        left: 200px
+    }
+}
+
+.contact-section {
+    //background: url(../images/contact-bg.jpg) no-repeat;
+    height: 500px;
+    overflow: hidden;
+    padding: 0 40px;
+    float: left;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    img {
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: -200px;
+    }
+    .section-title {
+        color: white;
+        font-family: 'open_sanssemibold';
+        font-size: 30px;
+        padding-bottom: 37px;
+    }
+}
+
+.contact-left {
+    width: 232px;
+    .diz-elem.elem-left,
+    .diz-elem.elem-right {
+        width: 107px;
+        background-color: white;
+        margin-top: 25px;
+    }
+}
+
+.contact-right {
+    width: 503px;
+}
+
+.working-hours {
+    text-align: center;
+    li {
+        color: white;
+        font-size: 24px;
+        line-height: 43px;
+    }
+}
+
+.contact-left {
+    .diz-elem.elem-left {
+        left: 6px;
+    }
+    .diz-elem.elem-right {
+        left: 130px;
+    }
+}
+
+.contacts-inner {
+    width: 1200px;
+    float: left;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin: 0 auto;
+    padding-bottom: 54px;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    z-index: 1
+}
+
+.btn-transparent {
+    background: transparent;
+    border: 1px solid #f5f0ed;
+    color: #f5f0ed;
+}
+
+.form-place {
+    p {
+        @extend .main-font;
+        color: $color6;
+        font-size: 24px;
+        line-height: 34px;
+    }
+}
+
+.form-left {
+    width: 328px;
+    float: left;
+    margin-right: 40px;
+    margin-right: 471px;
+}
+
+.form-right {
+    width: 328px;
+    float: right;
+}
+
+.form-row {
+    clear: both;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.def-input-wrap {
+    float: left;
+    position: relative
+}
+
+.form-row input {
+    width: 230px
+}
+
+.galochka {
+    @extend .sprite;
+    display: none;
+    width: 11px;
+    height: 7px;
+    background-position: -38px -102px;
+    position: absolute;
+    top: 20px;
+    right: 17px;
+}
+
+.btn-link,
+.btn-submit {
+    @extend .main-font;
+    display: block;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    float: left;
+}
+
+#uploadSubmit {
+    width: 220px; //140px
+    padding-top: 6px;
+    margin: 21px auto 0;
+}
+
+.form-place {
+    width: 100%;
+}
+
+.uploader-btn {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute
+}
+
+.vacancy-form-container {
+    width: 700px;
+    margin: 34px auto 0;
+    float: none;
+}
+
+.has-error {
+    border-color: red !important
+}
+
+.subscription-form {
+    padding-left: 0
+}
+
+.br-small {
+    display: none
+}
+
+.file-operations {
+    position: relative;
+    overflow: hidden;
+    .action-icons {
+        @extend .sprite;
+    }
+}
+
+.file-operations .action-icons {
+    width: 15px;
+    height: 17px;
+    margin-right: 9px;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-transition: none;
+    transition: none;
+}
+
+.file-operations .upload-icon {
+    background-position: -29px -37px;
+    &:hover {
+        background-position: -30px -4px;
+    }
+}
+
+.submit-row {
+    position: relative;
+    z-index: 10;
+}
+
+#vacancy-btn {
+    width: 185px;
+}
+
+.submit-row {
+    position: relative;
+    z-index: 10;
+}
+
+.fo-mobile {
+    display: none
+}
+
+.br-rights {
+    display: none
+}
+
+.copyright__2 {
+    display: none
+}
+
+#map {
+    width: 100%;
+    height: 300px;
+    z-index: 20;
+}
+
+.map-place {
+    width: 670px;
+    height: 300px;
+    border-radius: 20px;
+    overflow: hidden;
+    float: left;
+    position: relative;
+}
+
+@media only screen and (max-width: 940px) {
+    .header-middle {
+        width: 313px;
+    }
+    .logo-patters {
+        width: 313px;
+        height: 32px;
+        background-position: 0px -81px;
+    }
+    .logo {
+        width: 100px;
+        height: 93px;
+        background-position: -128px -233px;
+        top: 22px;
+        left: 105px;
+    }
+}

@@ -6,9 +6,41 @@
 </template>
 
 <script>
+import Header from './components/Header/Header.vue';
 export default {
-  name: 'app'
-}
+    name: 'app',
+    data() {
+        return {
+            showHeader: false,
+            showAuth: true,
+            showApp: false
+        }
+    },
+    methods: {},
+    components: {
+        'top-header': Header,
+       // 'login-signup': loginSignup
+            //contacts
+    },
+    created() {
+        EventBus.$on('setparent', show => {
+            this.showHeader = show;
+        });
+        fetch('http://api.mysalonla.com/api/getAllData', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }).then((response) => {
+            return response.json();
+        }).then((parsedData) => {
+            if (parsedData) {
+              this.$store.dispatch('setData', parsedData)
+                this.showApp = true;
+            }
+        }); 
+    } 
+};
 </script>
 
 <style>
