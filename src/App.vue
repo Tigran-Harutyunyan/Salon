@@ -1,8 +1,37 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
-  </div>
+<div v-show="showApp">
+    <top-header v-show="showHeader"></top-header>
+      <router-view/>
+
+    <!-- FOOTER -->
+    <section class="section-footer" v-show="showHeader">
+        <footer class="footer">
+            <div class="footer-inner">
+                <div class="footer-left">
+                    <a href="" class="privacy-policy footer-links">Privacy Policy</a> <span class="vert-bar"></span>  <span
+                        class="footer-links">Follow Us On</span> 
+                        <ul class="social-links">
+                            <li><a class="fb-link" href=""></a></li>
+                            <li><a class="tw-link" href=""></a></li>
+                            <li><a class="in-link" href=""></a></li>
+                            <li><a class="g-plus-link" href=""></a></li>
+                        </ul>
+                </div>
+                <div class="footer-right">
+                    <div class="copyright-place  ">
+                        <p class="footer-links"> © 2017 My Salon</p> <span class="vert-bar"></span>
+                    </div>
+                    <div class="website-author-place">
+                        <p class="footer-links">Website by </p><a href="http://platinuminkdesign.com" class="footer-links"><span>PLATINUN INK DESIGN</span></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </section>
+    <login-signup v-if="showAuth"> </login-signup>     
+    <div class="footer-bg"></div>
+</div>
+  
 </template>
 
 <script>
