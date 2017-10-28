@@ -43,8 +43,8 @@ export default {
         resetSliders(){ 
            setTimeout(()=> {
                 $('.home-slider-nav-container').append("<div class='home-slider-nav'></div>");
-                this.carousel.owlCarousel('destroy');
-                this.carousel2.owlCarousel('destroy');  
+                $("#slider1").owlCarousel('destroy');
+                $("#slider2").owlCarousel('destroy');  
                 $('#slider1 > .owl-item, #slider2 > .owl-item').remove();
                 this.initSliders();   
             }, 200);
@@ -56,7 +56,7 @@ export default {
                 autoplayTimeout: 4000,
                 autoplayHoverPause: false,
                 margin: 0,
-                loop: true,
+                loop: false,
                 smartSpeed: 1000,
                 animateOut: 'fadeOut',
                 animateIn: 'fadeIn',
@@ -73,7 +73,7 @@ export default {
             this.carousel.owlCarousel({
                 autoplayTimeout: 4000,
                 autoplayHoverPause: false,
-                loop: true,
+                loop: false,
                 smartSpeed: 1000,
                 margin: 0,
                 nav: true,
@@ -98,26 +98,23 @@ export default {
                         });
                     }, 100);
                     setTimeout(() => { 
-                        this.$emit('sliderReady');
-                        console.log("ready")
+                        this.$emit('sliderReady'); 
                     }, 800);
                 } 
             }); 
             this.carousel.on('dragged.owl.carousel', (event)=>{
                   if (e.relatedTarget.state.direction == 'left') {
-                     this.carousel.trigger('next.owl.carousel')
-                     }else {
+                     this.carousel2.trigger('next.owl.carousel')
+                     } else {
                          this.carousel2.trigger('prev.owl.carousel')
                     }
              });  
         }
     },
-    mounted() { 
-      
-        this.carousel2 = $("#slider2");
+    mounted() {  
         setTimeout(()=>{
             this.initSliders();
-        },200)
+        },500)
     },
     beforeDestroy() {
         $('#slider').owlCarousel('destroy');

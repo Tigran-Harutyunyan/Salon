@@ -78,7 +78,7 @@
             <div class="signup-page-container modal-container" v-show="showSignUp">
                 <div class="popup-close" @click="closePopups()"></div>
                 <div class="popup-container">
-                    <form v-on:submit.prevent="onSubmitSignup" @submit="$v.signupFirstName.$touch();$v.signupLastName.$touch();$v.signupEmail.$touch();$v.signupPhoneNumber.$touch();$v.signupPassword.$touch();$v.signupPasswordRepeat.$touch()">
+                    <form v-on:submit.prevent="onSubmitSignup" @submit="$v.signupFirstName.$touch();$v.signupLastName.$touch(); $v.signUpUserName.$touch(); $v.signupEmail.$touch();$v.signupPhoneNumber.$touch();$v.signupPassword.$touch();$v.signupPasswordRepeat.$touch()">
                         <div class="popup-title-container">
                             <h5>Sign Up</h5>
                             <div class="title-elements-container">
@@ -88,11 +88,14 @@
                         <div class="popup-inner">
                             <div class="login-left">
                                 <!-- <label for="f_name" class="popup-label">First Name</label> -->
-                                <input type="text" id="f_name" placeholder="*First Name" class="def-input" v-model="signupFirstName" :class="{'has-error': $v.signupFirstName.$error}">
+                                <input type="text" id="f_user_name" placeholder="*User name" class="def-input" v-model="signUpUserName" :class="{'has-error': $v.signUpUserName.$error}">
+                                <div class="input-space"></div>
+
+                                <input type="text" id="f_name" placeholder="*First name" class="def-input" v-model="signupFirstName" :class="{'has-error': $v.signupFirstName.$error}">
                                 <div class="input-space"></div>
 
                                 <!-- <label for="l_name" class="popup-label">Last Name</label> -->
-                                <input type="text" id="l_name" placeholder="*Last Name" class="def-input" v-model="signupLastName" :class="{'has-error': $v.signupLastName.$error}">
+                                <input type="text" id="l_name" placeholder="*Last name" class="def-input" v-model="signupLastName" :class="{'has-error': $v.signupLastName.$error}">
                                 <div class="input-space"></div>
 
                                 <!-- <label for="email" class="popup-label">Email Login</label> -->
@@ -106,9 +109,9 @@
                                 <input type="text" id="phone" placeholder="*Phone number" class="def-input" v-model="signupPhoneNumber" :class="{'has-error': $v.signupPhoneNumber.$error}">
                                 <div class="radio-btn-place">
                                     <label for="male" class="radio-label">Male</label>
-                                    <input type="radio" class="radio-btns" name="male" id="male" value="male" v-model="gender" />
+                                    <input type="radio" class="radio-btns" name="male" id="male" value="Male" v-model="gender" />
                                     <label for="female" class="radio-label">Female</label>
-                                    <input type="radio" class="radio-btns" name="female" id="female" value="female" v-model="gender" />
+                                    <input type="radio" class="radio-btns" name="female" id="female" value="Female" v-model="gender" />
                                 </div>
                                 
                             </div>
@@ -172,11 +175,14 @@ export default {
             signupPassword: "",
             signupPasswordRepeat: "",
             recoveryEmail: "",
-            gender: "male",
+            gender: "Male",
             htmlElement: {},
-            loginUsername: "",
-            loginPassword: "",
-            isRemember: false
+            signUpUserName:"",
+            loginUsername: "ann_chavalier",
+            loginPassword: "ann_chavalier",
+            isRemember: false,
+            isLoading: false,
+            recaptchaResponse:""
         }
     },
 /*
@@ -195,7 +201,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
             return (!this.$v.loginUsername.$invalid && !this.$v.loginPassword.$invalid);
         },
         isSignupValid() {
-            return (!this.$v.signupFirstName.$invalid && !this.$v.signupLastName.$invalid && !this.$v.signupEmail.$invalid && !this.$v.signupPhoneNumber.$invalid && !this.$v.signupPassword.$invalid && !this.$v.signupPasswordRepeat.$invalid);
+            return (!this.$v.signUpUserName.$invalid  && !this.$v.signupFirstName.$invalid && !this.$v.signupLastName.$invalid && !this.$v.signupEmail.$invalid && !this.$v.signupPhoneNumber.$invalid && !this.$v.signupPassword.$invalid && !this.$v.signupPasswordRepeat.$invalid);
         },
         isRecoveryValid(){
             return (!this.$v.passwordRecoveryEmail.$invalid); 
@@ -203,44 +209,51 @@ https://developers.facebook.com/apps/523193884695053/settings/
     },
     methods: {
         onSubmitLogin() {
-            if (this.isLoginValid) {
-                // LOG IN LOGIC
-                /*
-               $.ajax({
-                url: 'http://api.joind.in/v2.1/talks/10889',
-                data: {
-                   format: 'json'
-                },
-                dataType: 'jsonp',
-                error: function() {
-                   //this.$toastr('error', 'i am a toastr error') 
-                }, 
-                success: function(data) {
-                  //this.$toastr('success', 'i am a toastr error')  
-                },
-                type: 'GET'
-             }); */
+            if (this.isLoginValid && !this.isLoading) { 
+                this.isLoading = true;
+                $.ajax({
+                    url: 'http://api.mysalonla.com/api/login',
+                    dataType: 'json',
+                    'type': 'POST', 
+                    data: { 
+                        username: this.loginUsername,
+                        password: this.loginPassword 
+                    },
+                }).done((response) => {  
+                    this.isLoading = false;
+                    if (response.success == 1) {  
+                        this.$store.dispatch('setUserInfo', response);
+                        console.log('Welcome');
+                        this.showLogin = false;
+                        this.isPopupVisible= false;
+                    } else if (response.success == 0){
+                        // ERROR
+                    }
+                }); 
             }
         },
-        onSubmitSignup() {
+        onSubmitSignup() { 
             if (this.isSignupValid) {
-
-                // SIGN UP LOGIC
-                /*
-               $.ajax({
-                url: 'http://api.joind.in/v2.1/talks/10889',
-                data: {
-                   format: 'json'
-                },
-                dataType: 'jsonp',
-                error: function() {
-                   //this.$toastr('error', 'i am a toastr error') 
-                }, 
-                success: function(data) {
-                  //this.$toastr('success', 'i am a toastr error')  
-                },
-                type: 'GET'
-             }); */
+                $.ajax({
+                    url: 'http://api.mysalonla.com/api/register',
+                    dataType: 'json',
+                    'type': 'POST', 
+                    data: { 
+                        username: this.signUpUserName,
+                        first_name: this.signupFirstName,
+                        last_name: this.signupLastName, 
+                        phone_number: this.signupPhoneNumber,
+                        password: this.signupPassword,
+                        email: this.signupEmail,
+                        gender: this.gender, 
+                        recaptcha: this.recaptchaResponse 
+                    },
+                }).done((response) => {  
+                    if (response.success == 1) { 
+                       
+                       // this.$toastr('success', `Thank you! Your message has been sent successfully.`); 
+                    }
+                }); 
             }
         }, 
         openPopup(type) {
@@ -252,8 +265,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
             } else if (type === 'forgot') {
                 this.showLogin = false;
                 this.showForgetPass = true;
-            }
-
+            } 
         },
         onSubmitRecovery(){
             if (this.isRecoveryValid){
@@ -261,7 +273,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
             }
         },
         verify(recaptchaResponse) {
-            console.log(recaptchaResponse);
+         
         },
         onSignInSuccess(googleUser) {
             // `googleUser` is the GoogleUser object that represents the just-signed-in user. 
@@ -280,8 +292,8 @@ https://developers.facebook.com/apps/523193884695053/settings/
             this.htmlElement.removeClass('no-scroll');
             this.isPopupVisible = this.showLogin = this.showSignUp = this.showForgetPass = false; 
         },
-        onVerify(response) {
-            console.log('Verify: ' + response)
+        onVerify(response) { 
+            this.recaptchaResponse = response
         },
         onExpired() {
             console.log('Expired')
@@ -309,6 +321,9 @@ https://developers.facebook.com/apps/523193884695053/settings/
             required
         },
         loginPassword: {
+            required
+        },
+        signUpUserName: {
             required
         },
         signupFirstName: {

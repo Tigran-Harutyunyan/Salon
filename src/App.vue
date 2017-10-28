@@ -1,37 +1,36 @@
 <template>
-<div v-if="showApp">
-    <top-header v-show="showHeader"></top-header>
-      <router-view/>
+    <div v-if="showApp">
+        <top-header v-show="showHeader"></top-header>
+        <router-view/>
 
-    <!-- FOOTER -->
-    <section class="section-footer" v-show="showHeader">
-        <footer class="footer">
-            <div class="footer-inner">
-                <div class="footer-left">
-                    <a href="" class="privacy-policy footer-links">Privacy Policy</a> <span class="vert-bar"></span>  <span
-                        class="footer-links">Follow Us On</span> 
-                        <ul class="social-links">
-                            <li><a class="fb-link" v-bind:href="customData.facebook_link"></a></li>
-                            <li><a class="tw-link" v-bind:href="customData.twitter_link"></a></li>
-                            <li><a class="in-link" v-bind:href="customData.instagram_link"></a></li>
-                            <li><a class="g-plus-link" v-bind:href="customData.google_plus_link"></a></li>
-                        </ul>
-                </div>
-                <div class="footer-right">
-                    <div class="copyright-place  ">
-                        <p class="footer-links"> © 2017 My Salon</p> <span class="vert-bar"></span>
+        <!-- FOOTER -->
+        <section class="section-footer" v-show="showHeader">
+            <footer class="footer">
+                <div class="footer-inner">
+                    <div class="footer-left">
+                        <a href="" class="privacy-policy footer-links">Privacy Policy</a> <span class="vert-bar"></span>  <span
+                            class="footer-links">Follow Us On</span> 
+                            <ul class="social-links">
+                                <li><a class="fb-link" v-bind:href="customData.facebook_link"></a></li>
+                                <li><a class="tw-link" v-bind:href="customData.twitter_link"></a></li>
+                                <li><a class="in-link" v-bind:href="customData.instagram_link"></a></li>
+                                <li><a class="g-plus-link" v-bind:href="customData.google_plus_link"></a></li>
+                            </ul>
                     </div>
-                    <div class="website-author-place">
-                        <p class="footer-links">Website by </p><a href="http://platinuminkdesign.com" class="footer-links"><span>PLATINUN INK DESIGN</span></a>
+                    <div class="footer-right">
+                        <div class="copyright-place  ">
+                            <p class="footer-links"> © 2017 My Salon</p> <span class="vert-bar"></span>
+                        </div>
+                        <div class="website-author-place">
+                            <p class="footer-links">Website by </p><a href="http://platinuminkdesign.com" class="footer-links"><span>PLATINUN INK DESIGN</span></a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </footer>
-    </section>
-    <login-signup v-if="showAuth"> </login-signup>     
-    <div class="footer-bg"></div>
-</div>
-  
+            </footer>
+        </section>
+        <login-signup v-if="showAuth"> </login-signup>     
+        <div class="footer-bg"></div>
+    </div> 
 </template>
 
 <script>
@@ -114,17 +113,22 @@ export default {
                        }
                        parsedData.services['Hair Services'] = this.setAttributes(parsedData.services['Hair Services'])
                     }
-                    if( parsedData.services['Makeup Services']){
+                    if ( parsedData.services['Makeup Services']){
                         parsedData.services['Makeup Services'] = this.setAttributes(parsedData.services['Makeup Services'])
                     } 
                 } 
-                if(parsedData.slider){
+                if (parsedData.slider){
                    parsedData = this.setSliderImgPath(parsedData);  
                 }
                 this.$store.dispatch('setData', parsedData)
                 this.customData = parsedData.custom_data;
                 this.showApp = true;
             } 
+        }).catch(()=> {
+           this.showApp = true;   
+            this.$router.beforeEach((to, from, next) => {
+                 next('/') 
+            })
         }); 
     } 
 };

@@ -14,7 +14,7 @@
             </a> 
         </div>
         <div class="service-box">
-             <a href="/#/hair-services">
+             <a href="/#/makeup-services">
                 <img src="../../../static/images/pics/service-box2.jpg" alt="Makeup services">
                 <span class="service-name">Makeup Services</span>
                 <span class="service-link-title">See services here</span>
