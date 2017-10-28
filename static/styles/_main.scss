@@ -505,22 +505,22 @@ footer {
 
 ::-webkit-input-placeholder {
     /* Chrome/Opera/Safari */
-    color: #4e342e;
+    color: #fff;
 }
 
 ::-moz-placeholder {
     /* Firefox 19+ */
-    color: #4e342e;
+    color: #fff;
 }
 
 :-ms-input-placeholder {
     /* IE 10+ */
-    color: #4e342e;
+    color: #fff;
 }
 
 :-moz-placeholder {
     /* Firefox 18- */
-    color: #4e342e;
+    color: #fff;
 }
 .no-scroll{
     overflow-y: hidden;
@@ -1238,7 +1238,7 @@ footer {
 }
 
 @media only screen and (max-width: 625px) {
-    .banner-medium {
+    .banner-medium,.main-banner {
         display: block;
         height: 415px
     }
@@ -1247,9 +1247,7 @@ footer {
         -ms-flex-pack: center;
         justify-content: center;
     }
-    .banner-large {
-        display: none
-    }
+  
     .home-slider-nav-container {
         top: 381px;
     }
@@ -1260,9 +1258,7 @@ footer {
     .owl-item .item {
         height: 100%
     }
-    .slides-info-place__2 {
-        display: block
-    }
+  
     .slider-left {
         width: 100%;
         height: 100%;
@@ -1300,6 +1296,9 @@ footer {
 }
 
 @media only screen and (max-width: 480px) {
+    .banner-medium, .main-banner { 
+        height: 300px;
+    }
     .service-boxes-inner {
         width: 300px;
     }
@@ -1336,8 +1335,10 @@ footer {
         }
     }
     #slider2.owl-carousel .owl-stage,
-    #slider2 .owl-item .item,
-    .banner-medium {
+    #slider2 .owl-item .item {
+        min-height: 360px
+    }
+    .banner-medium, .banner-large {
         height: 300px;
     }
     .contact-right {

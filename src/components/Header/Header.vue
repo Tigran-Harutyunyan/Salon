@@ -8,7 +8,7 @@
                     </a>  
                     <ul class="nav sidemenu" id="top-nav">
                         <li><router-link class="menu-item" exact to="/">Home <span></span> </router-link> </li>
-                        <li><a class="menu-item" href="/">About Us<span></span> </a></li>
+                        <li><a class="menu-item">About Us<span></span> </a></li>
                         <li><router-link class="menu-item" to="/hair-services">Hair Services<span></span> </router-link></li>
                         <li><router-link class="menu-item" to="/makeup-services">Makeup Services<span></span> </router-link></li>
                         <li><router-link class="menu-item" to="/hair-services">Your Own Booking<span></span> </router-link></li>
@@ -33,8 +33,8 @@
                     <li v-on:click="hideMobileMenu"><a href="/#/about" class="link2">About Us</a></li>
                     <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/hair-services">Hair Services</router-link></li>
                     <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/makeup-services">Makeup Services</router-link></li>
-                    <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/hair-services">Your Own booking</router-link></li> 
-                    <li v-on:click="hideMobileMenu"><a v-on:click="toContactSection"class="link2">Contact Us</a></li> 
+                    <li v-on:click="hideMobileMenu"><a href="/#/about" class="link2">Your Own Booking</a></li> 
+                    <li v-on:click="hideMobileMenu"><a v-on:click="toContactSection" class="link2">Contact Us</a></li> 
                     <li v-on:click="hideMobileMenu" v-if="!isAuthtorized"><a  @click="openAuth('login')" class="link2">Log In</a></li>
                     <li v-on:click="hideMobileMenu" v-if="!isAuthtorized"><a  @click="openAuth('signup')"class="link2">Sign Up</a></li>
                     <li v-on:click="hideMobileMenu" v-if="isAuthtorized"><a  @click="logOut()"class="link2">Log Out</a></li>
@@ -64,9 +64,8 @@ export default {
             this.isMobileMenuVisible = false;
         },
         scrollToTop() {
-            if (this.$router.history) {
-                if (this.$router.history.current.fullPath === "/about") {
-                    return false;
+            if (this.$router.history) { 
+                if (this.$router.history.current.fullPath === "/about") { 
                  //this.parentElements.stop().animate({ scrollTop: $("#about").offset().top }, 500, 'swing', function() {});
                 } else {
                     this.parentElements.stop().animate({ scrollTop: 0 }, 500, 'swing', function() {});
@@ -81,10 +80,7 @@ export default {
         },
         openAuth(authPopupType){
             EventBus.$emit('openAuth', authPopupType);
-        },
-        clearSession(){
-
-        },
+        }, 
         logOut(){
             if(!this.isLoading){
                 this.isLoading=true; 
@@ -116,8 +112,7 @@ export default {
                              this.$toast.error({ 
                                 message: response.message 
                             });
-                        }
-                         
+                        } 
                     }
                 }); 
             }
