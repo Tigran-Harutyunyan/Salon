@@ -1,18 +1,18 @@
 <template>
-<div class="slider-container home-slider" v-if="slides.length>0">
+<div class="slider-container home-slider" v-if="sliderData.length>0">
     <div class="slider-inner">
-        <div class="owl-carousel owl-theme" id="slider2">
-            <div class="item" v-for="item in slides">
+        <div class="owl-carousel owl-theme" id="slider1">
+            <div class="item" v-for="item in sliderData">
                 <div class="main-banner banner-large" v-bind:style="item.style"></div>
-                <div class="main-banner banner-medium" v-bind:style="item.style2"></div>
+                <!-- <div class="main-banner banner-medium" v-bind:style="item.style2"></div> -->
             </div>
         </div>
-        <div class="owl-carousel owl-theme" id="slider1">
-            <div class="item" v-for="item in slides">
+        <div class="owl-carousel owl-theme" id="slider2">
+            <div class="item" v-for="item in sliderData">
                 <div class="slider-text-info-place">
                     <span class="slide-caption slide-text-part1">{{ item.caption[0] }}</span>
                     <span class="slide-caption slide-text-part2">{{ item.caption[1] }}</span>
-                    <p>{{ item.content }}
+                    <p>{{ item.description }}
                     </p>
                     <a href="" class="btn">Book now</a>
                 </div>
@@ -30,46 +30,27 @@ export default {
         return {
             carousel: {},
             carousel2: {},
-            slides: [
-                {
-                    id: 0,
-                    caption: ['Blow', 'Outs'],
-                    content: "Enjoy(1) a relaxing shampoo and a smooth blow out to de-frizz, create body and shine. Perms/Relaxers/Retexturizing:  A  permanent wave creates curl or waves full of body, and helps with style support.",
-                    style: {
-                        'background-image': "url('../../static/images/home slider/image1.jpg')",
-                    },
-                    style2: {
-                        'background-image': "url('../../static/images/home slider/image1_medium.jpg')"
-                    }
-                }, {
-                    id: 1,
-                    caption: ['Blow', 'Outs'],
-                    content: "Enjoy(2) a relaxing shampoo and a smooth blow out to de-frizz, create body and shine. Perms/Relaxers/Retexturizing:  A  permanent wave creates curl or waves full of body, and helps with style support.",
-                    style: {
-                        'background-image': "url('../../static/images/home slider/image2_medium.jpg')"
-                    },
-                    style2: {
-                        'background-image': "url('../../static/images/home slider/image2_medium.jpg')"
-                    }
-                },
-                {
-                    id: 2,
-                    caption: ['Blow', 'Outs'],
-                    content: "Enjoy(3) a relaxing shampoo and a smooth blow out to de-frizz, create body and shine. Perms/Relaxers/Retexturizing:  A  permanent wave creates curl or waves full of body, and helps with style support.",
-                    style: {
-                        'background-image': "url('../../static/images/home slider/image3_medium.jpg')"
-                    }, style2: {
-                        'background-image': "url('../../static/images/home slider/image3_medium.jpg')"
-                    }
-
-                }
-            ]
+            isScroll: true 
         }
     },
-
+    props:['sliderData'],
+      watch: {
+		'sliderData': function (to, from)  {    
+            this.resetSliders()
+        }
+    },
     methods: {
-        initSliders() {
-            this.carousel2 = $("#slider1")
+        resetSliders(){ 
+           setTimeout(()=> {
+                $('.home-slider-nav-container').append("<div class='home-slider-nav'></div>");
+                this.carousel.owlCarousel('destroy');
+                this.carousel2.owlCarousel('destroy');  
+                $('#slider1 > .owl-item, #slider2 > .owl-item').remove();
+                this.initSliders();   
+            }, 200);
+        },
+        initSliders() { 
+            this.carousel2 = $("#slider2");
             this.carousel2.owlCarousel({
                 autoplay: false,
                 autoplayTimeout: 4000,
@@ -86,10 +67,9 @@ export default {
                 items: 1,
                 autoHeight: false,
                 touchDrag: false,
-                mouseDrag: false,
-                onInitialized: (event) => { }
+                mouseDrag: false 
             });
-            this.carousel = $("#slider2")
+           this.carousel = $("#slider1");
             this.carousel.owlCarousel({
                 autoplayTimeout: 4000,
                 autoplayHoverPause: false,
@@ -117,19 +97,27 @@ export default {
                             }, 200);
                         });
                     }, 100);
-                    setTimeout(() => {
-                        this.$emit('sliderReady')
-                    }, 500);
-                },
-                onTranslate: (event) => {
-                    console.log(event.item.index)
-                    this.carousel2.trigger('to.owl.carousel', [event.item.index - 1, 0]);
-                }
-            });
+                    setTimeout(() => { 
+                        this.$emit('sliderReady');
+                        console.log("ready")
+                    }, 800);
+                } 
+            }); 
+            this.carousel.on('dragged.owl.carousel', (event)=>{
+                  if (e.relatedTarget.state.direction == 'left') {
+                     this.carousel.trigger('next.owl.carousel')
+                     }else {
+                         this.carousel2.trigger('prev.owl.carousel')
+                    }
+             });  
         }
     },
-    mounted() {
-        this.initSliders();
+    mounted() { 
+      
+        this.carousel2 = $("#slider2");
+        setTimeout(()=>{
+            this.initSliders();
+        },200)
     },
     beforeDestroy() {
         $('#slider').owlCarousel('destroy');

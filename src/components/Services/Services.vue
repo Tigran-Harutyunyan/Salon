@@ -1,7 +1,7 @@
 <template>
 <div class="container-inner" :class="{'is-visible': showMainSection}">
     <div class="home-slider-container">
-        <sliders v-on:sliderReady="showMainSection=true"></sliders> 
+        <sliders v-on:sliderReady="showMainSection=true" :sliderData="sliderData" v-if="sliderData"></sliders> 
     </div>
     <div class="main-section-area">
         <div class="service-items-section">
@@ -22,8 +22,7 @@
                     <div class="shirma">
                         <p>{{service.duration}} min ${{service.price}}</p>
                     </div>
-                </div>
-                
+                </div> 
             </div>
         </div>
         <contacts v-if="showContacts"></contacts>
@@ -93,17 +92,25 @@ export default {
             services:[],
             splittedHairServices:[],
             sectionTitle:"",
-            customData:{} 
+            customData:{},
+            sliderData:[],
+            storeData:{} 
         }
     },
     watch: {
 		'$route': function   (to, from)  {  
 			if (to.name == "MakeupServices") {
                this.services = this.makeUpServices;
-               this.sectionTitle = "Makeup services";
+               this.sectionTitle = "Makeup services"; 
+                if(this.storeData.slider['Makeup Services'])  {
+                    this.sliderData = this.storeData.slider['Makeup Services']
+                }
 			} else {
                 this.services = this.hairServices; 
                 this.sectionTitle = "Hair services";
+                 if(this.storeData.slider['Hair Services'])  {
+                    this.sliderData = this.storeData.slider['Hair Services']
+                }
             }
 		}
     },
@@ -168,26 +175,32 @@ export default {
         EventBus.$emit('setparent', true);
     },
     mounted() {  
-        let storeData = this.$store.getters.appData; 
-        if (storeData.services){
-            if (storeData.services['Hair Services']) { 
-                this.splittedHairServices.push(storeData.services.splittedHairServices[0].items);
-                this.splittedHairServices.push(storeData.services.splittedHairServices[1].items); 
-                this.hairServices = storeData.services['Hair Services'];
+       this.storeData = this.$store.getters.appData; 
+        if (this.storeData.services){
+            if (this.storeData.services['Hair Services']) { 
+                this.splittedHairServices.push(this.storeData.services.splittedHairServices[0].items);
+                this.splittedHairServices.push(this.storeData.services.splittedHairServices[1].items); 
+                this.hairServices = this.storeData.services['Hair Services'];
             }
-            if (storeData.services['Makeup Services']) {
-                this.makeUpServices = storeData.services['Makeup Services'];
+            if (this.storeData.services['Makeup Services']) {
+                this.makeUpServices = this.storeData.services['Makeup Services'];
             }
             if (this.$router.history.current.name=="HairServices"){
-                this.services = storeData.services['Hair Services'];
+                this.services = this.storeData.services['Hair Services'];
                 this.sectionTitle = "Hair Services";
+                if(this.storeData.slider && this.storeData.slider['Hair Services'])  {
+                    this.sliderData = this.storeData.slider['Hair Services']
+                }
             } else {
-                this.services = storeData.services['Makeup Services'];
+                this.services = this.storeData.services['Makeup Services'];
                 this.sectionTitle = "Makeup Services";
-            }   
+                 if(this.storeData.slider && this.storeData.slider['Makeup Services'])  {
+                    this.sliderData = this.storeData.slider['Makeup Services']
+                }
+            }  
         }
-        if (storeData.custom_data){ 
-             this.customData = storeData.custom_data;
+        if (this.storeData.custom_data){ 
+             this.customData = this.storeData.custom_data;
         } 
         let docWidth = $(document).width();
         if (docWidth > 480 && docWidth < 1000) {

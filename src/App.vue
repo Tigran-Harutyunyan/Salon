@@ -68,6 +68,25 @@ export default {
                 element.route = `/#/service/${element.id}`
             });
             return services
+        },
+        setSliderImgPath(data){
+            if(data.slider['Hair Services'])  {
+                data.slider['Hair Services'].forEach(function(element) {
+                    element.style = {
+                        'background-image': `url(http://api.mysalonla.com/images/sliders/${element.image})` 
+                    };  
+                    element.caption= element.title.split(" ");
+                });
+            }
+             if(data.slider['Makeup Services'])  {
+                data.slider['Makeup Services'].forEach(function(element) {
+                    element.style = {
+                        'background-image': `url(http://api.mysalonla.com/images/sliders/${element.image})` 
+                    };
+                    element.caption= element.title.split(" ");
+                });
+            } 
+            return data; 
         }
     },
     components: {
@@ -99,6 +118,9 @@ export default {
                         parsedData.services['Makeup Services'] = this.setAttributes(parsedData.services['Makeup Services'])
                     } 
                 } 
+                if(parsedData.slider){
+                   parsedData = this.setSliderImgPath(parsedData);  
+                }
                 this.$store.dispatch('setData', parsedData)
                 this.customData = parsedData.custom_data;
                 this.showApp = true;
