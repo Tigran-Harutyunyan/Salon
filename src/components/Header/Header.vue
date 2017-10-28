@@ -13,8 +13,9 @@
                         <li><router-link class="menu-item" to="/makeup-services">Makeup Services<span></span> </router-link></li>
                         <li><router-link class="menu-item" to="/hair-services">Your Own Booking<span></span> </router-link></li>
                         <li><a class="menu-item" v-on:click="toContactSection">Contact Us<span></span> </a></li>
-                        <li><a class="menu-item login-link" @click="openAuth('login')">Log In/</a></li>
-                        <li><a class="menu-item signup-link" @click="openAuth('signup')">Sign Up</a></li>
+                        <li v-if="!isAuthtorized"><a class="menu-item login-link" @click="openAuth('login')">Log In/</a></li>
+                        <li v-if="!isAuthtorized"><a class="menu-item signup-link" @click="openAuth('signup')">Sign Up</a></li>
+                        <li v-if="isAuthtorized"><a class="menu-item signup-link" @click="logOut()">Log Out</a></li>
                     </ul>
                 </div> 
             </div>
@@ -34,8 +35,9 @@
                     <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/makeup-services">Makeup Services</router-link></li>
                     <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/hair-services">Your Own booking</router-link></li> 
                     <li v-on:click="hideMobileMenu"><a v-on:click="toContactSection"class="link2">Contact Us</a></li> 
-                    <li v-on:click="hideMobileMenu"><a @click="openAuth('login')" class="link2">Log In</a></li>
-                    <li v-on:click="hideMobileMenu"><a @click="openAuth('signup')"class="link2">Sign Up</a></li>
+                    <li v-on:click="hideMobileMenu" v-if="!isAuthtorized"><a  @click="openAuth('login')" class="link2">Log In</a></li>
+                    <li v-on:click="hideMobileMenu" v-if="!isAuthtorized"><a  @click="openAuth('signup')"class="link2">Sign Up</a></li>
+                    <li v-on:click="hideMobileMenu" v-if="isAuthtorized"><a  @click="logOut()"class="link2">Log Out</a></li>
                 </ul>
             </nav> 
         </div>
@@ -49,13 +51,12 @@ export default {
     data: function() {
         return {
             routes: [
-                { route: '/', text: "Home", visible: false },
-                { route: '/gallery', text: "Gallery", visible: false },
-                { route: '/food', text: "Food", visible: false },
-                { route: '/drink', text: "Drink", visible: false } 
+                { route: '/', text: "Home", visible: false }  
             ], 
             parentElements: $("html, body"),
-            isMobileMenuVisible: false 
+            isMobileMenuVisible: false,
+            isAuthtorized:"",
+            isLoading:false 
         }
     },
     methods: {
@@ -65,7 +66,8 @@ export default {
         scrollToTop() {
             if (this.$router.history) {
                 if (this.$router.history.current.fullPath === "/about") {
-                    this.parentElements.stop().animate({ scrollTop: $("#about").offset().top }, 500, 'swing', function() {});
+                    return false;
+                 //this.parentElements.stop().animate({ scrollTop: $("#about").offset().top }, 500, 'swing', function() {});
                 } else {
                     this.parentElements.stop().animate({ scrollTop: 0 }, 500, 'swing', function() {});
                 }
@@ -79,6 +81,47 @@ export default {
         },
         openAuth(authPopupType){
             EventBus.$emit('openAuth', authPopupType);
+        },
+        clearSession(){
+
+        },
+        logOut(){
+            if(!this.isLoading){
+                this.isLoading=true; 
+                 $.ajax({
+                    url: 'http://api.mysalonla.com/api/logout',
+                    dataType: 'json',
+                    'type': 'POST', 
+                    data: { 
+                        token: this.userInfo.token 
+                    },
+                }).done((response) => {  
+                    this.isLoading = false;
+                    let _window= window;
+                    if (response.success) {  
+                        this.clearSession();
+                        _window.localStorage.clear();
+                        this.userInfo = {};
+                        this.isAuthtorized = false;
+                        this.$store.dispatch('setUserInfo', {}); 
+                        this.$toast.success({ 
+                            message: `Logged out`
+                        }); 
+                    }  
+                     if (response.error){ 
+                          _window.localStorage.clear();
+                         this.userInfo = {}; 
+                        this.isAuthtorized = false;
+                        if(response.message){
+                             this.$toast.error({ 
+                                message: response.message 
+                            });
+                        }
+                         
+                    }
+                }); 
+            }
+             
         }
     },
     watch: {
@@ -88,6 +131,14 @@ export default {
     },
     mounted() { 
         this.scrollToTop();
+        this.userInfo  =   JSON.parse(localStorage.getItem('userInfo'));
+        this.isAuthtorized = this.userInfo && this.userInfo.first_name ? true: false; 
+    },
+    created(){
+        EventBus.$on('Authorized', userInfo => { 
+           this.isAuthtorized = true;
+           this.userinfo = userInfo;
+        });
     }
 }
 </script>

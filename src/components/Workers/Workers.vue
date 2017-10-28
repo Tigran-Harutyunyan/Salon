@@ -1,7 +1,7 @@
 <template>
 <div class="container-inner" :class="{'is-visible': showMainSection}">
     <div class="home-slider-container">
-        <sliders v-on:sliderReady="showMainSection=true"></sliders> 
+        <sliders v-on:sliderReady="showMainSection=true" :sliderData="sliderData" v-if="sliderData"></sliders> 
     </div>
     <div class="main-section-area">
         <div class="service-items-section">
@@ -51,40 +51,22 @@
         </div>
         <!-- Services list -->
         <div class="services-list">
-            <div class="services-list-inner-container">
+           <div class="services-list-inner-container">
                 <div class="service-column">
                     <h5 class="subtitle">Hair services</h5>
                     <div class="sub-hair-services-section sub1">
                         <div class="sub-section">
                             <ul>
-                                <li><a href="">Haircut & Blowdry </a></li>
-                                <li><a href="">Haircut no Blowdry</a></li>
-                                <li><a href="">Blowdry Regular</a></li>
-                                <li><a href="">Blowdry with Extensions </a></li>
-                                <li><a href="">Blowdty Plus</a></li>
-                                <li><a href="">Curls Regular </a></li>
-                                <li><a href="">Curls Long Hair or Extensions</a></li>
-                                <li><a href="">Up Do</a></li>
-                                <li><a href="">Base Break Only</a></li>
-                                <li><a href="">Base Break & Highlight</a></li>
-                                <li><a href="">Base Color</a></li>
-                                <li><a href="">Partial Highlight</a></li>
+                               <li v-for="item in splittedHairServices[0]">
+                                  <a :href="item.route"> {{ item.name}} </a>
+                               </li>  
                             </ul>
                         </div>
                         <div class="sub-section">
                             <ul>
-                                <li><a href="">Full Highlight </a></li>
-                                <li><a href="">Full Head One Process Color</a></li>
-                                <li><a href="">Toner</a></li>
-                                <li><a href="">Brazilian Blowout</a></li>
-                                <li><a href="">Bleach & Tone</a></li>
-                                <li><a href="">Bleach & Tone with Blowdry</a></li>
-                                <li><a href="">Keratin Treatment</a></li>
-                                <li><a href="">Braids</a></li>
-                                <li><a href="">Treatment</a></li>
-                                <li><a href="">Ombre/Balayage</a></li>
-                                <li><a href="">Ombre/Balayage with Base Color</a></li>
-                                <li><a href="">Extensions</a></li>
+                                <li v-for="item in splittedHairServices[1]">
+                                     <a :href="item.route"> {{ item.name}} </a>
+                                </li> 
                             </ul>
                         </div>
                     </div>
@@ -94,30 +76,21 @@
                     <div class="sub-hair-services-section sub2">
                         <div class="sub-section">
                             <ul>
-                                <li><a href="">Regular</a></li>
-                                <li><a href="">With Contour & Extra Lashes </a></li>
-                                <li><a href="">Air Brush</a></li>
-                                <li><a href="">Eyes Only</a></li>
-                                <li><a href="">Express Make up no Lashes </a></li>
-                                <li><a href="">Express Make up with Lashes </a></li>
-                                <li><a href="">Just Lashes Regular</a></li>
-                                <li><a href="">Extra Lashes</a></li>
-                                <li><a href="">Make up Lessons</a></li>
-                                <li><a href="">Eyebrow Shaping</a></li>
-                                <li><a href="">Face Threating</a></li>
-                                <li><a href="">Lip Threating</a></li>
+                                <li v-for="item in makeUpServices">
+                                      <a :href="item.route"> {{ item.name}} </a>
+                                </li> 
                             </ul>
                         </div>
                         <div class="sub-section">
                             <ul class="address-info">
                                 <li><span></span>
-                                    <p>000 E Brodway ave., Glendale, CA,90000</p>
+                                    <p>{{customData.address}}</p>
                                 </li>
                                 <li><span></span>
-                                    <p>323 000 00 00</p>
+                                    <p>{{customData.phone}}</p>
                                 </li>
                                 <li><span></span>
-                                    <p>mysalon@gmail.com</p>
+                                    <p>{{customData.email}}</p>
                                 </li>
                             </ul>
                         </div>
@@ -136,6 +109,12 @@ export default {
     data() {
         return {
             wrokersLine: "",
+            customData:{},
+            sliderData:[],
+            storeData:{} ,
+            makeUpServices:[],
+            services:[],
+            splittedHairServices:[],
             slides: [{
                 id: 0,
                 imagePath: "../../../static/images/work1.jpg"
@@ -237,6 +216,24 @@ export default {
         EventBus.$emit('setparent', true);
     },
     mounted() {
+           this.storeData = this.$store.getters.appData; 
+      
+        if (this.storeData.services){   
+            if (this.storeData.services['Hair Services']) { 
+                this.splittedHairServices.push(this.storeData.services.splittedHairServices[0].items);
+                this.splittedHairServices.push(this.storeData.services.splittedHairServices[1].items); 
+                this.hairServices = this.storeData.services['Hair Services'];
+            }
+            if (this.storeData.services['Makeup Services']) {
+                this.makeUpServices = this.storeData.services['Makeup Services'];
+            }
+            if(this.storeData.slider && this.storeData.slider['Hair Services'])  {
+                this.sliderData = this.storeData.slider['Hair Services']
+            }
+        }
+        if (this.storeData.custom_data){ 
+             this.customData = this.storeData.custom_data;
+        } 
         this.workerLine = $('#workers-line')
         this.targetElement = $('.workers-container-inner .worker-item:first-child  .worker-info-place');
         this.setElementPositions();

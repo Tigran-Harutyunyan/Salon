@@ -8,16 +8,20 @@ import Vuelidate from 'vuelidate';
 import GSignInButton from 'vue-google-signin-button';
 import FBSignInButton from 'vue-facebook-signin-button';
 import VueParallaxJs from 'vue-parallax-js';
-import Toastr from 'vue-toastr';
-//import VueToastr from '@deveodk/vue-toastr';
+import CxltToastr from 'cxlt-vue2-toastr'; 
 
 Vue.config.productionTip = false;
  
 Vue.use(Vuelidate); 
 Vue.use(GSignInButton); 
 Vue.use(FBSignInButton);  
-Vue.use(VueParallaxJs)
-
+Vue.use(VueParallaxJs);
+var toastrConfigs = {
+  position: 'bottom right',
+  showDuration: 2000
+}
+Vue.use(CxltToastr, toastrConfigs);
+ 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

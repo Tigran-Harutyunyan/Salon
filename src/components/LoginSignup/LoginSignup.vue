@@ -210,7 +210,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
     methods: {
         onSubmitLogin() {
             if (this.isLoginValid && !this.isLoading) { 
-                this.isLoading = true;
+                this.isLoading = true; 
                 $.ajax({
                     url: 'http://api.mysalonla.com/api/login',
                     dataType: 'json',
@@ -221,13 +221,21 @@ https://developers.facebook.com/apps/523193884695053/settings/
                     },
                 }).done((response) => {  
                     this.isLoading = false;
-                    if (response.success == 1) {  
+                    if (response.success) {  
                         this.$store.dispatch('setUserInfo', response);
-                        console.log('Welcome');
+                        localStorage.setItem('userInfo', JSON.stringify(response));
+                        this.$toast.success({ 
+                            message: `Welcome ${response.first_name}`
+                        });
+                        EventBus.$emit('Authorized', response);
                         this.showLogin = false;
-                        this.isPopupVisible= false;
-                    } else if (response.success == 0){
-                        // ERROR
+                        this.isPopupVisible = false; 
+                    }  
+                     if (response.success==0){
+                         // get meaningfull data from server
+                          this.$toast.error({ 
+                            message: `Error logging in`
+                        });
                     }
                 }); 
             }
@@ -289,7 +297,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
             console.log('OH NOES', error)
         },
         closePopups() {
-            this.htmlElement.removeClass('no-scroll');
+           // this.htmlElement.removeClass('no-scroll');
             this.isPopupVisible = this.showLogin = this.showSignUp = this.showForgetPass = false; 
         },
         onVerify(response) { 
@@ -304,7 +312,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
     }, 
     created() {
         EventBus.$on('openAuth', windowType => {
-            this.htmlElement.addClass('no-scroll');
+            //this.htmlElement.addClass('no-scroll');
             this.isPopupVisible = true;
             if (windowType === 'login') {
                 this.showLogin = true;
@@ -312,7 +320,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
                 this.showSignUp = true;
             } 
         });
-        this.htmlElement = $('html');
+       // this.htmlElement = $('html');
         //EventBus.$emit('setparent', false);
     },
     components: { VueRecaptcha },

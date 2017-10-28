@@ -1,8 +1,7 @@
 <template>
     <div v-if="showApp">
         <top-header v-show="showHeader"></top-header>
-        <router-view/>
-
+        <router-view/> 
         <!-- FOOTER -->
         <section class="section-footer" v-show="showHeader">
             <footer class="footer">
@@ -28,7 +27,8 @@
                 </div>
             </footer>
         </section>
-        <login-signup v-if="showAuth"> </login-signup>     
+        <login-signup v-if="showAuth"> </login-signup>   
+      
         <div class="footer-bg"></div>
     </div> 
 </template>

@@ -2,7 +2,7 @@
     .modal-container {
         background-color: #f5f0ed;
         border-radius: 4px;
-        position: absolute;
+        position: fixed;
         z-index: 10001;
     }
     .def-input {
@@ -127,8 +127,8 @@
     left: 50%;
     margin-left: -359px;
     top: 50%;
-    height: 480px;
-    margin-top: -240px;
+    height: 520px;
+    margin-top: -260px;
     .popup-inner {
         padding-top: 20px
     }
