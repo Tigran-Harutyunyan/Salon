@@ -1,5 +1,5 @@
 <template>
-<div v-show="showApp">
+<div v-if="showApp">
     <top-header v-show="showHeader"></top-header>
       <router-view/>
 
@@ -11,10 +11,10 @@
                     <a href="" class="privacy-policy footer-links">Privacy Policy</a> <span class="vert-bar"></span>  <span
                         class="footer-links">Follow Us On</span> 
                         <ul class="social-links">
-                            <li><a class="fb-link" href=""></a></li>
-                            <li><a class="tw-link" href=""></a></li>
-                            <li><a class="in-link" href=""></a></li>
-                            <li><a class="g-plus-link" href=""></a></li>
+                            <li><a class="fb-link" v-bind:href="customData.facebook_link"></a></li>
+                            <li><a class="tw-link" v-bind:href="customData.twitter_link"></a></li>
+                            <li><a class="in-link" v-bind:href="customData.instagram_link"></a></li>
+                            <li><a class="g-plus-link" v-bind:href="customData.google_plus_link"></a></li>
                         </ul>
                 </div>
                 <div class="footer-right">
@@ -44,10 +44,32 @@ export default {
         return {
             showHeader: false,
             showAuth: true,
-            showApp: false
+            showApp: false,
+            customData: {}
         }
     },
-    methods: {},
+    methods: {
+         splitServices(parsedData) {
+            let splittedHairServices = [];
+            let services = parsedData.services['Hair Services'];
+            let devider = Math.floor(services.length / 2); 
+            splittedHairServices.push({
+                items: services.slice(0, devider)
+            });
+            splittedHairServices.push({
+                items: services.slice(devider, services.length)
+            }); 
+            parsedData.services.splittedHairServices =  splittedHairServices;
+            return parsedData 
+        },
+        setAttributes(services){
+            services.forEach(function(element) {
+                element.imgSrc = `http://api.mysalonla.com/images/services/${element.image}`;
+                element.route = `/#/service/${element.id}`
+            });
+            return services
+        }
+    },
     components: {
         'top-header': Header,
         'login-signup': loginSignup
@@ -64,23 +86,25 @@ export default {
             }
         }).then((response) => {
             return response.json();
-        }).then((parsedData) => {
-            if (parsedData) {
-              this.$store.dispatch('setData', parsedData)
+        }).then((parsedData) => { 
+             if (parsedData) {
+                if (parsedData.services) {
+                    if( parsedData.services['Hair Services'] ){
+                       if (parsedData.services['Hair Services'].length > 15){
+                           parsedData = this.splitServices(parsedData);
+                       }
+                       parsedData.services['Hair Services'] = this.setAttributes(parsedData.services['Hair Services'])
+                    }
+                    if( parsedData.services['Makeup Services']){
+                        parsedData.services['Makeup Services'] = this.setAttributes(parsedData.services['Makeup Services'])
+                    } 
+                } 
+                this.$store.dispatch('setData', parsedData)
+                this.customData = parsedData.custom_data;
                 this.showApp = true;
-            }
+            } 
         }); 
     } 
 };
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+ 

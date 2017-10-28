@@ -3,14 +3,14 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 export default new Vuex.Store({
     state: { 
-        incomingData : {}
+        data : {}
     },
     getters: {
-        menues: state => state.menus,
+        appData: state => state.data,
     },
     mutations: {
         SET_DATA(state, payload) {
-            state.incomingData = payload;
+            state.data = payload;
         } 
     },
     actions: {

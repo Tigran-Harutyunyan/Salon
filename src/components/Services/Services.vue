@@ -6,7 +6,7 @@
     <div class="main-section-area">
         <div class="service-items-section">
             <div class="section-title">
-                <h1>Hair Services</h1>
+                <h1>{{sectionTitle}}</h1>
                 <span class="diz-elem elem-left"></span>
                 <span class="diz-elem elem-right"></span>
             </div>
@@ -15,198 +15,15 @@
             <div class="lines line-3"></div>
             <div class="lines line-4"></div>
             <div class="service-boxes-inner" id="service-boxes-inner">
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Haircut & Blowdry</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
+                <div class="service-box-item animated" v-for="service in services">
+                    <img :src="service.imgSrc" :alt="service.name">
+                    <h5>{{service.name}}</h5>
+                    <a @click="bookService(service.id)" class="box-btn">Book now</a>
                     <div class="shirma">
-                        <p>60 min $80</p>
+                        <p>{{service.duration}} min ${{service.price}}</p>
                     </div>
                 </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Haircut no Blowdry</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Blowdry Regular</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Blowdry with Extensions</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Blowdry Plus</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item  animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Curls Regular</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item  animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Curls Long Hair or Extensions</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Up Do</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Base Break Only</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Base Break & Highlight</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Base Color</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Partial Highlight</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Full Highlights</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Full Head One Process Color</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Toner</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Brazilian Blowout</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Bleach & Tone</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Bleach & Tone with Blowdry</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Keratin Treatment</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item  animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Braids</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Treatment</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Ombre/Balayage</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Ombre/Balayage with Base Color</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
-                <div class="service-box-item animated">
-                    <img src="../../../static/images/services/image.jpg" alt="">
-                    <h5>Extensions</h5>
-                    <a href="/#/workers" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>60 min $80</p>
-                    </div>
-                </div>
+                
             </div>
         </div>
         <contacts v-if="showContacts"></contacts>
@@ -217,34 +34,16 @@
                     <div class="sub-hair-services-section sub1">
                         <div class="sub-section">
                             <ul>
-                                <li><a href="/#/workers">Haircut & Blowdry </a></li>
-                                <li><a href="/#/workers">Haircut no Blowdry</a></li>
-                                <li><a href="/#/workers">Blowdry Regular</a></li>
-                                <li><a href="/#/workers">Blowdry with Extensions </a></li>
-                                <li><a href="/#/workers">Blowdty Plus</a></li>
-                                <li><a href="/#/workers">Curls Regular </a></li>
-                                <li><a href="/#/workers">Curls Long Hair or Extensions</a></li>
-                                <li><a href="/#/workers">Up Do</a></li>
-                                <li><a href="/#/workers">Base Break Only</a></li>
-                                <li><a href="/#/workers">Base Break & Highlight</a></li>
-                                <li><a href="/#/workers">Base Color</a></li>
-                                <li><a href="/#/workers">Partial Highlight</a></li>
+                               <li v-for="item in splittedHairServices[0]">
+                                  <a :href="item.route"> {{ item.name}} </a>
+                               </li>  
                             </ul>
                         </div>
                         <div class="sub-section">
                             <ul>
-                                <li><a href="/#/workers">Full Highlight </a></li>
-                                <li><a href="/#/workers">Full Head One Process Color</a></li>
-                                <li><a href="/#/workers">Toner</a></li>
-                                <li><a href="/#/workers">Brazilian Blowout</a></li>
-                                <li><a href="/#/workers">Bleach & Tone</a></li>
-                                <li><a href="/#/workers">Bleach & Tone with Blowdry</a></li>
-                                <li><a href="/#/workers">Keratin Treatment</a></li>
-                                <li><a href="/#/workers">Braids</a></li>
-                                <li><a href="/#/workers">Treatment</a></li>
-                                <li><a href="/#/workers">Ombre/Balayage</a></li>
-                                <li><a href="/#/workers">Ombre/Balayage with Base Color</a></li>
-                                <li><a href="/#/workers">Extensions</a></li>
+                                <li v-for="item in splittedHairServices[1]">
+                                     <a :href="item.route"> {{ item.name}} </a>
+                                </li> 
                             </ul>
                         </div>
                     </div>
@@ -254,30 +53,21 @@
                     <div class="sub-hair-services-section sub2">
                         <div class="sub-section">
                             <ul>
-                                <li><a href="/#/workers">Regular</a></li>
-                                <li><a href="/#/workers">With Contour & Extra Lashes </a></li>
-                                <li><a href="/#/workers">Air Brush</a></li>
-                                <li><a href="/#/workers">Eyes Only</a></li>
-                                <li><a href="/#/workers">Express Make up no Lashes </a></li>
-                                <li><a href="/#/workers">Express Make up with Lashes </a></li>
-                                <li><a href="/#/workers">Just Lashes Regular</a></li>
-                                <li><a href="/#/workers">Extra Lashes</a></li>
-                                <li><a href="/#/workers">Make up Lessons</a></li>
-                                <li><a href="/#/workers">Eyebrow Shaping</a></li>
-                                <li><a href="/#/workers">Face Threating</a></li>
-                                <li><a href="/#/workers">Lip Threating</a></li>
+                                <li v-for="item in makeUpServices">
+                                      <a :href="item.route"> {{ item.name}} </a>
+                                </li> 
                             </ul>
                         </div>
                         <div class="sub-section">
                             <ul class="address-info">
                                 <li><span></span>
-                                    <p>000 E Brodway ave., Glendale, CA,90000</p>
+                                    <p>{{customData.address}}</p>
                                 </li>
                                 <li><span></span>
-                                    <p>323 000 00 00</p>
+                                    <p>{{customData.phone}}</p>
                                 </li>
                                 <li><span></span>
-                                    <p>mysalon@gmail.com</p>
+                                    <p>{{customData.email}}</p>
                                 </li>
                             </ul>
                         </div>
@@ -298,10 +88,30 @@ export default {
             lines: {},
             boxes: {},
             showMainSection: false,
-            showContacts: false
+            showContacts: false ,
+            makeUpServices:[],
+            services:[],
+            splittedHairServices:[],
+            sectionTitle:"",
+            customData:{} 
         }
     },
+    watch: {
+		'$route': function   (to, from)  {  
+			if (to.name == "MakeupServices") {
+               this.services = this.makeUpServices;
+               this.sectionTitle = "Makeup services";
+			} else {
+                this.services = this.hairServices; 
+                this.sectionTitle = "Hair services";
+            }
+		}
+    },
+ 
     methods: {
+        bookService(service){
+
+        },
         setElementPositions() {
             let _width = $(window).width();
             let leftOffset = Math.round(this.boxes.first.offset().left) - 40 + 160;
@@ -323,15 +133,17 @@ export default {
             }
         },
         initialiseScrollMagic(offset) {
-            var expertiseController = new ScrollMagic.Controller();
-            var sceneExpertise = new ScrollMagic.Scene({
-                triggerElement: "#service-boxes-inner",
-                triggerHook: 'onEnter',
-                offset: offset
-            })
-                //.addIndicators()
-                .addTo(expertiseController);
-            sceneExpertise.setClassToggle(".service-box-item", "fadeInUp");
+            setTimeout(()=>{
+                var expertiseController = new ScrollMagic.Controller();
+                var sceneExpertise = new ScrollMagic.Scene({
+                    triggerElement: "#service-boxes-inner",
+                    triggerHook: 'onEnter',
+                    offset: offset
+                })
+                    //.addIndicators()
+                    .addTo(expertiseController);
+                sceneExpertise.setClassToggle(".service-box-item", "fadeInUp");
+            },1000) 
         },
         initThings(){
              this.lines = {
@@ -355,9 +167,28 @@ export default {
     created() {
         EventBus.$emit('setparent', true);
     },
-    mounted() {
-
-       
+    mounted() {  
+        let storeData = this.$store.getters.appData; 
+        if (storeData.services){
+            if (storeData.services['Hair Services']) { 
+                this.splittedHairServices.push(storeData.services.splittedHairServices[0].items);
+                this.splittedHairServices.push(storeData.services.splittedHairServices[1].items); 
+                this.hairServices = storeData.services['Hair Services'];
+            }
+            if (storeData.services['Makeup Services']) {
+                this.makeUpServices = storeData.services['Makeup Services'];
+            }
+            if (this.$router.history.current.name=="HairServices"){
+                this.services = storeData.services['Hair Services'];
+                this.sectionTitle = "Hair Services";
+            } else {
+                this.services = storeData.services['Makeup Services'];
+                this.sectionTitle = "Makeup Services";
+            }   
+        }
+        if (storeData.custom_data){ 
+             this.customData = storeData.custom_data;
+        } 
         let docWidth = $(document).width();
         if (docWidth > 480 && docWidth < 1000) {
              this.initialiseScrollMagic(100);

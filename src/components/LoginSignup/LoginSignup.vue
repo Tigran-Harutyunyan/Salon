@@ -179,7 +179,9 @@ export default {
             isRemember: false
         }
     },
-
+/*
+https://developers.facebook.com/apps/523193884695053/settings/
+*/
     /*
     Идентификатор клиента	
     611284140430-okvicp2ah34lk7796cqlv5sci2jbj91d.apps.googleusercontent.com
