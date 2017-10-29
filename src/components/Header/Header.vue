@@ -129,8 +129,7 @@ export default {
         }
     },
     mounted() { 
-        this.apiPath = this.$store.getters.getApiPath; 
-        console.log(this.apiPath)
+        this.apiPath = this.$store.getters.getApiPath;  
         this.scrollToTop();
         this.userInfo  =   JSON.parse(localStorage.getItem('userInfo'));
         this.isAuthtorized = this.userInfo && this.userInfo.first_name ? true: false; 

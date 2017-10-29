@@ -11,9 +11,10 @@
                 <span class="diz-elem elem-right"></span>
             </div>
         </div>
-        <div class="lines line-1" id="workers-line"></div>
         <!-- WORKERS CONTAINER -->
         <div class="workers-container">
+
+            <div class="lines line-1" id="workers-line"></div>
             <div class="workers-container-inner">
                 <div class="worker-item" v-for="(employee, index) in employees">
                     <div class="worker-item-left">
@@ -134,26 +135,26 @@ export default {
                 if (response.success) {  
                     let employees = response.employees;
                      for (let index = 0; index < employees.length; index++) { 
-                         employees[index].image = `${this.apiPath}/images/${employees[index].image}`; 
+                         employees[index].image = `${this.apiPath}images/${employees[index].image}`; 
                         let workImages = employees[index].work_images;
                         let workImagesNew = [];
                         for (let index2 = 0; index2 < workImages.length; index2++) { 
                             workImagesNew.push({
                                 id: index2,
-                                imageSrc: `${this.apiPath}/images${workImages[index2]}` 
+                                imageSrc: `${this.apiPath}images${workImages[index2]}` 
                             })
                         } 
                         employees[index].work_images = workImagesNew;
                     } 
                    this.employees = employees;
-                   if(this.employees.lenght){
-                     setTimeout(()=> { 
+                   /*if(this.employees.lenght){
+                      setTimeout(()=> { 
                         this.setElementPositions();
                         $(window).on('resize', () => {
                             this.setElementPositions();
                         });
-                     }, 1000);
-                   }
+                     }, 1000); 
+                   }*/
                 }   
             }); 
         },

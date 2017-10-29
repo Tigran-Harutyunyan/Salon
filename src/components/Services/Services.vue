@@ -220,3 +220,9 @@ export default {
     }
 }
 </script> 
+
+<style>
+    .main-section-area {
+        overflow: hidden
+    }
+</style>

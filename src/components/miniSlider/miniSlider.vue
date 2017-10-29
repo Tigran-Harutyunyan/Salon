@@ -4,16 +4,16 @@
             <div class="mySlides fade" v-if="slides[0]">  
                 <img :src="slides[0].imageSrc">   
             </div> 
-            <div class="mySlides fade"  v-if="slides[1]"> 
+            <div class="mySlides fade" v-if="slides[1]"> 
                 <img :src="slides[1].imageSrc">  
             </div> 
-            <div class="mySlides fade"  v-if="slides[2]"> 
+            <div class="mySlides fade" v-if="slides[2]"> 
                 <img :src="slides[2].imageSrc">  
             </div>  
-            <div class="mySlides fade"  v-if="slides[3]"> 
+            <div class="mySlides fade" v-if="slides[3]"> 
                 <img :src="slides[3].imageSrc">  
             </div>  
-            <div class="mySlides fade"  v-if="slides[4]"> 
+            <div class="mySlides fade" v-if="slides[4]"> 
                 <img :src="slides[4].imageSrc">  
             </div>  
         </div> 
@@ -221,5 +221,32 @@
     @keyframes fade {
         from {opacity: .4} 
         to {opacity: 1}
+    }
+    @media only screen and (max-width: 1400px) {
+        .worker-item-right {
+            margin-left: 20px;
+        }
+        .worker-item{
+            padding-bottom: 0px;
+        }
+        .mini-slider-container {
+            width: 250px; 
+            margin: 340px auto 0;
+        }
+        .mySlides img {
+            width: 250px !important;
+        }
+        .slideshow-container .mySlides:nth-child(2) { 
+            width: 230px !important; 
+        }
+        .slideshow-container .mySlides:nth-child(3) { 
+            width: 210px !important; 
+        }
+         .slideshow-container .mySlides:nth-child(4) { 
+            width: 190px !important
+        }
+          .slideshow-container .mySlides:nth-child(5) { 
+            width: 170px !important
+        }
     }
 </style>

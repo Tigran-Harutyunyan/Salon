@@ -1,7 +1,7 @@
 .workers-container {
     width: 1440px;
     margin: 0 auto 60px;
-    overflow: hidden;
+    position: relative;
 }
 
  
@@ -22,7 +22,8 @@
         -ms-flex-negative: 0;
         flex-shrink: 0;
         img {
-            width: 100%
+            width: 100%; 
+            border-radius: 5px;
         }
     }
     .social-links {
@@ -135,19 +136,22 @@
         width: 100%;
         padding: 0 30px;
     }
+    .main-section-area .lines {
+         left: 229px;
+    }
 }
 
 @media only screen and (max-width: 1400px) {
     .worker-item-left {
-        .worker-info-place {
+      /*   .worker-info-place {
             width: 300px;
-        }
+        } */
         .social-links {
             width: 145px;
         }
     }
     .worker-name {
-        padding-bottom: 14px;
+        padding-bottom: 91px;
     }
     .worker-bio {
         padding-right: 10px;
@@ -155,7 +159,7 @@
     }
     .worker-position {
         margin-bottom: 8px;
-    }
+    } 
 }
 
 @media only screen and (max-width: 1300px) {
