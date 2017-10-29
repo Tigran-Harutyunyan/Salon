@@ -20,10 +20,11 @@
                 <span class="service-link-title">See services here</span>
              </a>   
         </div>
-    </div> 
+    </div>  
 </div>
 </template> 
 <script>
+    //import smallSlider from '../smallSlider/smallSlider.vue';
     import { EventBus } from '../../event-bus.js';
     export default {
         data() {
@@ -31,6 +32,6 @@
         } ,
         created(){ 
             EventBus.$emit('setparent', false);
-        }  
+        } 
     } 
 </script>

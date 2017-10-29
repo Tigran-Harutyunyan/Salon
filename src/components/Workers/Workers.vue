@@ -15,36 +15,31 @@
         <!-- WORKERS CONTAINER -->
         <div class="workers-container">
             <div class="workers-container-inner">
-                <div class="worker-item" v-for="item in 5">
+                <div class="worker-item" v-for="(employee, index) in employees">
                     <div class="worker-item-left">
                         <div class="worker-info-place">
-                            <img src="../../../static/images/worker.jpg" alt="Worker" class="worker-avatar">
+                            <img :src="employee.image" alt="Worker" class="worker-avatar">
                             <div class="worker-action-section">
                                 <ul class="social-links">
-                                    <li><a class="in-link" href=""></a></li>
-                                    <li><a class="fb-link" href=""></a></li>
-                                    <li><a class="tw-link" href=""></a></li>
+                                    <li><a class="in-link" :href="employee.instagram"></a></li>
+                                    <li><a class="fb-link" :href="employee.facebook"></a></li>
+                                    <li><a class="tw-link" :href="employee.twitter"></a></li>
                                 </ul>
-                                <a href="" class="btn-workers">Book now</a>
+                                <a @click="bookEmployeeByID(employee.id)" class="btn-workers">Book now</a>
                             </div>
                         </div>
 
                         <div class="worker-item-middle">
-                            <p class="worker-name">Anne <br> Chavalier</p>
-                            <h5 class="worker-position">SENIOR STYLIST</h5>
-                            <p class="worker-bio">French born Anne Chevallier is a Senior Stylist at Cristophe Salon Beverly Hills. She began her
-                                hair career as an apprentice at “l ecole de coiffure de Paris”, while also working for Dessange
-                                and Courrèges in Paris.After living in Washington DC, Anne moved to Los Angeles and began
-                                her career with Frederic Fekkai. Within her fourteen years at Fekkai, Anne was featured four
-                                years in a row for “Best Blowouts in Los Angeles” by Allure Magazine
-                            </p>
+                            <p class="worker-name">{{ employee.first_name }} <br> {{ employee.last_name}}</p>
+                            <h5 class="worker-position">{{ employee.profession }}</h5>
+                            <p class="worker-bio"> {{ employee.description }} </p>
                         </div>
 
                     </div>
-                    <div class="worker-item-right"> 
+                    <div class="worker-item-right" v-if="employee.work_images.length"> 
                         <span class="works">Works</span>
-                        <windy :images="slides"></windy>
-                        <!-- <works-slider :images="slides" v-if="slides.length"></works-slider> -->
+                        <mini-slider  :originalSlides="employee.work_images"></mini-slider>
+                        <!-- <windy :images="slides"></windy> --> 
                     </div>
                 </div>
             </div>
@@ -104,103 +99,64 @@
 import { EventBus } from '../../event-bus.js'; 
 import sliders from '../../components/DualSliders/DualSliders.vue';
 import windy from './Windy/Windy.vue';
-//import slider from '../worksSlider/worksSlider.vue';
+import miniSlider from '../miniSlider/miniSlider.vue';
+ 
 export default {
     data() {
         return {
             wrokersLine: "",
             customData:{},
+            employees:[],
             sliderData:[],
-            storeData:{} ,
+            storeData:{},
             makeUpServices:[],
             services:[],
             splittedHairServices:[],
-            slides: [{
-                id: 0,
-                imagePath: "../../../static/images/work1.jpg"
-            },
-            {
-                id: 2,
-                imagePath: "../../../static/images/work2.jpg"
-            },
-            {
-                id: 3,
-                imagePath: "../../../static/images/work3.jpg"
-            }, {
-                id: 4,
-                imagePath: "../../../static/images/work4.jpg"
-            },
-            {
-                id: 5,
-                imagePath: "../../../static/images/work5.jpg"
-            },
-            {
-                id: 6,
-                imagePath: "../../../static/images/work1.jpg"
-            },
-            {
-                id: 7,
-                imagePath: "../../../static/images/work2.jpg"
-            },
-            {
-                id: 8,
-                imagePath: "../../../static/images/work3.jpg"
-            }, {
-                id: 9,
-                imagePath: "../../../static/images/work4.jpg"
-            },
-            {
-                id: 10,
-                imagePath: "../../../static/images/work5.jpg"
-            },
-            {
-                id: 11,
-                imagePath: "../../../static/images/work1.jpg"
-            },
-            {
-                id: 12,
-                imagePath: "../../../static/images/work2.jpg"
-            },
-            {
-                id: 13,
-                imagePath: "../../../static/images/work3.jpg"
-            }, {
-                id: 14,
-                imagePath: "../../../static/images/work4.jpg"
-            },
-            {
-                id: 15,
-                imagePath: "../../../static/images/work5.jpg"
-            },
-            {
-                id: 16,
-                imagePath: "../../../static/images/work5.jpg"
-            },
-            {
-                id: 17,
-                imagePath: "../../../static/images/work1.jpg"
-            },
-            {
-                id: 18,
-                imagePath: "../../../static/images/work2.jpg"
-            },
-            {
-                id: 19,
-                imagePath: "../../../static/images/work3.jpg"
-            }, {
-                id: 20,
-                imagePath: "../../../static/images/work4.jpg"
-            },
-            {
-                id: 21,
-                imagePath: "../../../static/images/work5.jpg"
-            }
-            ],
+            slides: [], 
             showMainSection: false,
-            workerLine: {}
+            workerLine: {},
+            apiPath:{}
         }
     },
-    methods: {
+    methods: { 
+        bookEmployeeByID(employeeID){
+
+        },
+        getEmployeesByService(){ 
+            $.ajax({
+                url: `${this.apiPath}/api/getEmployeesByService`,
+                dataType: 'json',
+                'type': 'POST', 
+                data: { 
+                    service_id: this.$route.params.id
+                },
+            }).done((response) => {    
+                if (response.success) {  
+                    let employees = response.employees;
+                     for (let index = 0; index < employees.length; index++) { 
+                         employees[index].image = `${this.apiPath}/images/${employees[index].image}`; 
+                        let workImages = employees[index].work_images;
+                        let workImagesNew = [];
+                        for (let index2 = 0; index2 < workImages.length; index2++) { 
+                            workImagesNew.push({
+                                id: index2,
+                                imageSrc: `${this.apiPath}/images${workImages[index2]}` 
+                            })
+                        } 
+                        employees[index].work_images = workImagesNew;
+                    } 
+                   this.employees = employees;
+                   if(this.employees.lenght){
+                     setTimeout(()=> { 
+                        this.setElementPositions();
+                        $(window).on('resize', () => {
+                            this.setElementPositions();
+                        });
+                     }, 1000);
+                   }
+                }   
+            }); 
+        },
         displayContent() {
             showMainSection = true;
         },
@@ -216,8 +172,11 @@ export default {
         EventBus.$emit('setparent', true);
     },
     mounted() {
-           this.storeData = this.$store.getters.appData; 
-      
+       this.apiPath = this.$store.getters.getApiPath; 
+       this.getEmployeesByService();
+       this.workerLine = $('#workers-line')
+       this.targetElement = $('.workers-container-inner .worker-item:first-child  .worker-info-place');
+       this.storeData = this.$store.getters.appData;  
         if (this.storeData.services){   
             if (this.storeData.services['Hair Services']) { 
                 this.splittedHairServices.push(this.storeData.services.splittedHairServices[0].items);
@@ -233,18 +192,13 @@ export default {
         }
         if (this.storeData.custom_data){ 
              this.customData = this.storeData.custom_data;
-        } 
-        this.workerLine = $('#workers-line')
-        this.targetElement = $('.workers-container-inner .worker-item:first-child  .worker-info-place');
-        this.setElementPositions();
-        $(window).on('resize', () => {
-            this.setElementPositions();
-        });
+        }  
     },
     components: {
         sliders, 
         windy,
+        'mini-slider': miniSlider
         //'works-slider':slider
     }
-}</script>
- 
+}
+</script> 

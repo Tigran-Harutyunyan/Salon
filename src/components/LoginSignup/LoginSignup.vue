@@ -182,7 +182,8 @@ export default {
             loginPassword: "ann_chavalier",
             isRemember: false,
             isLoading: false,
-            recaptchaResponse:""
+            recaptchaResponse:"",
+            apiPath:""
         }
     },
 /*
@@ -212,7 +213,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
             if (this.isLoginValid && !this.isLoading) { 
                 this.isLoading = true; 
                 $.ajax({
-                    url: 'http://api.mysalonla.com/api/login',
+                    url: `${this.apiPath}/api/login`,
                     dataType: 'json',
                     'type': 'POST', 
                     data: { 
@@ -243,7 +244,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
         onSubmitSignup() { 
             if (this.isSignupValid) {
                 $.ajax({
-                    url: 'http://api.mysalonla.com/api/register',
+                    url: `${this.apiPath}/api/register`,
                     dataType: 'json',
                     'type': 'POST', 
                     data: { 
@@ -322,6 +323,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
         });
        // this.htmlElement = $('html');
         //EventBus.$emit('setparent', false);
+        this.apiPath = this.$store.getters.getApiPath; 
     },
     components: { VueRecaptcha },
     validations: {

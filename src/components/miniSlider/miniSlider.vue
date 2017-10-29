@@ -2,19 +2,19 @@
     <div class="mini-slider-container">
         <div class="slideshow-container"  v-if="slides.length">
             <div class="mySlides fade" v-if="slides[0]">  
-                <img :src="slides[0].url">   
+                <img :src="slides[0].imageSrc">   
             </div> 
             <div class="mySlides fade"  v-if="slides[1]"> 
-                <img :src="slides[1].url">  
+                <img :src="slides[1].imageSrc">  
             </div> 
             <div class="mySlides fade"  v-if="slides[2]"> 
-                <img :src="slides[2].url">  
+                <img :src="slides[2].imageSrc">  
             </div>  
             <div class="mySlides fade"  v-if="slides[3]"> 
-                <img :src="slides[3].url">  
+                <img :src="slides[3].imageSrc">  
             </div>  
             <div class="mySlides fade"  v-if="slides[4]"> 
-                <img :src="slides[4].url">  
+                <img :src="slides[4].imageSrc">  
             </div>  
         </div> 
         <div class="mini-slider-bullets" v-if="originalSlides.length">
@@ -27,96 +27,12 @@
         name:"work-slider",
         data() {
             return {
-            slideIndex:1,
-            slides:[],
-            latestID:-1, 
-            originalSlides: [
-                    {
-                        id: 0,
-                        url: '../../../static/images/work1.jpg',
-                        isActive: true
-                    }, {
-                        id: 1,
-                        url: '../../../static/images/work2.jpg',
-                        isActive: false
-                    }, {
-                        id: 2,
-                        url: '../../../static/images/work3.jpg',
-                        isActive: false
-                    },
-                    {
-                        id: 3,
-                        url: '../../../static/images/work4.jpg',
-                        isActive: false
-                    }, 
-                    {
-                        id: 4,
-                        url: '../../../static/images/work5.jpg',
-                        isActive: false
-                    },
-                    {
-                        id: 5,
-                        url: '../../../static/images/work1.jpg',
-                        isActive: false
-                    } ,
-                    {
-                        id: 6,
-                        url: '../../../static/images/work2.jpg',
-                        isActive: false
-                    } , {
-                        id: 7,
-                        url: '../../../static/images/work3.jpg',
-                        isActive: false
-                    },
-                    {
-                        id: 8,
-                        url: '../../../static/images/work4.jpg',
-                        isActive: false
-                    }, 
-                    {
-                        id: 9,
-                        url: '../../../static/images/work5.jpg',
-                        isActive: false
-                    },
-                    {
-                        id: 10,
-                        url: '../../../static/images/work1.jpg',
-                        isActive: false
-                    } ,
-                    {
-                        id: 11,
-                        url: '../../../static/images/work2.jpg',
-                        isActive: false
-                    }  ,
-                     {
-                        id: 12,
-                        url: '../../../static/images/work3.jpg',
-                        isActive: false
-                    },
-                    {
-                        id: 13,
-                        url: '../../../static/images/work4.jpg',
-                        isActive: false
-                    }, 
-                    {
-                        id: 14,
-                        url: '../../../static/images/work5.jpg',
-                        isActive: false
-                    },
-                    {
-                        id: 15,
-                        url: '../../../static/images/work1.jpg',
-                        isActive: false
-                    } ,
-                    {
-                        id: 16,
-                        url: '../../../static/images/work2.jpg',
-                        isActive: false
-                    }   
-                ] 
-            }
+                slideIndex:1,
+                slides:[],
+                latestID:-1 
+            } 
         },
-    
+       props:['originalSlides'],
         methods: {
             reorderSlides(index, itemId){
                 if(index==this.latestID){
@@ -133,14 +49,14 @@
                     element.isActive = element.id == ID ? true: false;
                 });
             },
-            startRotation: function() {
+            startRotation() {
                 this.timer = setInterval(this.next, 3000);
             }, 
-            stopRotation: function() {
+            stopRotation() {
                 clearTimeout(this.timer);
                 this.timer = null;
             }, 
-            next: function() {
+            next() {
                 this.currentNumber += 1
             } 
         }, 
@@ -148,6 +64,7 @@
             this.reorderSlides(0,0);
         } 
     }
+ 
 </script>
 <style>
     .fade-transition {
@@ -177,7 +94,7 @@
     .mini-slider-container {
         width: 300px;
         position: relative;
-        margin: 326px auto 0
+        margin: 380px auto 0
     }
     * {box-sizing:border-box}
     .mySlides img{
@@ -286,9 +203,7 @@
          background-color: #4d342f; 
     }
 
-    .active, .dot:hover {
-        background-color: #4d342f;
-    }
+   
 
     /* Fading animation */
     .fade {

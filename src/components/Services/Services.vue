@@ -185,7 +185,7 @@ export default {
             if (this.storeData.services['Makeup Services']) {
                 this.makeUpServices = this.storeData.services['Makeup Services'];
             }
-            if (this.$router.history.current.name=="HairServices"){
+            if (this.$route.name=="HairServices"){
                 this.services = this.storeData.services['Hair Services'];
                 this.sectionTitle = "Hair Services";
                 if(this.storeData.slider && this.storeData.slider['Hair Services'])  {

@@ -4,11 +4,13 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: { 
         data : {},
-        userInfo: {}
+        userInfo: {},
+        apiPath: "http://api.mysalonla.com/"
     },
     getters: {
         appData: state => state.data,
-        getUserInfo: state => state.userInfo
+        getUserInfo: state => state.userInfo,
+        getApiPath: state => state.apiPath
     },
     mutations: {
         SET_DATA(state, payload) {

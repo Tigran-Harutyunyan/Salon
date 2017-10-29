@@ -56,7 +56,8 @@ export default {
             parentElements: $("html, body"),
             isMobileMenuVisible: false,
             isAuthtorized:"",
-            isLoading:false 
+            isLoading:false,
+            apiPath:"" 
         }
     },
     methods: {
@@ -85,7 +86,7 @@ export default {
             if(!this.isLoading){
                 this.isLoading=true; 
                  $.ajax({
-                    url: 'http://api.mysalonla.com/api/logout',
+                    url: `${this.apiPath}api/logout`,
                     dataType: 'json',
                     'type': 'POST', 
                     data: { 
@@ -94,9 +95,10 @@ export default {
                 }).done((response) => {  
                     this.isLoading = false;
                     let _window= window;
-                    if (response.success) {  
-                        this.clearSession();
-                        _window.localStorage.clear();
+                    if (response.success) {   
+                        if(_window.localStorage){
+                             _window.localStorage.clear();
+                        } 
                         this.userInfo = {};
                         this.isAuthtorized = false;
                         this.$store.dispatch('setUserInfo', {}); 
@@ -105,8 +107,10 @@ export default {
                         }); 
                     }  
                      if (response.error){ 
-                          _window.localStorage.clear();
-                         this.userInfo = {}; 
+                        if(_window.localStorage){
+                             _window.localStorage.clear();
+                        } 
+                        this.userInfo = {}; 
                         this.isAuthtorized = false;
                         if(response.message){
                              this.$toast.error({ 
@@ -125,6 +129,8 @@ export default {
         }
     },
     mounted() { 
+        this.apiPath = this.$store.getters.getApiPath; 
+        console.log(this.apiPath)
         this.scrollToTop();
         this.userInfo  =   JSON.parse(localStorage.getItem('userInfo'));
         this.isAuthtorized = this.userInfo && this.userInfo.first_name ? true: false; 
