@@ -69,7 +69,7 @@ export default {
                 if (this.$router.history.current.fullPath === "/about") { 
                  //this.parentElements.stop().animate({ scrollTop: $("#about").offset().top }, 500, 'swing', function() {});
                 } else {
-                    this.parentElements.stop().animate({ scrollTop: 0 }, 500, 'swing', function() {});
+                   // this.parentElements.stop().animate({ scrollTop: 0 }, 500, 'swing', function() {});
                 }
             }
         },

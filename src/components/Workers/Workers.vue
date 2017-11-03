@@ -119,6 +119,11 @@ export default {
             apiPath:{}
         }
     },
+    watch:{
+        '$route.params.id':function(newVal,oldVal){
+             this.getEmployeesByService()
+        }
+    },
     methods: { 
         bookEmployeeByID(employeeID){
 

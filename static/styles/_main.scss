@@ -151,7 +151,9 @@ section {
     width: 50%;
     z-index: 1;
     float: left;
-    height: 100%
+    height: 100%; 
+    height: 680px;
+    overflow: hidden
 }
 
 .owl-prev.disabled {
@@ -297,10 +299,10 @@ section {
     }
 }
 
-.main-banner {
-    height: 680px;
+.main-banner { 
     background-size: cover;
     background-position: center;
+    height: 680px
 }
 
 .banner-medium {
@@ -387,7 +389,7 @@ section {
     text-align: center;
     padding-top: 57px;
     padding-bottom: 174px;
-    max-width: 356px;
+    max-width: 400px;
     margin: 0 auto;
     position: relative;
     overflow: hidden;
@@ -479,15 +481,13 @@ footer {
     display: -ms-flexbox;
     display: flex;
     margin-top: 40px;
-    position: relative;
-    opacity: 0;
+    position: relative; 
     -webkit-transition: opacity 0.3s ease-in-out;
     transition: opacity 0.3s ease-in-out;
 }
 
 .home-slider {
-    .owl-item .item {
-        height: 680px;
+    .owl-item .item { 
         background-size: cover;
         background-position: center;
     }
@@ -774,7 +774,8 @@ footer {
             line-height: 30px;
         }
     }
-    .home-slider .owl-item .item {
+    .home-slider .owl-item .item,   #slider2 .owl-item .item,
+    .main-banner, .owl-carousel  {
         height: 630px;
     }
     .home-slider-nav-container {
@@ -945,7 +946,7 @@ footer {
         }
     }
     #slider2 .owl-item .item,
-    .main-banner {
+    .main-banner, .owl-carousel {
         height: 475px;
     }
     #slider1 .owl-item .item {
@@ -976,6 +977,12 @@ footer {
 }
 
 @media only screen and (max-width: 825px) {
+    #slider2 {
+        padding-bottom: 70px;
+        .owl-item .item {
+            height: 100%
+        }
+    }
     .owl-item.active .slider-text-info-place p {
         width: 80%;
         margin: 15px auto 10px;
@@ -990,6 +997,9 @@ footer {
     }
     .owl-carousel {
         width: 100%
+    }
+    #slider2 {
+        height: auto !important
     }
     .slider-text-info-place {
         padding-top: 30px;
@@ -1238,9 +1248,10 @@ footer {
 }
 
 @media only screen and (max-width: 625px) {
-    .banner-medium,.main-banner {
+    .banner-medium,.main-banner, .owl-carousel, 
+    .main-banner, .owl-carousel,.slider-inner {
         display: block;
-        height: 415px
+        height: 300px
     }
     .footer-left {
         -webkit-box-pack: center;
@@ -1249,11 +1260,11 @@ footer {
     }
   
     .home-slider-nav-container {
-        top: 381px;
+        top: 266px;
     }
     #slider2.owl-carousel .owl-stage,
     .home-slider #slider2 .owl-item .item {
-        height: 415px;
+        height: 100% !important;
     }
     .owl-item .item {
         height: 100%
@@ -1334,9 +1345,8 @@ footer {
             margin: 0 auto;
         }
     }
-    #slider2.owl-carousel .owl-stage,
-    #slider2 .owl-item .item {
-        min-height: 360px
+    #slider2 {
+        padding-bottom: 50px
     }
     .banner-medium, .banner-large {
         height: 300px;

@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-    <div class="home-slider-nav-container">
+    <div class="home-slider-nav-container" v-show="sliderData.length>1">
         <div class="home-slider-nav"></div>
     </div> 
 </div>
@@ -83,7 +83,7 @@ export default {
                 autoHeight: false,
                 mouseDrag: false,
                 onInitialized: (event) => {
-                    $("html, body").stop().animate({ scrollTop: 0 }, 500, 'swing', () => { });
+                   // $("html, body").stop().animate({ scrollTop: 0 }, 500, 'swing', () => { });
                     setTimeout(() => {
                         $('.home-slider').show();
                         $('.home-slider-nav .owl-next').click(() => {
@@ -111,10 +111,10 @@ export default {
              });  
         }
     },
-    mounted() {  
+    mounted() {   
         setTimeout(()=>{
             this.initSliders();
-        },500)
+        },200)
     },
     beforeDestroy() {
         $('#slider').owlCarousel('destroy');
