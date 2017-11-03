@@ -28,7 +28,7 @@
             </footer>
         </section>
         <login-signup v-if="showAuth"> </login-signup>   
-      
+        <filters></filters>
         <div class="footer-bg"></div>
     </div> 
 </template>
@@ -36,6 +36,7 @@
 <script>
 import Header from './components/Header/Header.vue';
 import loginSignup from './components/LoginSignup/LoginSignup.vue';
+import filters from './components/Filters/Filters.vue';
 import { EventBus } from './event-bus.js';
 export default {
     name: 'app',
@@ -90,8 +91,8 @@ export default {
     },
     components: {
         'top-header': Header,
-        'login-signup': loginSignup
-            //contacts
+        'login-signup': loginSignup,
+        filters 
     }, 
     created() {
         EventBus.$on('setparent', show => { 

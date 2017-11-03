@@ -14,7 +14,7 @@
                     <span class="slide-caption slide-text-part2">{{ item.caption[1] }}</span>
                     <p>{{ item.description }}
                     </p>
-                    <a href="" class="btn">Book now</a>
+                    <a  class="btn" @click="bookService('al')">Book now</a>
                 </div>
             </div>
         </div>
@@ -25,6 +25,7 @@
 </div>
 </template>   
 <script>
+import { EventBus } from '../../event-bus.js'; 
 export default {
     data() {
         return {
@@ -40,6 +41,9 @@ export default {
         }
     },
     methods: {
+         bookService(service){
+             EventBus.$emit('openFilter', service);
+        },
         resetSliders(){ 
            setTimeout(()=> {
                 $('.home-slider-nav-container').append("<div class='home-slider-nav'></div>");
@@ -69,7 +73,7 @@ export default {
                 touchDrag: false,
                 mouseDrag: false 
             });
-           this.carousel = $("#slider1");
+            this.carousel = $("#slider1");
             this.carousel.owlCarousel({
                 autoplayTimeout: 4000,
                 autoplayHoverPause: false,

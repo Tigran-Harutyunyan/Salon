@@ -208,6 +208,10 @@ Navigation
             }
         }
     }
+    a.router-link-active{
+        color: #4e342e;
+        font-family: 'open_sans_bold';
+    }
     .login-link,
     .signup-link {
         font-family: 'open_sans_bold';

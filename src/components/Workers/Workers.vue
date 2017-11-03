@@ -99,7 +99,7 @@
 <script> 
 import { EventBus } from '../../event-bus.js'; 
 import sliders from '../../components/DualSliders/DualSliders.vue';
-import windy from './Windy/Windy.vue';
+//import windy from './Windy/Windy.vue';
 import miniSlider from '../miniSlider/miniSlider.vue';
  
 export default {
@@ -202,7 +202,7 @@ export default {
     },
     components: {
         sliders, 
-        windy,
+       // windy,
         'mini-slider': miniSlider
         //'works-slider':slider
     }

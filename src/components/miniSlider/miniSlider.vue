@@ -226,9 +226,9 @@
         .worker-item-right {
             margin-left: 20px;
         }
-        .worker-item{
+       /*  .worker-item{
             padding-bottom: 0px;
-        }
+        } */
         .mini-slider-container {
             width: 250px; 
             margin: 340px auto 0;

@@ -94,12 +94,20 @@ export default {
             sectionTitle:"",
             customData:{},
             sliderData:[],
-            storeData:{} 
+            storeData:{},
+            servicesController:{},
+            sceneServices:{} 
         }
     },
     watch: {
 		'$route': function   (to, from)  {  
-			if (to.name == "MakeupServices") {
+          // $("html, body").stop().animate({ scrollTop: 0 }, 0, 'swing', () => { });
+          if (this.servicesController){
+            this.servicesController.destroy(true);
+		    this.servicesController = null;
+          }
+         
+			if (to.name == "MakeupServices") { 
                this.services = this.makeUpServices;
                this.sectionTitle = "Makeup services"; 
                 if(this.storeData.slider['Makeup Services'])  {
@@ -112,12 +120,18 @@ export default {
                     this.sliderData = this.storeData.slider['Hair Services']
                 }
             }
+             let docWidth = $(document).width();
+            if (docWidth > 480 && docWidth < 1000) {
+                this.initialiseScrollMagic(100);
+            } else if (docWidth >= 1000) {
+                this.initialiseScrollMagic(0);
+            }
 		}
     },
  
     methods: {
         bookService(service){
-
+             EventBus.$emit('openFilter', service);
         },
         setElementPositions() {
             let _width = $(window).width();
@@ -141,15 +155,15 @@ export default {
         },
         initialiseScrollMagic(offset) {
             setTimeout(()=>{
-                var expertiseController = new ScrollMagic.Controller();
-                var sceneExpertise = new ScrollMagic.Scene({
+                this.servicesController = new ScrollMagic.Controller();
+                this.sceneServices = new ScrollMagic.Scene({
                     triggerElement: "#service-boxes-inner",
                     triggerHook: 'onEnter',
                     offset: offset
                 })
                     //.addIndicators()
-                    .addTo(expertiseController);
-                sceneExpertise.setClassToggle(".service-box-item", "fadeInUp");
+                    .addTo( this.servicesController);
+                this.sceneServices.setClassToggle(".service-box-item", "fadeInUp");
             },1000) 
         },
         initThings(){
