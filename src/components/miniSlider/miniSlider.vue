@@ -229,7 +229,7 @@
        /*  .worker-item{
             padding-bottom: 0px;
         } */
-        .mini-slider-container {
+        .mini-slider-container { 
             width: 250px; 
             margin: 340px auto 0;
         }
@@ -248,5 +248,8 @@
           .slideshow-container .mySlides:nth-child(5) { 
             width: 170px !important
         }
+    }
+     @media only screen and (max-width: 1300px) { 
+        .mini-slider-container {display:none}
     }
 </style>

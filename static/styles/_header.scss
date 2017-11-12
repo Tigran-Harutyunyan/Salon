@@ -358,8 +358,7 @@ $button-width: 22px;
 
 #toggleMobileMEnu {
     display: none;
-    @extend .sprite;
-    background-position: -215px -172px;
+    @extend .sprite; 
 }
 
 .active-menu {

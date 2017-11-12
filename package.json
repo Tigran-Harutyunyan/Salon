@@ -13,6 +13,7 @@
     "cxlt-vue2-toastr": "^1.0.12",
     "flatpickr": "^4.1.0",
     "vue": "^2.5.2",
+    "vue-carousel": "^0.6.5",
     "vue-facebook-signin-button": "^1.0.1",
     "vue-flatpickr-component": "^4.0.0",
     "vue-google-signin-button": "^1.0.2",

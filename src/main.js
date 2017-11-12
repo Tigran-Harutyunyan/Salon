@@ -11,6 +11,7 @@ import VueParallaxJs from 'vue-parallax-js';
 import CxltToastr from 'cxlt-vue2-toastr'; 
 import vSelect from 'vue-select'
 
+ 
 Vue.config.productionTip = false;
 Vue.component('v-select', vSelect); 
 Vue.use(Vuelidate); 

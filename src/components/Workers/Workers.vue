@@ -6,15 +6,17 @@
     <div class="main-section-area">
         <div class="service-items-section">
             <div class="section-title workers-title">
-                <h1>Haircut & Style</h1>
+                <h1>{{ currentCategoryName }}</h1>
                 <span class="diz-elem elem-left"></span>
                 <span class="diz-elem elem-right"></span>
             </div>
         </div>
         <!-- WORKERS CONTAINER -->
-        <div class="workers-container">
-
-            <div class="lines line-1" id="workers-line"></div>
+        <div class="workers-container"> 
+            <div class="lines line-1" id="workers-line" v-show="employees.length"></div>
+            <div v-if="!employees.length" class="no-employees-warning-block">
+                    {{noResultsText}}
+            </div>
             <div class="workers-container-inner">
                 <div class="worker-item" v-for="(employee, index) in employees">
                     <div class="worker-item-left">
@@ -41,7 +43,17 @@
                         <span class="works">Works</span>
                         <mini-slider  :originalSlides="employee.work_images"></mini-slider>
                         <!-- <windy :images="slides"></windy> --> 
+                          <div class="worker-alternative-slider">
+                            <carousel :perPageCustom="[[768, 3], [1024, 4]]">
+                                <slide v-for="slide in  employee.work_images">
+                                     <div class="alternative-slider-item">  
+                                        <img :src="slide.imageSrc">   
+                                    </div> 
+                                </slide> 
+                            </carousel>
+                        </div>  
                     </div>
+                  
                 </div>
             </div>
         </div>
@@ -99,6 +111,7 @@
 <script> 
 import { EventBus } from '../../event-bus.js'; 
 import sliders from '../../components/DualSliders/DualSliders.vue';
+import { Carousel, Slide } from 'vue-carousel';
 //import windy from './Windy/Windy.vue';
 import miniSlider from '../miniSlider/miniSlider.vue';
  
@@ -116,27 +129,44 @@ export default {
             slides: [], 
             showMainSection: false,
             workerLine: {},
-            apiPath:{}
+            apiPath:{},
+            noResultsText:"Sorry, no service provider found in this service category.",
+            currentCategoryName:""
         }
     },
     watch:{
         '$route.params.id':function(newVal,oldVal){
-             this.getEmployeesByService()
+             this.getEmployeesByService();
         }
     },
+ 
     methods: { 
+        getCurrentRouteParamName(serviceID) {
+            let serviceName = ""; 
+            this.storeData.allServices.forEach((element)=> { 
+                if(serviceID === element.id){ 
+                   serviceName =  element.name;
+                }
+            }); 
+            return serviceName
+        },
         filterByEmployeeByID(employeeID){
             EventBus.$emit('filterByEmployeeByID', employeeID);
         },
         getEmployeesByService(){ 
+           let routeParam = +this.$route.params.id; 
+             if(isNaN(routeParam)) { return; }
+              this.employees  = [];
+            this.currentCategoryName = this.getCurrentRouteParamName(routeParam); 
             $.ajax({
-                url: `${this.apiPath}/api/getEmployeesByService`,
+                url: `${this.apiPath}api/getEmployeesByService`,
                 dataType: 'json',
                 'type': 'POST', 
                 data: { 
-                    service_id: this.$route.params.id
+                    service_id: routeParam
                 },
             }).done((response) => {    
+                $("html, body").stop().animate({ scrollTop: 500 }, 500, 'swing', () => { });
                 if (response.success) {  
                     let employees = response.employees;
                      for (let index = 0; index < employees.length; index++) { 
@@ -178,11 +208,11 @@ export default {
         EventBus.$emit('setparent', true);
     },
     mounted() {
-       this.apiPath = this.$store.getters.getApiPath; 
-       this.getEmployeesByService();
+       this.apiPath = this.$store.getters.getApiPath;   
        this.workerLine = $('#workers-line')
        this.targetElement = $('.workers-container-inner .worker-item:first-child  .worker-info-place');
        this.storeData = this.$store.getters.appData;  
+        this.getEmployeesByService();
         if (this.storeData.services){   
             if (this.storeData.services['Hair Services']) { 
                 this.splittedHairServices.push(this.storeData.services.splittedHairServices[0].items);
@@ -203,7 +233,9 @@ export default {
     components: {
         sliders, 
        // windy,
-        'mini-slider': miniSlider
+        'mini-slider': miniSlider,
+         Carousel,
+         Slide
         //'works-slider':slider
     }
 }
