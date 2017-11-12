@@ -18,7 +18,7 @@
                     {{noResultsText}}
             </div>
             <div class="workers-container-inner">
-                <div class="worker-item" v-for="(employee, index) in employees">
+                <div class="worker-item" v-for="(employee, index) in employees" :key="index">
                     <div class="worker-item-left">
                         <div class="worker-info-place">
                             <img :src="employee.image" alt="Worker" class="worker-avatar">
@@ -45,67 +45,19 @@
                         <!-- <windy :images="slides"></windy> --> 
                           <div class="worker-alternative-slider">
                             <carousel :perPageCustom="[[768, 3], [1024, 4]]">
-                                <slide v-for="slide in  employee.work_images">
+                                <slide v-for="(slide,index) in  employee.work_images" :key="index">
                                      <div class="alternative-slider-item">  
                                         <img :src="slide.imageSrc">   
                                     </div> 
                                 </slide> 
                             </carousel>
                         </div>  
-                    </div>
-                  
+                    </div> 
                 </div>
             </div>
         </div>
         <!-- Services list -->
-        <div class="services-list">
-           <div class="services-list-inner-container">
-                <div class="service-column">
-                    <h5 class="subtitle">Hair services</h5>
-                    <div class="sub-hair-services-section sub1">
-                        <div class="sub-section">
-                            <ul>
-                               <li v-for="item in splittedHairServices[0]">
-                                  <a :href="item.route"> {{ item.name}} </a>
-                               </li>  
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <ul>
-                                <li v-for="item in splittedHairServices[1]">
-                                     <a :href="item.route"> {{ item.name}} </a>
-                                </li> 
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="service-column">
-                    <h5 class="subtitle">Make up services</h5>
-                    <div class="sub-hair-services-section sub2">
-                        <div class="sub-section">
-                            <ul>
-                                <li v-for="item in makeUpServices">
-                                      <a :href="item.route"> {{ item.name}} </a>
-                                </li> 
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <ul class="address-info">
-                                <li><span></span>
-                                    <p>{{customData.address}}</p>
-                                </li>
-                                <li><span></span>
-                                    <p>{{customData.phone}}</p>
-                                </li>
-                                <li><span></span>
-                                    <p>{{customData.email}}</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <services-list></services-list>
     </div>
 </div> </template> 
 <script> 
@@ -114,18 +66,15 @@ import sliders from '../../components/DualSliders/DualSliders.vue';
 import { Carousel, Slide } from 'vue-carousel';
 //import windy from './Windy/Windy.vue';
 import miniSlider from '../miniSlider/miniSlider.vue';
- 
+import serviceList from '../ServicesList/ServicesList.vue';
 export default {
     data() {
         return {
-            wrokersLine: "",
-            customData:{},
+            wrokersLine: "", 
             employees:[],
             sliderData:[],
-            storeData:{},
-            makeUpServices:[],
-            services:[],
-            splittedHairServices:[],
+            storeData:{}, 
+            services:[], 
             slides: [], 
             showMainSection: false,
             workerLine: {},
@@ -138,8 +87,7 @@ export default {
         '$route.params.id':function(newVal,oldVal){
              this.getEmployeesByService();
         }
-    },
- 
+    }, 
     methods: { 
         getCurrentRouteParamName(serviceID) {
             let serviceName = ""; 
@@ -148,7 +96,7 @@ export default {
                    serviceName =  element.name;
                 }
             }); 
-            return serviceName
+            return serviceName;
         },
         filterByEmployeeByID(employeeID){
             EventBus.$emit('filterByEmployeeByID', employeeID);
@@ -156,7 +104,7 @@ export default {
         getEmployeesByService(){ 
            let routeParam = +this.$route.params.id; 
              if(isNaN(routeParam)) { return; }
-              this.employees  = [];
+           
             this.currentCategoryName = this.getCurrentRouteParamName(routeParam); 
             $.ajax({
                 url: `${this.apiPath}api/getEmployeesByService`,
@@ -167,6 +115,7 @@ export default {
                 },
             }).done((response) => {    
                 $("html, body").stop().animate({ scrollTop: 500 }, 500, 'swing', () => { });
+                   this.employees  = [];
                 if (response.success) {  
                     let employees = response.employees;
                      for (let index = 0; index < employees.length; index++) { 
@@ -214,29 +163,18 @@ export default {
        this.storeData = this.$store.getters.appData;  
         this.getEmployeesByService();
         if (this.storeData.services){   
-            if (this.storeData.services['Hair Services']) { 
-                this.splittedHairServices.push(this.storeData.services.splittedHairServices[0].items);
-                this.splittedHairServices.push(this.storeData.services.splittedHairServices[1].items); 
-                this.hairServices = this.storeData.services['Hair Services'];
-            }
-            if (this.storeData.services['Makeup Services']) {
-                this.makeUpServices = this.storeData.services['Makeup Services'];
-            }
             if(this.storeData.slider && this.storeData.slider['Hair Services'])  {
                 this.sliderData = this.storeData.slider['Hair Services']
             }
-        }
-        if (this.storeData.custom_data){ 
-             this.customData = this.storeData.custom_data;
-        }  
+        } 
     },
     components: {
-        sliders, 
-       // windy,
+        sliders,  
         'mini-slider': miniSlider,
          Carousel,
-         Slide
-        //'works-slider':slider
+         Slide,
+         'services-list':serviceList
+        //'works-slider':slider, // windy,
     }
 }
 </script> 

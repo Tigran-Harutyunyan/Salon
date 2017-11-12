@@ -26,54 +26,7 @@
                 </div>
             </div>
             <contacts v-if="showContacts"></contacts>
-            <div class="services-list">
-                <div class="services-list-inner-container">
-                    <div class="service-column">
-                        <h5 class="subtitle">Hair services</h5>
-                        <div class="sub-hair-services-section sub1">
-                            <div class="sub-section">
-                                <ul>
-                                <li v-for="item in splittedHairServices[0]">
-                                    <a :href="item.route"> {{ item.name}} </a>
-                                </li>  
-                                </ul>
-                            </div>
-                            <div class="sub-section">
-                                <ul>
-                                    <li v-for="item in splittedHairServices[1]">
-                                        <a :href="item.route"> {{ item.name}} </a>
-                                    </li> 
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="service-column">
-                        <h5 class="subtitle">Make up services</h5>
-                        <div class="sub-hair-services-section sub2">
-                            <div class="sub-section">
-                                <ul>
-                                    <li v-for="item in makeUpServices">
-                                        <a :href="item.route"> {{ item.name}} </a>
-                                    </li> 
-                                </ul>
-                            </div>
-                            <div class="sub-section">
-                                <ul class="address-info">
-                                    <li><span></span>
-                                        <p>{{customData.address}}</p>
-                                    </li>
-                                    <li><span></span>
-                                        <p>{{customData.phone}}</p>
-                                    </li>
-                                    <li><span></span>
-                                        <p>{{customData.email}}</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <services-list></services-list>
         </div>
     </div>
  </template> 
@@ -81,18 +34,16 @@
 import { EventBus } from '../../event-bus.js'; 
 import sliders from '../../components/DualSliders/DualSliders.vue';
 import contacts from '../Contacts/Contacts.vue';
+import serviceList from '../ServicesList/ServicesList.vue';
 export default {
     data() {
         return {
             lines: {},
             boxes: {},
             showMainSection: false,
-            showContacts: false ,
-            makeUpServices:[],
-            services:[],
-            splittedHairServices:[],
-            sectionTitle:"",
-            customData:{},
+            showContacts: false, 
+            services:[], 
+            sectionTitle:"", 
             sliderData:[],
             storeData:{},
             servicesController:{},
@@ -189,15 +140,7 @@ export default {
     },
     mounted() {  
        this.storeData = this.$store.getters.appData; 
-        if (this.storeData.services){
-            if (this.storeData.services['Hair Services']) { 
-                this.splittedHairServices.push(this.storeData.services.splittedHairServices[0].items);
-                this.splittedHairServices.push(this.storeData.services.splittedHairServices[1].items); 
-                this.hairServices = this.storeData.services['Hair Services'];
-            }
-            if (this.storeData.services['Makeup Services']) {
-                this.makeUpServices = this.storeData.services['Makeup Services'];
-            }
+        if (this.storeData.services){ 
             if (this.$route.name=="HairServices"){
                 this.services = this.storeData.services['Hair Services'];
                 this.sectionTitle = "Hair Services";
@@ -212,9 +155,7 @@ export default {
                 }
             }  
         }
-        if (this.storeData.custom_data){ 
-             this.customData = this.storeData.custom_data;
-        } 
+       
         let docWidth = $(document).width();
         if (docWidth > 480 && docWidth < 1000) {
              this.initialiseScrollMagic(100);
@@ -229,7 +170,8 @@ export default {
     },
     components: { 
         sliders,
-        contacts
+        contacts,
+         'services-list':serviceList
     }
 }
 </script> 
