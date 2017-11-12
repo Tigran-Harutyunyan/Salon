@@ -26,7 +26,7 @@
                                     <li><a class="fb-link" :href="employee.facebook"></a></li>
                                     <li><a class="tw-link" :href="employee.twitter"></a></li>
                                 </ul>
-                                <a @click="bookEmployeeByID(employee.id)" class="btn-workers">Book now</a>
+                                <a @click="filterByEmployeeByID(employee.id)" class="btn-workers">Book now</a>
                             </div>
                         </div>
 
@@ -125,8 +125,8 @@ export default {
         }
     },
     methods: { 
-        bookEmployeeByID(employeeID){
-
+        filterByEmployeeByID(employeeID){
+            EventBus.$emit('filterByEmployeeByID', employeeID);
         },
         getEmployeesByService(){ 
             $.ajax({

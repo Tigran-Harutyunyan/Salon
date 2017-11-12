@@ -14,7 +14,7 @@
                     <span class="slide-caption slide-text-part2">{{ item.caption[1] }}</span>
                     <p>{{ item.description }}
                     </p>
-                    <a  class="btn" @click="bookService('al')">Book now</a>
+                    <a  class="btn"  @click="filterByService(-1)">Book now</a>
                 </div>
             </div>
         </div>
@@ -41,8 +41,8 @@ export default {
         }
     },
     methods: {
-         bookService(service){
-             EventBus.$emit('openFilter', service);
+        filterByService(serviceID){
+             EventBus.$emit('filterByService', -1);
         },
         resetSliders(){ 
            setTimeout(()=> {

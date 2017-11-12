@@ -11,12 +11,15 @@
   },
   "dependencies": {
     "cxlt-vue2-toastr": "^1.0.12",
+    "flatpickr": "^4.1.0",
     "vue": "^2.5.2",
     "vue-facebook-signin-button": "^1.0.1",
+    "vue-flatpickr-component": "^4.0.0",
     "vue-google-signin-button": "^1.0.2",
     "vue-parallax-js": "0.0.5",
     "vue-recaptcha": "^0.4.0",
     "vue-router": "^3.0.1",
+    "vue-select": "^2.3.0",
     "vue-toastr": "^2.0.9",
     "vuelidate": "^0.6.1",
     "vuex": "^3.0.0"

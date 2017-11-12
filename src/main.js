@@ -9,13 +9,15 @@ import GSignInButton from 'vue-google-signin-button';
 import FBSignInButton from 'vue-facebook-signin-button';
 import VueParallaxJs from 'vue-parallax-js';
 import CxltToastr from 'cxlt-vue2-toastr'; 
+import vSelect from 'vue-select'
 
 Vue.config.productionTip = false;
- 
+Vue.component('v-select', vSelect); 
 Vue.use(Vuelidate); 
 Vue.use(GSignInButton); 
 Vue.use(FBSignInButton);  
 Vue.use(VueParallaxJs);
+Vue.use(require('vue-moment'));
 var toastrConfigs = {
   position: 'bottom right',
   showDuration: 2000

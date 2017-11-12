@@ -94,7 +94,7 @@ export default {
                     },
                 }).done((response) => {  
                     this.isLoading = false;
-                    let _window= window;
+                    let _window = window;
                     if (response.success) {   
                         if(_window.localStorage){
                              _window.localStorage.clear();
@@ -102,9 +102,9 @@ export default {
                         this.userInfo = {};
                         this.isAuthtorized = false;
                         this.$store.dispatch('setUserInfo', {}); 
-                        this.$toast.success({ 
-                            message: `Logged out`
-                        }); 
+                        // this.$toast.success({ 
+                        //     message: `Logged out`
+                        // }); 
                     }  
                      if (response.error){ 
                         if(_window.localStorage){
@@ -138,6 +138,14 @@ export default {
         EventBus.$on('Authorized', userInfo => { 
            this.isAuthtorized = true;
            this.userinfo = userInfo;
+        });
+        EventBus.$on('unAuthorized', () => { 
+           this.isAuthtorized = false;
+           this.userinfo = null;
+           let _window = window;
+           if(_window.localStorage){
+               _window.localStorage.clear();
+            }  
         });
     }
 }

@@ -1,81 +1,81 @@
 <template>
-<div class="container-inner" :class="{'is-visible': showMainSection}">
-    <div class="home-slider-container">
-        <sliders v-on:sliderReady="showMainSection=true" :sliderData="sliderData" v-if="sliderData"></sliders> 
-    </div>
-    <div class="main-section-area">
-        <div class="service-items-section">
-            <div class="section-title">
-                <h1>{{sectionTitle}}</h1>
-                <span class="diz-elem elem-left"></span>
-                <span class="diz-elem elem-right"></span>
-            </div>
-            <div class="lines line-1"></div>
-            <div class="lines line-2"></div>
-            <div class="lines line-3"></div>
-            <div class="lines line-4"></div>
-            <div class="service-boxes-inner" id="service-boxes-inner">
-                <div class="service-box-item animated" v-for="service in services">
-                    <img :src="service.imgSrc" :alt="service.name">
-                    <h5>{{service.name}}</h5>
-                    <a @click="bookService(service.id)" class="box-btn">Book now</a>
-                    <div class="shirma">
-                        <p>{{service.duration}} min ${{service.price}}</p>
-                    </div>
-                </div> 
-            </div>
+    <div class="container-inner" :class="{'is-visible': showMainSection}">
+        <div class="home-slider-container">
+            <sliders v-on:sliderReady="showMainSection=true" :sliderData="sliderData" v-if="sliderData"></sliders> 
         </div>
-        <contacts v-if="showContacts"></contacts>
-        <div class="services-list">
-            <div class="services-list-inner-container">
-                <div class="service-column">
-                    <h5 class="subtitle">Hair services</h5>
-                    <div class="sub-hair-services-section sub1">
-                        <div class="sub-section">
-                            <ul>
-                               <li v-for="item in splittedHairServices[0]">
-                                  <a :href="item.route"> {{ item.name}} </a>
-                               </li>  
-                            </ul>
+        <div class="main-section-area">
+            <div class="service-items-section">
+                <div class="section-title">
+                    <h1>{{sectionTitle}}</h1>
+                    <span class="diz-elem elem-left"></span>
+                    <span class="diz-elem elem-right"></span>
+                </div>
+                <div class="lines line-1"></div>
+                <div class="lines line-2"></div>
+                <div class="lines line-3"></div>
+                <div class="lines line-4"></div>
+                <div class="service-boxes-inner" id="service-boxes-inner">
+                    <div class="service-box-item animated" v-for="service in services">
+                        <img :src="service.imgSrc" :alt="service.name">
+                        <h5>{{service.name}}</h5>
+                        <a @click="filterByService(service.id)" class="box-btn">Book now</a>
+                        <div class="shirma">
+                            <p>{{service.duration}} min ${{service.price}}</p>
                         </div>
-                        <div class="sub-section">
-                            <ul>
-                                <li v-for="item in splittedHairServices[1]">
-                                     <a :href="item.route"> {{ item.name}} </a>
-                                </li> 
-                            </ul>
+                    </div> 
+                </div>
+            </div>
+            <contacts v-if="showContacts"></contacts>
+            <div class="services-list">
+                <div class="services-list-inner-container">
+                    <div class="service-column">
+                        <h5 class="subtitle">Hair services</h5>
+                        <div class="sub-hair-services-section sub1">
+                            <div class="sub-section">
+                                <ul>
+                                <li v-for="item in splittedHairServices[0]">
+                                    <a :href="item.route"> {{ item.name}} </a>
+                                </li>  
+                                </ul>
+                            </div>
+                            <div class="sub-section">
+                                <ul>
+                                    <li v-for="item in splittedHairServices[1]">
+                                        <a :href="item.route"> {{ item.name}} </a>
+                                    </li> 
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-column">
+                        <h5 class="subtitle">Make up services</h5>
+                        <div class="sub-hair-services-section sub2">
+                            <div class="sub-section">
+                                <ul>
+                                    <li v-for="item in makeUpServices">
+                                        <a :href="item.route"> {{ item.name}} </a>
+                                    </li> 
+                                </ul>
+                            </div>
+                            <div class="sub-section">
+                                <ul class="address-info">
+                                    <li><span></span>
+                                        <p>{{customData.address}}</p>
+                                    </li>
+                                    <li><span></span>
+                                        <p>{{customData.phone}}</p>
+                                    </li>
+                                    <li><span></span>
+                                        <p>{{customData.email}}</p>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="service-column">
-                    <h5 class="subtitle">Make up services</h5>
-                    <div class="sub-hair-services-section sub2">
-                        <div class="sub-section">
-                            <ul>
-                                <li v-for="item in makeUpServices">
-                                      <a :href="item.route"> {{ item.name}} </a>
-                                </li> 
-                            </ul>
-                        </div>
-                        <div class="sub-section">
-                            <ul class="address-info">
-                                <li><span></span>
-                                    <p>{{customData.address}}</p>
-                                </li>
-                                <li><span></span>
-                                    <p>{{customData.phone}}</p>
-                                </li>
-                                <li><span></span>
-                                    <p>{{customData.email}}</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
-</div>
  </template> 
 <script> 
 import { EventBus } from '../../event-bus.js'; 
@@ -127,11 +127,10 @@ export default {
                 this.initialiseScrollMagic(0);
             }
 		}
-    },
- 
+    }, 
     methods: {
-        bookService(service){
-             EventBus.$emit('openFilter', service);
+        filterByService(serviceID){
+             EventBus.$emit('filterByService', serviceID);
         },
         setElementPositions() {
             let _width = $(window).width();

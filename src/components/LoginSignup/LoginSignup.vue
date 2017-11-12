@@ -36,13 +36,13 @@
                         </div>
                         <div class="login-right">
                             <h5 class="my-salon">New to My Salon?</h5>
-                            <a class="btn-popup" @click="openPopup('forgot')">Create a Username & Password</a>
+                            <a class="btn-popup" @click="openPopup('signup')">Create a Username & Password</a>
                             <div class="decor-container-hor">
                                 <span class="top-elem"></span>
                                 <h5>OR</h5>
                                 <span class="bottom-elem"></span>
                             </div>
-                            <fb-signin-button :params="fbSignInParams" @success="onSignInSuccess" @error="onSignInError">
+                            <fb-signin-button :params="fbSignInParams" @success="onSignInSuccessFB" @error="onSignInError">
                                 Facebook
                             </fb-signin-button>
                             <g-signin-button :params="googleSignInParams" @success="onSignInSuccess" @error="onSignInError">
@@ -117,11 +117,11 @@
                             </div>
                             <div class="login-right">
                                 <!-- <label for="pass" class="popup-label">Password</label> -->
-                                <input type="text" id="pass" class="def-input" placeholder="*Password (Mininum 8 char.)" v-model="signupPassword" :class="{'has-error': $v.signupPassword.$error}">
+                                <input type="password" id="pass" class="def-input" placeholder="*Password (Mininum 8 char.)" v-model="signupPassword" :class="{'has-error': $v.signupPassword.$error}">
                                 <div class="input-space"></div>
 
                                 <!-- <label for="confirm_pass" class="popup-label">Confirm password</label> -->
-                                <input type="text" id="confirm_pass" class="def-input" placeholder="*Confirm password" v-model="signupPasswordRepeat" :class="{'has-error': $v.signupPasswordRepeat.$error}">
+                                <input type="password" id="confirm_pass" class="def-input" placeholder="*Confirm password" v-model="signupPasswordRepeat" :class="{'has-error': $v.signupPasswordRepeat.$error}">
                                 <div class="input-space"></div> 
 
                                 <template>
@@ -136,7 +136,7 @@
 
                                 <div class="login-btn-place">
                                     <!-- <a href="" class="btn">Cancel</a>  -->
-                                    <input type="submit" class="btn btn-small-popup" value="Sign Up">
+                                    <input type="submit" class="btn btn-small-popup" v-bind:value="signupValue">
                                     <!--   :disabled="$v.$invalid" -->
                                 </div>
                             </div>
@@ -183,7 +183,8 @@ export default {
             isRemember: false,
             isLoading: false,
             recaptchaResponse:"",
-            apiPath:""
+            apiPath:"",
+            signupValue: "Sign Up"
         }
     },
 /*
@@ -208,7 +209,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
             return (!this.$v.passwordRecoveryEmail.$invalid); 
         }
     },
-    methods: {
+    methods: { 
         onSubmitLogin() {
             if (this.isLoginValid && !this.isLoading) { 
                 this.isLoading = true; 
@@ -243,6 +244,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
         },
         onSubmitSignup() { 
             if (this.isSignupValid) {
+                this.signupValue = "Wait...";
                 $.ajax({
                     url: `${this.apiPath}/api/register`,
                     dataType: 'json',
@@ -258,9 +260,21 @@ https://developers.facebook.com/apps/523193884695053/settings/
                         recaptcha: this.recaptchaResponse 
                     },
                 }).done((response) => {  
-                    if (response.success == 1) { 
-                       
-                       // this.$toastr('success', `Thank you! Your message has been sent successfully.`); 
+                    this.signupValue = "Sign Up";
+                    if (response.success) { 
+                       this.$toast.success({ 
+                            message: `Thank you! Your message has been sent successfully.`
+                        }); 
+                        this.showSignUp = false;
+                        this.isPopupVisible = false;
+                    } 
+                    if (response.error && response.message) {
+                        this.$toast.error({ 
+                            message: response.message
+                        }); 
+                        if(response.message ==  "Invalid Recaptcha"){
+                              this.$refs.recaptcha.reset()
+                        }
                     }
                 }); 
             }
@@ -283,6 +297,9 @@ https://developers.facebook.com/apps/523193884695053/settings/
         },
         verify(recaptchaResponse) {
          
+        },
+        onSignInSuccessFB(fBuser){
+            console.log(fBuser)
         },
         onSignInSuccess(googleUser) {
             // `googleUser` is the GoogleUser object that represents the just-signed-in user. 

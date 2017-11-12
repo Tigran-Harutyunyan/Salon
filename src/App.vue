@@ -45,7 +45,8 @@ export default {
             showHeader: false,
             showAuth: true,
             showApp: false,
-            customData: {}
+            customData: {},
+            apiPath:{}
         }
     },
     methods: {
@@ -69,13 +70,13 @@ export default {
             });
             return services
         },
-        setSliderImgPath(data){
+        setSliderImgPath(data){ 
             if(data.slider['Hair Services'])  {
-                data.slider['Hair Services'].forEach(function(element) {
+                data.slider['Hair Services'].forEach(function(element) { 
                     element.style = {
                         'background-image': `url(http://api.mysalonla.com/images/sliders/${element.image})` 
                     };  
-                    element.caption= element.title.split(" ");
+                    element.caption= element.title.split(" "); 
                 });
             }
              if(data.slider['Makeup Services'])  {
@@ -83,11 +84,33 @@ export default {
                     element.style = {
                         'background-image': `url(http://api.mysalonla.com/images/sliders/${element.image})` 
                     };
-                    element.caption= element.title.split(" ");
+                    element.caption= element.title.split(" "); 
                 });
             } 
             return data; 
-        }
+        },
+        joinServices(parsedData){
+             parsedData.allServices = [];
+                if ( parsedData.services['Hair Services'] ){
+                     parsedData.services['Hair Services'].forEach(function(element) {
+                       parsedData.allServices.push(element)
+                    }); 
+                }
+                if (parsedData.services['Makeup Services']){
+                    parsedData.services['Makeup Services'].forEach(function(element) {
+                       parsedData.allServices.push(element)
+                    }); 
+                }  
+                 
+            return parsedData
+        },
+        setEmployeeData(EMPLOYEES){ 
+            let employees = EMPLOYEES; 
+            for (let index = 0; index < employees.length; index++) {
+                employees[index].image = `${this.apiPath}images/${employees[index].image}`;   
+             } 
+            return employees;
+        } 
     },
     components: {
         'top-header': Header,
@@ -95,6 +118,7 @@ export default {
         filters 
     }, 
     created() {
+        this.apiPath = this.$store.getters.getApiPath; 
         EventBus.$on('setparent', show => { 
             this.showHeader = show;
         });
@@ -107,19 +131,27 @@ export default {
             return response.json();
         }).then((parsedData) => { 
              if (parsedData) {
+                 let allServices = [];
                 if (parsedData.services) {
                     if( parsedData.services['Hair Services'] ){
                        if (parsedData.services['Hair Services'].length > 15){
                            parsedData = this.splitServices(parsedData);
                        }
-                       parsedData.services['Hair Services'] = this.setAttributes(parsedData.services['Hair Services'])
+                       parsedData.services['Hair Services'] = this.setAttributes(parsedData.services['Hair Services']);
+                       parsedData.services['Hair Services'].sort((a, b)=> a.name.localeCompare(b.name)); 
                     }
-                    if ( parsedData.services['Makeup Services']){
-                        parsedData.services['Makeup Services'] = this.setAttributes(parsedData.services['Makeup Services'])
+                    if (parsedData.services['Makeup Services']){
+                        parsedData.services['Makeup Services'] = this.setAttributes(parsedData.services['Makeup Services']);
+                        parsedData.services['Makeup Services'].sort((a, b)=> a.name.localeCompare(b.name)); 
                     } 
                 } 
                 if (parsedData.slider){
                    parsedData = this.setSliderImgPath(parsedData);  
+                }
+                parsedData = this.joinServices(parsedData);
+                
+                if(parsedData.employees){
+                    parsedData.employees.employees = this.setEmployeeData(parsedData.employees.employees)
                 }
                 this.$store.dispatch('setData', parsedData)
                 this.customData = parsedData.custom_data;
