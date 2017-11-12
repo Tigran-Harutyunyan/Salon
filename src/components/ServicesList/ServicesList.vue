@@ -26,7 +26,7 @@
                     <div class="sub-section">
                         <ul>
                             <li v-for="item in makeUpServices">
-                                    <a :href="item.route"> {{ item.name}} </a>
+                                <a :href="item.route"> {{ item.name}} </a>
                             </li> 
                         </ul>
                     </div>
@@ -50,8 +50,7 @@
  </template> 
 <script>  
 export default {
-    name: "services-list",
-    props:[],
+    name: "services-list", 
     data() {
         return {
             makeUpServices:[], 

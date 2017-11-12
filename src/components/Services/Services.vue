@@ -7,8 +7,10 @@
             <div class="service-items-section">
                 <div class="section-title">
                     <h1>{{sectionTitle}}</h1>
-                    <span class="diz-elem elem-left"></span>
-                    <span class="diz-elem elem-right"></span>
+                    <div class="section-elements-container">
+                        <span class="diz-elem elem-left"></span>
+                        <span class="diz-elem elem-right"></span>
+                    </div>
                 </div>
                 <div class="lines line-1"></div>
                 <div class="lines line-2"></div>

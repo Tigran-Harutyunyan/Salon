@@ -119,13 +119,15 @@
 .lines.line-4 {
     left: 1471px;
 }
-
+.section-elements-container {
+    position: relative
+}
 .diz-elem.elem-left {
-    left: -228px;
+    left: 0
 }
 
 .diz-elem.elem-right {
-    left: 224px;
+  right: 0
 }
 
 .service-items-section {
