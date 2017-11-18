@@ -21,6 +21,7 @@
                         <img :src="service.imgSrc" :alt="service.name">
                         <h5>{{service.name}}</h5>
                         <a @click="filterByService(service.id)" class="box-btn">Book now</a>
+                        <div class="shirma-dark"></div>
                         <div class="shirma">
                             <p>{{service.duration}} min ${{service.price}}</p>
                         </div>
@@ -49,19 +50,22 @@ export default {
             sliderData:[],
             storeData:{},
             servicesController:{},
-            sceneServices:{} 
+            sceneServices:{}, 
+            hairServices:[],
+            makeUpServices:[]
+
         }
     },
     watch: {
 		'$route': function   (to, from)  {  
           // $("html, body").stop().animate({ scrollTop: 0 }, 0, 'swing', () => { });
-          if (this.servicesController){
-            this.servicesController.destroy(true);
-		    this.servicesController = null;
-          }
-         
+            if (this.servicesController){
+                this.servicesController.destroy(true);
+                this.servicesController = null;
+            }
+            
 			if (to.name == "MakeupServices") { 
-               this.services = this.makeUpServices;
+               this.services = this.makeUpServices; 
                this.sectionTitle = "Makeup services"; 
                 if(this.storeData.slider['Makeup Services'])  {
                     this.sliderData = this.storeData.slider['Makeup Services']
@@ -79,6 +83,7 @@ export default {
             } else if (docWidth >= 1000) {
                 this.initialiseScrollMagic(0);
             }
+              $("html, body").stop().animate({ scrollTop: 500 }, 500, 'swing', () => { });
 		}
     }, 
     methods: {
@@ -143,14 +148,16 @@ export default {
     mounted() {  
        this.storeData = this.$store.getters.appData; 
         if (this.storeData.services){ 
-            if (this.$route.name=="HairServices"){
-                this.services = this.storeData.services['Hair Services'];
+            this.hairServices = this.storeData.services['Hair Services'];
+            this.makeUpServices = this.storeData.services['Makeup Services'];
+            if (this.$route.name == "HairServices"){
+                this.services = this.storeData.services['Hair Services']; 
                 this.sectionTitle = "Hair Services";
                 if(this.storeData.slider && this.storeData.slider['Hair Services'])  {
                     this.sliderData = this.storeData.slider['Hair Services']
                 }
             } else {
-                this.services = this.storeData.services['Makeup Services'];
+                this.services = this.storeData.services['Makeup Services'];  
                 this.sectionTitle = "Makeup Services";
                  if(this.storeData.slider && this.storeData.slider['Makeup Services'])  {
                     this.sliderData = this.storeData.slider['Makeup Services']

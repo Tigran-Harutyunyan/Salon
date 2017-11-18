@@ -1,0 +1,160 @@
+.booking-detail-left {
+  img {
+    width: 200px;
+    height: 200px;
+    border-radius: 5px;
+  }
+}
+
+.booking-item {
+  display: flex;
+  margin: 0 auto;
+  margin-bottom: 34px;
+  flex-wrap: wrap;
+  ul {
+    line-height: 23px;
+  }
+  ul:first-child {
+    width: 156px;
+    margin-left: 20px;
+  }
+  ul:first-child {
+    width: 156px
+  }
+}
+
+.service-provider-name {
+  font-family: 'open_sanssemibold';
+  color: #4e342e;
+  font-size: 22px;
+}
+
+.service-provider-profession {
+  font-family: "OpenSans-Regular";
+  font-size: 20px;
+  text-transform: uppercase;
+  color: #84716b;
+  padding-top: 9px;
+  display: inline-block;
+  padding-bottom: 19px;
+}
+
+.booking-detail-right {
+  display: flex
+}
+
+.avatar-cell {
+  span {
+    display: inline-block;
+    padding-left: 50px;
+  }
+}
+.v--modal-overlay .v--modal-box {
+  padding: 20px
+}
+.vue-dialog .dialog-c-text{
+  color: #4e342e;
+  font-family: 'open_sans_bold';
+}
+.vue-dialog-buttons{
+  .vue-dialog-button {
+    border-radius: 25px;
+    font-size: 30px;
+    display: inline-block;
+    padding: 0px 10px 8px;
+    line-height: 40px;
+    border-radius: 5px;
+    margin-top: 22px;
+    border: 1px solid #4e342e !important;
+    cursor: pointer;
+  }
+  .vue-dialog-button:first-child{
+    color: #fff;
+    background-color: #4e342e;
+    margin-right: 10px;
+  }
+}
+.bookings-container-inner {
+  
+  padding: 0 30px;
+  .service-provider {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  .customer-search-btn {
+    margin-top: 0;
+    padding: 0 13px 0;
+    font-size: 14px;
+    line-height: 27px;
+    text-transform: capitalize;
+  }
+  .wrapper {
+    margin: 0 auto;
+    padding: 40px;
+    max-width: 800px;
+  }
+  .table {
+    margin: 0 0 40px 0;
+    max-width: 1300px;
+    margin: 0 auto;
+    width: 100%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    display: table;
+  }
+  @media screen and (max-width: 580px) {
+    .table {
+      display: block;
+    }
+  }
+  .row {
+    display: table-row;
+    background: #f6f6f6;
+  }
+  .row:nth-of-type(odd) {
+    background: #e9e9e9;
+  }
+  .row.table-header {
+    font-weight: 900;
+    color: #ffffff;
+    background: #4f352f;
+    .cell{
+      padding-top: 12px;
+      padding-bottom:12px
+    }
+  }
+  .row.green {
+    background: #27ae60;
+  }
+  .row.blue {
+    background: #2980b9;
+  }
+  .cell {
+    padding: 6px 12px;
+    display: table-cell;
+    vertical-align: middle;
+    position: relative
+  }
+  @media screen and (max-width: 814px) {
+    .row.table-header .cell {
+      padding-top: 5px !important;
+      padding-bottom: 5px !important;
+    }
+    
+      .customer-search-btn {
+        margin-top: 6px;
+      }
+    
+    .row {
+      padding: 8px 0;
+      display: block;
+    }
+    .cell {
+      padding: 5px 12px;
+      display: block;
+    }
+    
+  }
+ 
+}
+ 

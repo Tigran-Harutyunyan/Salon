@@ -57,6 +57,7 @@
 
 .section-footer {
     padding: 0 40px 40px;
+    position: relative;
     .container2 {
         margin-bottom: 27px;
     }
@@ -144,6 +145,7 @@ footer {
         width: 367px;
         .social-links { 
             padding-top: 25px;
+            margin-right: auto
         }
         .copyright-place {
             width: 100%;

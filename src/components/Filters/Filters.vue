@@ -1,8 +1,8 @@
 <template>
     <div class="popup-outer-container">
         <transition name="modal">
-            <div class="login-page-container modal-container filters-window" v-if="showFilter">
-                <div class="popup-close" @click="closePopups()"></div>
+            <div class="login-page-container modal-container filters-window" v-if="showFilter" :class="{'long-window': searchResults.length}">
+                <div class="popup-close" @click="closeFilter()"></div>
                 <div class="popup-container">
                     <div class="popup-title-container">
                         <h5>Book services</h5>
@@ -43,12 +43,14 @@
                             <span v-if="employees.length">Service Provider<i>(Required)</i></span> 
                             <v-select v-show="employees.length" :debounce="250" v-model="selectedEmployee" :on-change="employeeChanged"  :options="employees" label="fullName"  placeholder="Select a worker"></v-select> 
                             <span v-if="!employees.length" class="no-filter-results">{{noResults.employee}}</span>
-                        </div> 
-                        
+                        </div>
                     </div>
-                     <div class="filter-item filter5">
-                           <button @click="filterService" class="btn customer-search-btn" v-show="!isSearchDisabled">Search</button>
+                     <div class="filter-item filter5 btn-book">
+                           <button @click="filterService" class="btn customer-search-btn" v-show="!isSearchDisabled">{{fitlerBtnText}}</button>
                      </div> 
+
+                    <!-- SEARCH RESULTS -->
+
                      <div v-if="zeroResults" class="zero-results"> 
                             <h4>No results found</h4>
                      </div>
@@ -60,7 +62,7 @@
                        <ul>
                            <li v-for="employee in searchResults">
                                <div class="search-results-left">
-                                   <img :src="employee.image"  width="200">
+                                   <img :src="employee.image" class="filtered-employee-image">
                                    <div class="employee-details">
                                        <h4>{{employee.first_name}} {{employee.last_name}}</h4> 
                                        <br>
@@ -69,8 +71,8 @@
                                            <span>Price: <span v-if="employee.service">${{ employee.service.price }}</span> </span> 
                                        </div>
                                         <div class="filter-item filter5">
-                                        <a @click="bookEmployee(employee)" class="btn customer-search-btn">Book</a>
-                                    </div> 
+                                             <a v-show="employee.availability.length" @click="bookEmployee(employee)" class="btn customer-search-btn">{{bookBtnText}}</a>
+                                        </div> 
                                    </div>
                                 </div> 
                                 <div class="search-results-right">
@@ -78,19 +80,23 @@
                                     <h3>Available hours:</h3>  
                                     <div class="availabilities">
                                          <div class="availability-item" v-for="(item, index) in employee.availability" >
-                                            <input type="checkbox" :id="index"  v-model="item.isChecked"/>
+                                            <input type="checkbox" :id="index" @click='proccessCheckboxes(item)' v-model="item.isChecked"/>
                                             <label :for="index" class="filter-label">
                                                 <span></span>{{item.time}}</label>
                                         </div> 
                                     </div>  
-                                </div> 
+                                </div>
+                                 <div class="filter-item btn-mobile-booking filter5">
+                                        <a v-show="employee.availability.length" @click="bookEmployee(employee)" class="btn customer-search-btn">{{bookBtnText}}</a>
+                                </div>  
                            </li>
                        </ul>
                     </div>
+                    <div class="filter-spacer"></div>
                 </div>
             </div>
         </transition> 
-        <div class="mobile-backdrop" v-if="isPopupVisible" @click="closePopups()"></div>
+        <div class="mobile-backdrop" v-if="isPopupVisible" @click="closeFilter()"></div>
     </div>
  </template> 
 <script> 
@@ -123,7 +129,10 @@ export default {
             },
             datePickerPlaceholder: "Select date",
             searchResults: [],
-            zeroResults: null
+            zeroResults: null,
+            bookBtnText: "book",
+            fitlerBtnText:"search",
+            loading: false
         }
     },  
     computed:{
@@ -132,14 +141,24 @@ export default {
         }
     },
     methods: {
+        proccessCheckboxes (item){  
+            if(!item.isChecked){ 
+                this.searchResults[0].availability.forEach((element)=>{ 
+                if(element.time !== item.time ){
+                        element.isChecked = false;
+                    }
+                });
+            } 
+        },
         getToday(){
           let today = new Date();
           let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
           return date;
         },
         bookEmployee (employee){
+            debugger;
             let checkedTime = "";
-            this.searchResults[0].availability.forEach(function(element) {
+            this.searchResults[0].availability.forEach((element) =>{
                 if(element.isChecked){
                     checkedTime = element.time
                 }
@@ -148,6 +167,21 @@ export default {
                 this.$toast.info({message: `Please select a preferred hour from the available hours`});  
                 return; 
             }
+ 
+            let storageData = localStorage.getItem('userInfo');
+            let token;  
+
+            if (storageData){
+                token = JSON.parse(storageData).token;
+            } else {
+                this.$toast.info({message: `You are not logged in. Please login first`}); 
+                EventBus.$emit('unAuthorized'); 
+                this.closeFilter();
+                EventBus.$emit('openAuth', 'login');
+               return;
+            } 
+            this.loading = true;
+            this.bookBtnText = "Booking"
             $.ajax({
                 url: `${this.apiPath}api/makeAppointment`,
                 dataType: 'json',
@@ -155,23 +189,36 @@ export default {
                 data: { 
                     service_id: this.searchResults[0].service.id,
                     employee_id: this.searchResults[0].id,
-                    reserve_started_at: checkedTime, 
-                    date: this.searchResults[0].date 
+                    time: checkedTime, 
+                    date: this.selectedDate,
+                    token: token
                 },
             }).done((response) => {  
-                this.isLoading = false;  
+                this.loading = false;  
+                this.bookBtnText = "book"
                     if (response.success) {  
-                         
+                         this.$toast.info({message: `Booking success.You can see your booking under 'Your own bokings' section.`});  
+                         if (this.searchResults[0]){
+                            this.searchResults[0].availability.forEach((element,index, array)=> {
+                                if(element.isChecked){
+                                    array.splice(index, 1);
+                                }
+                            });
+                         }    
                     }  
                     if (response.error){
                         if(response.message == "Invalid token"){ 
                             this.$toast.info({message: `You are not logged in. Please login first`}); 
                             EventBus.$emit('unAuthorized'); 
-                            this.isPopupVisible = this.showFilter = false; 
+                            this.closeFilter();
                             EventBus.$emit('openAuth', 'login');
                             return; 
-                        } 
+                        } else if (response.message ==  "Another Booking Found") {
+                           this.$toast.info({message: `Already booked.`}); 
+                        }
                     }
+            }).fail((xhr, status, error)=> {
+                this.handleError();
             }); 
         },
         setActiveTab(filterType){
@@ -191,7 +238,7 @@ export default {
             } 
         },
         filterChanged(val){
-             console.log(JSON.stringify(val))
+             //console.log(JSON.stringify(val))
         },
         serviceChanged(service) {
             this.zeroResults = false;
@@ -217,94 +264,96 @@ export default {
                 } 
                 this.showServices = true;
             } 
-        },  
-      
-        closePopups() { 
+        },   
+        closeFilter() { 
             this.isPopupVisible = this.showFilter = false; 
-            this.selectedService="";
-            this.selectedEmployee= "";
+            this.selectedService = "";
+            this.selectedEmployee = "";
+            this.searchResults = [];
+            //$("html").removeClass('no-scroll');
         },
         filterService(){ 
-             if(!this.selectedDate){
-                this.$toast.info({message: `Please select a date`});
-                return;
-            }
-            if(this.activeFilter=="services") {
+            if (!this.loading){
+                if (!this.selectedDate){
+                    this.$toast.info({message: `Please select a date`});
+                    return;
+                }
+                if (this.activeFilter=="services") {
+                    if(!this.selectedService){  
+                        this.$toast.info({message: `Please select a service`}); 
+                        return; 
+                    }
+                    if(!this.employees.length){
+                        this.$toast.info({message: `There are not service providers for the service`});
+                        return;
+                    }  
+                    if(!this.selectedEmployee) {
+                        this.$toast.info({message: `Please select a service provider`});
+                        return; 
+                    }  
+                }   
                 if(!this.selectedService){  
                     this.$toast.info({message: `Please select a service`}); 
+                    return;
+                }
+                if(!this.selectedEmployee){
+                    if(!this.employees.length){
+                        this.$toast.info({message: `There are not service providers for the service`});
+                    } else {
+                        this.$toast.info({message: `Please select a service provider`});
+                    } 
                     return; 
                 }
-                if(!this.employees.length){
-                    this.$toast.info({message: `There are not service providers for the service`});
-                    return;
-                }  
-                if(!this.selectedEmployee) {
-                    this.$toast.info({message: `Please select a service provider`});
-                    return; 
-                }  
-            } else {
-
-            }
-           
-            if(!this.selectedService){  
-                    this.$toast.info({message: `Please select a service`}); 
-                    return
-            }
-            if(!this.selectedEmployee){
-                if(!this.employees.length){
-                     this.$toast.info({message: `There are not service providers for the service`});
-                 } else {
-                    this.$toast.info({message: `Please select a service provider`});
-                } 
-                return; 
-            }
-            $.ajax({
-                url: `${this.apiPath}api/getEmployeeAvailabilitiesByServiceAndDate`,
-                dataType: 'json',
-                'type': 'POST', 
-                data: { 
-                    service_id: this.selectedService.id,
-                    employee_id: this.selectedEmployee.id,
-                    dt: this.selectedDate 
-                },
-            }).done((response) => {  
-                this.isLoading = false; 
+                this.loading = true;
+                this.fitlerBtnText = "Wait...";
                 this.searchResults = [];
-                    if (response.success) {  
-                        if(response.availability  && response.availability.length){
-                             this.zeroResults = false;
-                             let newAvaliabilities =[];
-                             response.availability.forEach(function(availability) {
-                                 newAvaliabilities.push({
-                                     time:availability,
-                                     isChecked:false
-                                 })
-                             });
-                             response.availability =  newAvaliabilities;
-                            // if(response.date){
-                            //    response.dateFormated = new Date(response.date); 
-                            // } 
-                            if(response.image){
-                                response.image = `${this.apiPath}images${response.image }`; 
-                            }
-                           this.searchResults.push(response);
-                        } else {
-                             this.zeroResults = true;
-                        } 
-                    }  
-                     
-                    if (response.success==0){
-                        // get meaningfull data from server
-                        this.$toast.error({ 
-                            message: `Error logging in`
-                        });
-                    }
-            }); 
+                $.ajax({
+                    url: `${this.apiPath}api/getEmployeeAvailabilitiesByServiceAndDate`,
+                    dataType: 'json',
+                    'type': 'POST', 
+                    data: { 
+                        service_id: this.selectedService.id,
+                        employee_id: this.selectedEmployee.id,
+                        dt: this.selectedDate 
+                    },
+                }).done((response) => {  
+                    this.loading = false; 
+                    this.searchResults = [];
+                    this.fitlerBtnText = "Search";
+                        if (response.success) {  
+                            if(response.availability  && response.availability.length){
+                                this.zeroResults = false;
+                                let newAvaliabilities =[];
+                                response.availability.forEach(function(availability) {
+                                    newAvaliabilities.push({
+                                        time:availability,
+                                        isChecked:false
+                                    })
+                                });
+                                response.availability =  newAvaliabilities;
+                                // if(response.date){
+                                //    response.dateFormated = new Date(response.date); 
+                                // } 
+                                if(response.image){
+                                    response.image = `${this.apiPath}images${response.image }`; 
+                                }
+                                this.searchResults.push(response);
+                            } else {
+                                this.zeroResults = true;
+                            } 
+                        }  else {
+                            this.$toast.error({ 
+                                message: `Error whilie searching`
+                            });
+                        }    
+                }).fail((xhr, status, error)=> {
+                   this.handleError();
+                }); 
+            } 
         },
-        filterEmployeesByServices(serviceID){
-            this.searchResults = [];
+        filterEmployeesByServices(serviceID){ 
             this.employees = [];
-             this.allEmployees.forEach((employee)=> {  
+            this.allEmployees.forEach((employee)=> {  
                 employee.services.forEach((service)=> { 
                     if(service.id == serviceID){
                         this.employees.push(employee);
@@ -313,12 +362,14 @@ export default {
             });  
             if(this.employees.length ){
                this.selectedEmployee = this.employees[0]
-            }  
+            }  else {
+                this.searchResults = [];
+            }
             this.showServices = true;
             this.showEmployees = true;
         }, 
         filterByServiceID(serviceID){
-            this.searchResults = [];
+            //this.searchResults = [];
             if(serviceID == -1){
                 this.services = JSON.parse(JSON.stringify(this.allServices));
                 this.showEmployees = false;
@@ -333,21 +384,31 @@ export default {
                 } 
             });
             this.services = JSON.parse(JSON.stringify(this.allServices))
-            }
-            
+            } 
+        },
+        handleError(error){
+            this.loading = false; 
+            if(error){
+                this.$toast.error({ 
+                    message: error
+                });
+            } 
+        },
+        openFilterWindow(){
+            $("html").stop().animate({ scrollTop: 0 }, 0, 'swing', function() {}); 
+            this.isPopupVisible = true; 
+            this.showFilter = true; 
         } 
     }, 
     created() {
       let today = this.getToday();
       this.datePickerConfig.minDate =  today; 
       this.datePickerConfig.defaultDate =  today;
-      this.selectedDate =  today; 
-       
+      this.selectedDate =  today;  
         EventBus.$on('filterByService', serviceID => {  
             this.filterByServiceID(serviceID);
             this.activeFilter = "services";
-            this.isPopupVisible = true; 
-            this.showFilter = true;  
+            this.openFilterWindow();
         }); 
         EventBus.$on('filterByEmployeeByID', employeeID => {   
             this.selectedService="";  
@@ -361,11 +422,10 @@ export default {
                 } 
             }); 
             
-            this.activeFilter = "employees";
-            this.isPopupVisible = true; 
-            this.showFilter = true; 
+            this.activeFilter = "employees";   
             this.showEmployees = true;
-            this.showServices = false 
+            this.showServices = false;
+            this.openFilterWindow(); 
         });  
       
         this.apiPath = this.$store.getters.getApiPath; 

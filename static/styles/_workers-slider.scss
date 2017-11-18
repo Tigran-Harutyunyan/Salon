@@ -1,8 +1,50 @@
 .worker-alternative-slider{
     display: none
 }
-@media only screen and (max-width:1300px) {
-    .worker-alternative-slider {
-        display: block
+.alternative-slider-item { 
+    .image-holder {
+        width: 150px;
+        height: 150px;
+        border-radius:6px; 
+        overflow: hidden;
+        position: relative; 
+        &:hover {
+            background: transparent;
+            .slider-shirma {
+                background: transparent
+            }
+        }
+        .slider-shirma{
+            background-color: rgba(78,52,46, 0.5);
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            transition: background-color 0.2s ease-in-out
+        }
+    } 
+    img {
+        width: 100%; 
+       
     }
 }
+@media only screen and (max-width:1300px) {
+    .worker-alternative-slider { 
+            display: block;
+            width: 640px;
+            margin: 0 auto;
+    }
+}
+@media only screen and (max-width:840px) {
+    .worker-alternative-slider {  
+            width: 485px; 
+    }
+}
+
+@media only screen and (max-width:768px) {
+    .worker-alternative-slider {  
+            width: 315px; 
+    }
+}
+
+

@@ -9,8 +9,8 @@ import GSignInButton from 'vue-google-signin-button';
 import FBSignInButton from 'vue-facebook-signin-button';
 import VueParallaxJs from 'vue-parallax-js';
 import CxltToastr from 'cxlt-vue2-toastr'; 
-import vSelect from 'vue-select'
-
+import vSelect from 'vue-select';
+import VModal from 'vue-js-modal';
  
 Vue.config.productionTip = false;
 Vue.component('v-select', vSelect); 
@@ -24,7 +24,7 @@ var toastrConfigs = {
   showDuration: 2000
 }
 Vue.use(CxltToastr, toastrConfigs);
- 
+Vue.use(VModal, { dialog: true })
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

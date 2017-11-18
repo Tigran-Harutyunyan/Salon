@@ -1,5 +1,6 @@
 <template>
     <div class="popup-outer-container">
+        <!-- Login form -->
         <transition name="modal">
             <div class="login-page-container modal-container" v-show="showLogin">
                 <div class="popup-close" @click="closePopups()"></div>
@@ -17,15 +18,15 @@
                                 <input type="text" class="def-input" placeholder="*Username" v-model="loginUsername" :class="{'has-error': $v.loginUsername.$error}">
                                 <div class="input-space"></div>
 
-                                <input type="text" class="def-input" placeholder="*Password" v-model="loginPassword" :class="{'has-error': $v.loginPassword.$error}">
+                                <input type="password" class="def-input" placeholder="*Password" v-model="loginPassword" :class="{'has-error': $v.loginPassword.$error}">
                                 <div class="rem">
-                                    <label for="remember">Remember me</label>
-                                    <input type="checkbox" name="remember" id="remember" :value="isRemember">
+                               <!--      <label for="remember">Remember me</label>
+                                    <input type="checkbox" name="remember" id="remember" :value="isRemember"> -->
                                 </div>
                                 <a @click="openPopup('forgot')" class="forgot">Forgot password?</a>
                                 <div class="login-btn-place">
                                     <!-- <a href="" class="btn">Cancel</a> -->
-                                    <input type="submit" class="btn btn-small-popup" value="Log In">
+                                    <input type="submit" class="btn btn-small-popup" v-bind:value="loginValue">
                                 </div>
                             </form>
                         </div>
@@ -36,44 +37,50 @@
                         </div>
                         <div class="login-right">
                             <h5 class="my-salon">New to My Salon?</h5>
-                            <a class="btn-popup" @click="openPopup('signup')">Create a Username & Password</a>
+                            <a class="btn-popup register-btn" @click="openPopup('signup')">Sign up</a>
                             <div class="decor-container-hor">
                                 <span class="top-elem"></span>
                                 <h5>OR</h5>
                                 <span class="bottom-elem"></span>
                             </div>
-                            <fb-signin-button :params="fbSignInParams" @success="onSignInSuccessFB" @error="onSignInError">
-                                Facebook
-                            </fb-signin-button>
-                            <g-signin-button :params="googleSignInParams" @success="onSignInSuccess" @error="onSignInError">
-                                Google
-                            </g-signin-button>
+                          <div class="social-buttons">
+                                <fb-signin-button :params="fbSignInParams" @success="onSignInSuccessFB" @error="onSignInError">
+                                    Facebook
+                                </fb-signin-button>
+                                <g-signin-button :params="googleSignInParams" @success="onSignInSuccess" @error="onSignInError">
+                                    Google
+                                </g-signin-button>
+                          </div>
                         </div>
                     </div>
                 </div>
             </div>
         </transition>
+        <!-- Reset form -->
         <transition name="modal">
             <div class="forget-password-container modal-container" v-if="showForgetPass">
                 <div class="popup-close" @click="closePopups()"></div>
                 <div class="popup-container">
                     <div class="popup-title-container">
-                        <h5>Forgot Password</h5>
-                        <div class="title-elements-container">
-                            <span></span><span></span>
+                            <h5>Forgot Password</h5>
+                            <div class="title-elements-container">
+                                <span></span><span></span>
+                            </div>
                         </div>
-                    </div>
-                    <form v-on:submit.prevent="onSubmitRecovery" @submit="$v.passwordRecoveryEmail.$touch();">
-                        <input type="text" class="def-input" placeholder="*Email" 
-                                v-model="recoveryEmail" :class="{'has-error': $v.passwordRecoveryEmail.$error}">
-                        <div class="input-space"></div>  
-                        <div class="login-btn-place"> 
-                            <input type="submit" class="btn btn-small-popup" value="Submit">
-                        </div>
-                    </form>
+                    <div class="popup-inner"> 
+                        <form v-on:submit.prevent="onSubmitRecovery" @submit="$v.passwordRecoveryEmail.$touch();">
+                            <input type="text" class="def-input" placeholder="*Email" 
+                                    v-model="passwordRecoveryEmail" :class="{'has-error': $v.passwordRecoveryEmail.$error}">
+                            <div class="input-space"></div>  
+                            <div class="login-btn-place"> 
+                                <input type="submit" class="btn btn-small-popup" v-bind:value="resetValue">
+                            </div>
+                        </form>
+                    </div> 
                 </div>
             </div>
         </transition>
+        <!-- Signup form -->
         <transition name="modal">
             <div class="signup-page-container modal-container" v-show="showSignUp">
                 <div class="popup-close" @click="closePopups()"></div>
@@ -108,12 +115,15 @@
                                 <!-- <label for="phone" class="popup-label">Phone number</label> -->
                                 <input type="text" id="phone" placeholder="*Phone number" class="def-input" v-model="signupPhoneNumber" :class="{'has-error': $v.signupPhoneNumber.$error}">
                                 <div class="radio-btn-place">
-                                    <label for="male" class="radio-label">Male</label>
-                                    <input type="radio" class="radio-btns" name="male" id="male" value="Male" v-model="gender" />
-                                    <label for="female" class="radio-label">Female</label>
-                                    <input type="radio" class="radio-btns" name="female" id="female" value="Female" v-model="gender" />
-                                </div>
-                                
+                                    <div class="radio-container"> 
+                                        <input type="radio" class="radio-btns" name="male" id="male" value="Male" v-model="gender" />
+                                        <label for="male" class="radio-label"> <span></span>Male</label> 
+                                    </div>
+                                    <div class="radio-container"> 
+                                        <input type="radio" class="radio-btns" name="female" id="female" value="Female" v-model="gender" />
+                                         <label for="female" class="radio-label"> <span></span>Female</label> 
+                                    </div>  
+                                </div> 
                             </div>
                             <div class="login-right">
                                 <!-- <label for="pass" class="popup-label">Password</label> -->
@@ -125,7 +135,7 @@
                                 <div class="input-space"></div> 
 
                                 <template>
-                                    <vue-recaptcha 
+                                    <vue-recaptcha  class="recaptcha-element"
                                         sitekey="6LdADzUUAAAAAOqvJ2GscYI610Lpch6AHyr1Ehxu" 
                                         ref="recaptcha"
                                         @verify="onVerify"
@@ -174,17 +184,20 @@ export default {
             signupPhoneNumber: "",
             signupPassword: "",
             signupPasswordRepeat: "",
-            recoveryEmail: "",
+            passwordRecoveryEmail: "",
             gender: "Male",
             htmlElement: {},
             signUpUserName:"",
-            loginUsername: "ann_chavalier",
-            loginPassword: "ann_chavalier",
+            loginUsername: "",
+            loginPassword: "",
             isRemember: false,
             isLoading: false,
             recaptchaResponse:"",
             apiPath:"",
-            signupValue: "Sign Up"
+            signupValue: "Sign Up",
+            resetValue:"Reset password",
+            loginValue:"Log In",
+            loading: false
         }
     },
 /*
@@ -204,17 +217,15 @@ https://developers.facebook.com/apps/523193884695053/settings/
         },
         isSignupValid() {
             return (!this.$v.signUpUserName.$invalid  && !this.$v.signupFirstName.$invalid && !this.$v.signupLastName.$invalid && !this.$v.signupEmail.$invalid && !this.$v.signupPhoneNumber.$invalid && !this.$v.signupPassword.$invalid && !this.$v.signupPasswordRepeat.$invalid);
-        },
-        isRecoveryValid(){
-            return (!this.$v.passwordRecoveryEmail.$invalid); 
-        }
+        } 
     },
     methods: { 
         onSubmitLogin() {
             if (this.isLoginValid && !this.isLoading) { 
                 this.isLoading = true; 
+                this.loginValue = "Wait...";
                 $.ajax({
-                    url: `${this.apiPath}/api/login`,
+                    url: `${this.apiPath}api/login`,
                     dataType: 'json',
                     'type': 'POST', 
                     data: { 
@@ -230,15 +241,20 @@ https://developers.facebook.com/apps/523193884695053/settings/
                             message: `Welcome ${response.first_name}`
                         });
                         EventBus.$emit('Authorized', response);
-                        this.showLogin = false;
-                        this.isPopupVisible = false; 
-                    }  
-                     if (response.success==0){
-                         // get meaningfull data from server
-                          this.$toast.error({ 
-                            message: `Error logging in`
-                        });
+                        this.closePopups();
+                    }  else { 
+                        if(response.message == "User is not activated") {
+                              this.$toast.error({ 
+                                message: `Please activate your account first.`
+                            });
+                        } else {
+                              this.$toast.error({ 
+                                message: `Error logging in`
+                            });
+                        }
+                        
                     }
+                     this.loginValue = "Log In";
                 }); 
             }
         },
@@ -246,7 +262,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
             if (this.isSignupValid) {
                 this.signupValue = "Wait...";
                 $.ajax({
-                    url: `${this.apiPath}/api/register`,
+                    url: `${this.apiPath}api/register`,
                     dataType: 'json',
                     'type': 'POST', 
                     data: { 
@@ -265,8 +281,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
                        this.$toast.success({ 
                             message: `Thank you! Your message has been sent successfully.`
                         }); 
-                        this.showSignUp = false;
-                        this.isPopupVisible = false;
+                       this.closePopups();
                     } 
                     if (response.error && response.message) {
                         this.$toast.error({ 
@@ -289,10 +304,36 @@ https://developers.facebook.com/apps/523193884695053/settings/
                 this.showLogin = false;
                 this.showForgetPass = true;
             } 
+           
         },
-        onSubmitRecovery(){
-            if (this.isRecoveryValid){
-                console.log("Recoverint")
+        onSubmitRecovery(){ 
+            if (!this.$v.passwordRecoveryEmail.$invalid && !this.loading){
+                this.isLoading = true; 
+                this.resetValue="Wait...";
+                $.ajax({
+                    url: `${this.apiPath}api/resetPassword`,
+                    dataType: 'json',
+                    'type': 'POST', 
+                    data: { 
+                        email: this.passwordRecoveryEmail 
+                    },
+                }).done((response) => {  
+                    this.isLoading = false;
+                    
+                    if (response.success) {   
+                        this.$toast.success({ 
+                            message: `Please check your email box for futher instructions.`
+                        }); 
+                       this.closePopups();
+                    }  
+                    if (response.success==0){
+                         // get meaningfull data from server
+                          this.$toast.error({ 
+                            message: `Error proccessing data`
+                        });
+                    }
+                    this.resetValue = "Reset password";
+                }); 
             }
         },
         verify(recaptchaResponse) {
@@ -317,6 +358,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
         closePopups() {
            // this.htmlElement.removeClass('no-scroll');
             this.isPopupVisible = this.showLogin = this.showSignUp = this.showForgetPass = false; 
+            //$("html").removeClass('no-scroll');
         },
         onVerify(response) { 
             this.recaptchaResponse = response
@@ -331,6 +373,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
     created() {
         EventBus.$on('openAuth', windowType => {
             //this.htmlElement.addClass('no-scroll');
+            $("html").stop().animate({ scrollTop: 0 }, 0, 'swing', function() {}); 
             this.isPopupVisible = true;
             if (windowType === 'login') {
                 this.showLogin = true;
@@ -338,9 +381,15 @@ https://developers.facebook.com/apps/523193884695053/settings/
                 this.showSignUp = true;
             } 
         });
-       // this.htmlElement = $('html');
+        this.htmlElement = $('html');
         //EventBus.$emit('setparent', false);
         this.apiPath = this.$store.getters.getApiPath; 
+       
+       if( location.hostname === "localhost" ){
+            this.loginUsername = "tigran";
+            this.loginPassword = "salonUser";
+        }
+        
     },
     components: { VueRecaptcha },
     validations: {
@@ -375,8 +424,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
             sameAsPassword: sameAs('signupPassword')
         },
         passwordRecoveryEmail: {
-            required,
-            email 
+           required,email 
         }
     }
 }

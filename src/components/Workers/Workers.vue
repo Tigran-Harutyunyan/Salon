@@ -4,7 +4,7 @@
             <sliders v-on:sliderReady="showMainSection=true" :sliderData="sliderData" v-if="sliderData"></sliders> 
         </div>
         <div class="main-section-area">
-            <div class="service-items-section">
+            <div class="service-items-section worker-section">
                 <div class="section-title workers-title">
                     <h1>{{ currentCategoryName }}</h1>
                     <div class="section-elements-container">
@@ -46,10 +46,13 @@
                             <mini-slider  :originalSlides="employee.work_images"></mini-slider>
                             <!-- <windy :images="slides"></windy> --> 
                             <div class="worker-alternative-slider">
-                                <carousel :perPageCustom="[[768, 3], [1024, 4]]">
+                                <carousel :perPageCustom="[[200, 1],[400, 2],[768, 3], [850, 4]]">
                                     <slide v-for="(slide,index) in  employee.work_images" :key="index">
                                         <div class="alternative-slider-item">  
-                                            <img :src="slide.imageSrc">   
+                                           <div class="image-holder">
+                                                <img :src="slide.imageSrc">   
+                                                <div class="slider-shirma"> </div>   
+                                           </div>
                                         </div> 
                                     </slide> 
                                 </carousel>
@@ -88,7 +91,7 @@
         },
         watch:{
             '$route.params.id':function(newVal,oldVal){
-                this.getEmployeesByService();
+                this.chooseTheWay(); 
             }
         }, 
         methods: { 
@@ -101,11 +104,40 @@
                 }); 
                 return serviceName;
             },
+            proccessData(response){
+                $("html, body").stop().animate({ scrollTop: 500 }, 500, 'swing', () => { });
+                    this.employees  = [];
+                    if (response.success) {  
+                        let employees = response.employees;
+                        for (let index = 0; index < employees.length; index++) { 
+                            employees[index].image = `${this.apiPath}images/${employees[index].image}`; 
+                            let workImages = employees[index].work_images;
+                            let workImagesNew = [];
+                            for (let index2 = 0; index2 < workImages.length; index2++) { 
+                                workImagesNew.push({
+                                    id: index2,
+                                    imageSrc: `${this.apiPath}images${workImages[index2]}` 
+                                })
+                            } 
+                            employees[index].work_images = workImagesNew;
+                        } 
+                        this.employees = employees; 
+                    }   
+            },
             filterByEmployeeByID(employeeID){
                 EventBus.$emit('filterByEmployeeByID', employeeID);
             },
-            getEmployeesByService(){ 
-            let routeParam = +this.$route.params.id; 
+            getEmployees(){
+                   $.ajax({
+                    url: `${this.apiPath}api/getEmployees`,
+                    dataType: 'json',
+                    'type': 'GET' 
+                }).done((response) => {    
+                    this.proccessData(response);
+                }); 
+             }, 
+            getEmployeesByService(){  
+                let routeParam = +this.$route.params.id; 
                 if(isNaN(routeParam)) { return; }
             
                 this.currentCategoryName = this.getCurrentRouteParamName(routeParam); 
@@ -115,7 +147,7 @@
                     'type': 'POST', 
                     data: { 
                         service_id: routeParam
-                    },
+                    }
                 }).done((response) => {    
                     $("html, body").stop().animate({ scrollTop: 500 }, 500, 'swing', () => { });
                     this.employees  = [];
@@ -154,6 +186,14 @@
                 let _offset = _width > 1400 ? 160 : 110;
                 let leftOffset = Math.round(this.targetElement.offset().left) + _offset;
                 this.workerLine.css({ 'left': leftOffset + 'px' });
+            },
+            chooseTheWay(){
+                 if (this.$route.name === "Employees"){
+                    this.currentCategoryName = "Employees";
+                    this.getEmployees();
+                } else {
+                    this.getEmployeesByService();
+                }
             }
         },
         created() {
@@ -163,8 +203,9 @@
         this.apiPath = this.$store.getters.getApiPath;   
         this.workerLine = $('#workers-line')
         this.targetElement = $('.workers-container-inner .worker-item:first-child  .worker-info-place');
-        this.storeData = this.$store.getters.appData;  
-            this.getEmployeesByService();
+        
+        this.storeData = this.$store.getters.appData;    
+        this.chooseTheWay();   
             if (this.storeData.services){   
                 if(this.storeData.slider && this.storeData.slider['Hair Services'])  {
                     this.sliderData = this.storeData.slider['Hair Services']

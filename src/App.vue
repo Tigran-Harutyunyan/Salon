@@ -65,7 +65,7 @@ export default {
         },
         setAttributes(services){
             services.forEach(function(element) {
-                element.imgSrc = `http://api.mysalonla.com/images/services/${element.image}`;
+                element.imgSrc = `http://api.mysalonla.com/images/services/${element.image}`;//'./static/images/service-item.jpg';
                 element.route = `/#/service/${element.id}`
             });
             return services
@@ -108,6 +108,7 @@ export default {
             let employees = EMPLOYEES; 
             for (let index = 0; index < employees.length; index++) {
                 employees[index].image = `${this.apiPath}images/${employees[index].image}`;   
+                employees[index].url = `/#/service-provider/${employees[index].id}`;   
              } 
             return employees;
         } 

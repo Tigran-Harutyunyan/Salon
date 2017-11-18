@@ -1,7 +1,7 @@
 <div>
     <!-- CONTACTS  -->
     <section id="contacts" class="contact-section">
-        <img src="../../../static/images/contact-bg.jpg"  v-parallax.absY="0.2">
+        <img :src="parallaxImgSrc"  v-parallax.absY="0.2">
         <div class="contacts-inner"> 
             <div class="contact-left">
                 <div class="section-title">
@@ -16,7 +16,11 @@
                     <li>Thu: 8am - 9pm</li>
                     <li>Fri: 8am - 9pm</li>
                     <li>Sat: 8am - 9pm </li>
-                </ul>
+                </ul> 
+                <form v-on:submit.prevent="onSubmitSubscription" class="contact-form subscribe-form"   name="subscribe_form" @submit="$v.subscriptionEmail.$touch();">  
+                    <input class="def-input" type="email" placeholder="Your Email" name="subscribe" v-model="subscriptionEmail" :class="{'has-error': $v.subscriptionEmail.$error}">
+                    <input type="submit" class="btn-submit btn btn-transparent" value="Subsribe"> 
+                </form>
             </div>
             <div class="contact-right">
                 <div class="form-place">
@@ -42,8 +46,8 @@
                                 <div class="default-inp-row row-btn">
                                     <input type="submit" class="btn-submit btn btn-transparent" value="Send">
                                 </div>
-                            </div>
-                        </form>
+                            </div> 
+                        </form> 
                     </div>
                 </div>
             </div>

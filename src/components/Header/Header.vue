@@ -9,9 +9,15 @@
                     <ul class="nav sidemenu" id="top-nav">
                         <li><router-link class="menu-item" exact to="/">Home <span></span> </router-link> </li>
                         <li><a class="menu-item">About Us<span></span> </a></li>
-                        <li><router-link class="menu-item" to="/hair-services">Hair Services<span></span> </router-link></li>
-                        <li><router-link class="menu-item" to="/makeup-services">Makeup Services<span></span> </router-link></li>
-                        <li><router-link class="menu-item" to="/hair-services">Your Own Booking<span></span> </router-link></li>
+                        <li class="dropdown">
+                           <a class="menu-item dropbtn">Services <i class="open-indicator"></i> </a>
+                           <div class="dropdown-content">
+                                <router-link class="menu-item" to="/hair-services">Hair Services<span></span> </router-link>
+                                <router-link class="menu-item" to="/makeup-services">Makeup Services<span></span> </router-link> 
+                            </div>
+                        </li>
+                        <li> <router-link class="menu-item" to="/employees">Employees<span></span> </router-link> </li>  
+                        <li v-show="isAuthtorized"><router-link class="menu-item" to="/my-bookings">Your Own Booking<span></span> </router-link></li>
                         <li><a class="menu-item" v-on:click="toContactSection">Contact Us<span></span> </a></li>
                         <li v-if="!isAuthtorized"><a class="menu-item login-link" @click="openAuth('login')">Log In/</a></li>
                         <li v-if="!isAuthtorized"><a class="menu-item signup-link" @click="openAuth('signup')">Sign Up</a></li>
@@ -31,13 +37,14 @@
                 <ul>
                     <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/">Home</router-link></li>
                     <li v-on:click="hideMobileMenu"><a href="/#/about" class="link2">About Us</a></li>
-                    <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/hair-services">Hair Services</router-link></li>
+                    <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/hair-services">Hair Services</router-link> </li>
                     <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/makeup-services">Makeup Services</router-link></li>
-                    <li v-on:click="hideMobileMenu"><a href="/#/about" class="link2">Your Own Booking</a></li> 
+                    <li v-on:click="hideMobileMenu"><router-link class="menu-item" to="/employees">Employees<span></span> </router-link></li> 
+                    <li v-on:click="hideMobileMenu" v-if="isAuthtorized"><router-link class="menu-item" exact to="/my-bookings">Your Own Booking</router-link></li>
                     <li v-on:click="hideMobileMenu"><a v-on:click="toContactSection" class="link2">Contact Us</a></li> 
-                    <li v-on:click="hideMobileMenu" v-if="!isAuthtorized"><a  @click="openAuth('login')" class="link2">Log In</a></li>
-                    <li v-on:click="hideMobileMenu" v-if="!isAuthtorized"><a  @click="openAuth('signup')"class="link2">Sign Up</a></li>
-                    <li v-on:click="hideMobileMenu" v-if="isAuthtorized"><a  @click="logOut()"class="link2">Log Out</a></li>
+                    <li v-on:click="hideMobileMenu" v-if="!isAuthtorized"><a @click="openAuth('login')" class="link2">Log In</a></li>
+                    <li v-on:click="hideMobileMenu" v-if="!isAuthtorized"><a @click="openAuth('signup')"class="link2">Sign Up</a></li>
+                    <li v-on:click="hideMobileMenu" v-if="isAuthtorized"><a @click="logOut()"class="link2">Log Out</a></li>
                 </ul>
             </nav> 
         </div>
@@ -57,7 +64,8 @@ export default {
             isMobileMenuVisible: false,
             isAuthtorized:"",
             isLoading:false,
-            apiPath:"" 
+            apiPath:"",
+            userInfo:{} 
         }
     },
     methods: {
@@ -105,6 +113,7 @@ export default {
                         // this.$toast.success({ 
                         //     message: `Logged out`
                         // }); 
+                        this.$router.push({name:'HairServices'});
                     }  
                      if (response.error){ 
                         if(_window.localStorage){
@@ -118,9 +127,16 @@ export default {
                             });
                         } 
                     }
-                }); 
-            }
-             
+                }).fail((xhr, status, error)=> {
+                    this.isLoading = false;  
+                    this.$toast.error({ 
+                        message: "Server error"
+                    }); 
+                    if(window.localStorage){
+                            window.localStorage.clear();
+                    } 
+                });
+            } 
         }
     },
     watch: {
@@ -133,15 +149,15 @@ export default {
         this.scrollToTop();
         this.userInfo  =   JSON.parse(localStorage.getItem('userInfo'));
         this.isAuthtorized = this.userInfo && this.userInfo.first_name ? true: false; 
-    },
+    }, 
     created(){
         EventBus.$on('Authorized', userInfo => { 
            this.isAuthtorized = true;
-           this.userinfo = userInfo;
+           this.userInfo = userInfo;
         });
         EventBus.$on('unAuthorized', () => { 
            this.isAuthtorized = false;
-           this.userinfo = null;
+           this.userInfo = null;
            let _window = window;
            if(_window.localStorage){
                _window.localStorage.clear();
