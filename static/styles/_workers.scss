@@ -1,6 +1,7 @@
 .workers-container {
     width: 1440px;
-    margin: 0 auto 60px;
+    margin: 0 auto 20px;
+    padding: 0 20px;
     position: relative;
 }
 
@@ -131,11 +132,26 @@
     display: -ms-flexbox;
     display: flex
 }
-
+ 
+.workers-paginiation{
+    margin-bottom: 46px;
+    li a {
+        text-indent: -9999px;
+        height: 16px;
+        width: 16px;
+        margin: 0 5px 10px;
+        background: transparent;
+        transition: background-color 0.6s ease;
+        border: 1px solid #4d342f;
+        border-radius: 50%;
+        padding: 0 !important;
+        margin-right: 15px;
+    }
+}
+ 
 @media only screen and (max-width: 1610px) {
     .workers-container {
-        width: 100%;
-        padding: 0 30px;
+        width: 100%; 
     }
     .main-section-area .lines {
          left: 229px;
@@ -151,16 +167,12 @@
             width: 145px;
         }
     }
-    .worker-name {
-        padding-bottom: 91px;
-    }
+    
     .worker-bio {
         padding-right: 10px;
         height: 188px;
     }
-    .worker-position {
-        margin-bottom: 8px;
-    } 
+    
 }
 
 @media only screen and (max-width: 1300px) {

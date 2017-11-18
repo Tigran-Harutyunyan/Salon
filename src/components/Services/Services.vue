@@ -77,13 +77,13 @@ export default {
                     this.sliderData = this.storeData.slider['Hair Services']
                 }
             }
-             let docWidth = $(document).width();
+            let docWidth = $(document).width();
             if (docWidth > 480 && docWidth < 1000) {
                 this.initialiseScrollMagic(100);
             } else if (docWidth >= 1000) {
                 this.initialiseScrollMagic(0);
             }
-              $("html, body").stop().animate({ scrollTop: 500 }, 500, 'swing', () => { });
+            $("html, body").stop().animate({ scrollTop: 0 }, 500, 'swing', () => { });
 		}
     }, 
     methods: {

@@ -44,7 +44,7 @@ Navigation
     -webkit-transition: padding-top 0.2s;
     transition: padding-top 0.2s;
 }
-
+ 
 .tel-caption {
     color: $color1;
     font-size: 26px;
@@ -499,7 +499,10 @@ $button-width: 22px;
     text-decoration: none;
     display: block;
     text-align: left;
-    font-size: 18px;
+    font-size: 18px; 
+    &:hover {
+       background:  #f5f0ed !important
+    }
 }
 
 .dropdown-content a:hover {background-color: #f1f1f1}

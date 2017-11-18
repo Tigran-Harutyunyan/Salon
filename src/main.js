@@ -11,7 +11,9 @@ import VueParallaxJs from 'vue-parallax-js';
 import CxltToastr from 'cxlt-vue2-toastr'; 
 import vSelect from 'vue-select';
 import VModal from 'vue-js-modal';
- 
+import pagination from "vuejs-uib-pagination";
+
+Vue.use(pagination);
 Vue.config.productionTip = false;
 Vue.component('v-select', vSelect); 
 Vue.use(Vuelidate); 

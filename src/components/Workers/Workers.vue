@@ -61,6 +61,19 @@
                     </div>
                 </div>
             </div>
+            <uib-pagination 
+                class="workers-paginiation"
+                @change="pageChanged()"
+                :max-size="maxSize" 
+                :boundary-links="false"
+                :total-items="totalItems" 
+                :items-per-page="itemsPerPage" 
+                previous-text="" 
+                next-text="" 
+                first-text="" 
+                last-text=""
+                v-model="pagination">
+            </uib-pagination>
             <!-- Services list -->
             <services-list></services-list>
         </div>
@@ -85,8 +98,13 @@
                 showMainSection: false,
                 workerLine: {},
                 apiPath:{},
-                noResultsText:"Sorry, no service provider found in this service category.",
-                currentCategoryName:""
+                noResultsText:"",
+                currentCategoryName:"",
+                maxSize:7, 
+                totalItems:0,
+                itemsPerPage: 4,
+                pagination: { currentPage: 1 },
+                allEmployees:[]
             }
         },
         watch:{
@@ -95,6 +113,15 @@
             }
         }, 
         methods: { 
+             pageChanged(){
+                this.employees  =  this.paginate( this.allEmployees,this.pagination.currentPage);
+                $("html").stop().animate({ scrollTop: 0 }, 300, 'swing', function() {}); 
+            },
+            paginate (list, currentPage){
+                let index = (currentPage - 1) * this.itemsPerPage;
+                let x = list.slice(index, index + this.itemsPerPage);
+                return x;
+            },
             getCurrentRouteParamName(serviceID) {
                 let serviceName = ""; 
                 this.storeData.allServices.forEach((element)=> { 
@@ -105,23 +132,27 @@
                 return serviceName;
             },
             proccessData(response){
-                $("html, body").stop().animate({ scrollTop: 500 }, 500, 'swing', () => { });
+                $("html, body").stop().animate({ scrollTop: 0 }, 500, 'swing', () => { });
                     this.employees  = [];
                     if (response.success) {  
                         let employees = response.employees;
                         for (let index = 0; index < employees.length; index++) { 
-                            employees[index].image = `${this.apiPath}images/${employees[index].image}`; 
+                            employees[index].image = `${this.apiPath}images${employees[index].image}`; 
                             let workImages = employees[index].work_images;
                             let workImagesNew = [];
                             for (let index2 = 0; index2 < workImages.length; index2++) { 
                                 workImagesNew.push({
                                     id: index2,
-                                    imageSrc: `${this.apiPath}images${workImages[index2]}` 
+                                    imageSrc: `${this.apiPath}images${workImages[index2]}`,
+                                    isActive: false 
                                 })
                             } 
+                            workImagesNew[0].isActive = true;
                             employees[index].work_images = workImagesNew;
                         } 
-                        this.employees = employees; 
+                        this.allEmployees =  employees;
+                        this.totalItems = this.allEmployees.length;
+                        this.employees = this.paginate( this.allEmployees,this.pagination.currentPage); 
                     }   
             },
             filterByEmployeeByID(employeeID){
@@ -149,7 +180,7 @@
                         service_id: routeParam
                     }
                 }).done((response) => {    
-                    $("html, body").stop().animate({ scrollTop: 500 }, 500, 'swing', () => { });
+                    //$("html, body").stop().animate({ scrollTop: 0 }, 500, 'swing', () => { });
                     this.employees  = [];
                     if (response.success) {  
                         let employees = response.employees;
@@ -190,9 +221,11 @@
             chooseTheWay(){
                  if (this.$route.name === "Employees"){
                     this.currentCategoryName = "Employees";
+                    this.noResultsText = "Sorry, no service provider found in this service category.";
                     this.getEmployees();
                 } else {
                     this.getEmployeesByService();
+                    this.noResultsText = "Sorry, no employees found.";
                 }
             }
         },

@@ -2,7 +2,7 @@
   .modal-container {
     background-color: #f5f0ed;
     border-radius: 4px;
-    position: fixed;
+    position: absolute;
     z-index: 10001;
   }
   .def-input {
@@ -439,7 +439,7 @@
     margin-top: 0;
     width: 100%;
     border-radius: 0;
-    min-height: 900px;
+    min-height: 1100px;
   }
   .login-page-container .popup-inner,
   .forget-password-container .popup-inner {

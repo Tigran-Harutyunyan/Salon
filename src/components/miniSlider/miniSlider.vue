@@ -32,20 +32,20 @@
                 latestID:-1 
             } 
         },
-       props:['originalSlides'],
+        props:['originalSlides'],
         methods: {
             reorderSlides(index, itemId){
-                if(index==this.latestID){
+                if (index == this.latestID){ 
                     return;
-                } else{
+                } else { 
                     this.latestID = index; 
                     this.setActive(this.originalSlides ,itemId);
                     let originalSlides = JSON.parse(JSON.stringify(this.originalSlides)); 
                     this.slides = originalSlides.concat(originalSlides.splice(0,index));  
                 } 
             },
-            setActive(array,ID){ 
-                array.forEach((element)=> {   
+            setActive(array,ID){  
+                array.forEach((element)=> {    
                     element.isActive = element.id == ID ? true: false;
                 });
             },

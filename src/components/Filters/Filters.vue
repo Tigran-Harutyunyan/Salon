@@ -155,8 +155,7 @@ export default {
           let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
           return date;
         },
-        bookEmployee (employee){
-            debugger;
+        bookEmployee (employee){ 
             let checkedTime = "";
             this.searchResults[0].availability.forEach((element) =>{
                 if(element.isChecked){
@@ -205,6 +204,9 @@ export default {
                                 }
                             });
                          }    
+                         if (!this.searchResults[0].availability.length){
+                             this.searchResults=[];
+                         }
                     }  
                     if (response.error){
                         if(response.message == "Invalid token"){ 
