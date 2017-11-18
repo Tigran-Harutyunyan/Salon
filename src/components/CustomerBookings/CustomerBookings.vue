@@ -68,13 +68,25 @@
                     </div>
                          <!-- <a href=""> <img :src="booking.bookingServiceProvider.image" :alt="booking.bookingServiceProvider.fullName" class="service-provider"> </a> -->
                  </div>
+                <uib-pagination 
+                    @change="pageChanged()"
+                    :max-size="maxSize" 
+                    :boundary-links="false"
+                    :total-items="totalItems" 
+                    :items-per-page="itemsPerPage" 
+                    previous-text="" 
+                    next-text="" 
+                    first-text="" 
+                    last-text=""
+                    v-model="pagination" 
+                    ></uib-pagination>
                 <div v-if="noBooking">
-                    You don`t have not made any bookin yet.    
+                    You don`t have not made any booking yet.    
                 </div>    
             </div> 
             <services-list></services-list>
         </div>
-           <v-dialog/> 
+        <v-dialog/> 
     </div> 
  </template> 
 <script> 
@@ -90,11 +102,24 @@ export default {
            bookings: [],
            storeData: {},
            noBooking: false,
-           deletableBookingID:""
+           deletableBookingID:"", 
+           maxSize:7, 
+           totalItems:0,
+           itemsPerPage: 10,
+           pagination: { currentPage: 1 },
+           allBookings:[]
         }
     }, 
     
     methods: {
+        paginate (list, currentPage){
+            let index = (currentPage - 1) * this.itemsPerPage;
+            let x = list.slice(index, index + this.itemsPerPage);
+            return x;
+        },
+        pageChanged(){
+             this.bookings  =  this.paginate( this.allBookings,this.pagination.currentPage);
+        },
         show () {
             this.$modal.show('dialog',{ 
                 text: 'Do you really want to cancel the booking?',
@@ -199,7 +224,10 @@ export default {
                                 booking.bookingServiceProvider = this.addServiceProviderData(booking.employee_id);
                                 booking.bookingService = this.addServiceData(booking.service_id);
                             });
-                           this.bookings = response.customer_bookings
+                           response.customer_bookings.sort((a, b)=> new Date(b.startDate) - new Date(a.startDate));  
+                           this.allBookings =  response.customer_bookings;
+                           this.totalItems = this.allBookings.length;
+                           this.bookings  =   this.paginate( this.allBookings,this.pagination.currentPage);
                         } else {
                             this.noBooking = true;
                         } 
