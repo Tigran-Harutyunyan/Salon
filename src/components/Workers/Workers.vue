@@ -19,16 +19,18 @@
                 <div v-if="!employees.length" class="no-employees-warning-block">
                         {{noResultsText}}
                 </div>
-                <div class="workers-container-inner">
+                <div class="workers-container-inner" :class="{'workers-with-pagination': totalItems > itemsPerPage}">
                     <div class="worker-item" v-for="(employee, index) in employees" :key="index">
                         <div class="worker-item-left">
                             <div class="worker-info-place">
-                                <img :src="employee.image" alt="Worker" class="worker-avatar">
+                              <div class="avatar-place">
+                                    <img :src="employee.image" @error="imageLoadError(employee)" class="worker-avatar">
+                              </div>
                                 <div class="worker-action-section">
                                     <ul class="social-links">
-                                        <li><a class="in-link" :href="employee.instagram"></a></li>
-                                        <li><a class="fb-link" :href="employee.facebook"></a></li>
-                                        <li><a class="tw-link" :href="employee.twitter"></a></li>
+                                        <li v-if="employee.instagram.length"><a class="in-link" target="_blank" :href="employee.instagram"></a></li>
+                                        <li v-if="employee.facebook.length"><a class="fb-link" target="_blank" :href="employee.facebook"></a></li>
+                                        <li v-if="employee.twitter.length"><a class="tw-link" target="_blank" :href="employee.twitter"></a></li>
                                     </ul>
                                     <a @click="filterByEmployeeByID(employee.id)" class="btn-workers">Book now</a>
                                 </div>
@@ -46,7 +48,7 @@
                             <mini-slider  :originalSlides="employee.work_images"></mini-slider>
                             <!-- <windy :images="slides"></windy> --> 
                             <div class="worker-alternative-slider">
-                                <carousel :perPageCustom="[[200, 1],[400, 2],[768, 3], [850, 4]]">
+                                <carousel :perPageCustom="[[200, 1],[400, 2],[560, 3], [850, 4]]">
                                     <slide v-for="(slide,index) in  employee.work_images" :key="index">
                                         <div class="alternative-slider-item">  
                                            <div class="image-holder">
@@ -61,21 +63,23 @@
                     </div>
                 </div>
             </div>
-            <uib-pagination 
+            <uib-pagination v-show="totalItems > itemsPerPage" 
                 class="workers-paginiation"
                 @change="pageChanged()"
                 :max-size="maxSize" 
-                :boundary-links="false"
+                :boundary-links="true"
                 :total-items="totalItems" 
                 :items-per-page="itemsPerPage" 
                 previous-text="" 
                 next-text="" 
                 first-text="" 
                 last-text=""
-                v-model="pagination">
+                v-model="pagination"
+                :direction-links="false">
             </uib-pagination>
             <!-- Services list -->
-            <services-list></services-list>
+            <contacts v-if="showContacts"></contacts>
+            <services-list></services-list> 
         </div>
     </div> 
 </template> 
@@ -86,6 +90,7 @@
     //import windy from './Windy/Windy.vue';
     import miniSlider from '../miniSlider/miniSlider.vue';
     import serviceList from '../ServicesList/ServicesList.vue';
+    import contacts from '../Contacts/Contacts.vue';
     export default {
         data() {
             return {
@@ -104,7 +109,8 @@
                 totalItems:0,
                 itemsPerPage: 4,
                 pagination: { currentPage: 1 },
-                allEmployees:[]
+                allEmployees:[],
+                showContacts: false
             }
         },
         watch:{
@@ -113,9 +119,16 @@
             }
         }, 
         methods: { 
+            imageLoadError(employee){ 
+                this.employees.forEach((element) =>{
+                  if(element.id === employee.id){
+                      element.image = "./static/images/custom-avatar.png"
+                  }   
+                });
+            },
              pageChanged(){
                 this.employees  =  this.paginate( this.allEmployees,this.pagination.currentPage);
-                $("html").stop().animate({ scrollTop: 0 }, 300, 'swing', function() {}); 
+                $("body").stop().animate({ scrollTop: 0 }, 300, 'swing', function() {}); 
             },
             paginate (list, currentPage){
                 let index = (currentPage - 1) * this.itemsPerPage;
@@ -132,7 +145,7 @@
                 return serviceName;
             },
             proccessData(response){
-                $("html, body").stop().animate({ scrollTop: 0 }, 500, 'swing', () => { });
+                $("body").stop().animate({ scrollTop: 0 }, 500, 'swing', () => { });
                     this.employees  = [];
                     if (response.success) {  
                         let employees = response.employees;
@@ -147,8 +160,11 @@
                                     isActive: false 
                                 })
                             } 
-                            workImagesNew[0].isActive = true;
-                            employees[index].work_images = workImagesNew;
+                            if(workImagesNew[0]){
+                                 workImagesNew[0].isActive = true;
+                                 employees[index].work_images = workImagesNew;
+                            }
+                           
                         } 
                         this.allEmployees =  employees;
                         this.totalItems = this.allEmployees.length;
@@ -180,7 +196,7 @@
                         service_id: routeParam
                     }
                 }).done((response) => {    
-                    //$("html, body").stop().animate({ scrollTop: 0 }, 500, 'swing', () => { });
+                    //$("body").stop().animate({ scrollTop: 0 }, 500, 'swing', () => { });
                     this.employees  = [];
                     if (response.success) {  
                         let employees = response.employees;
@@ -233,19 +249,23 @@
             EventBus.$emit('setparent', true);
         },
         mounted() {
-        this.apiPath = this.$store.getters.getApiPath;   
-        this.workerLine = $('#workers-line')
-        this.targetElement = $('.workers-container-inner .worker-item:first-child  .worker-info-place');
-        
-        this.storeData = this.$store.getters.appData;    
-        this.chooseTheWay();   
+            this.apiPath = this.$store.getters.getApiPath;   
+            this.workerLine = $('#workers-line')
+            this.targetElement = $('.workers-container-inner .worker-item:first-child  .worker-info-place');
+            
+            this.storeData = this.$store.getters.appData;    
+            this.chooseTheWay();   
             if (this.storeData.services){   
                 if(this.storeData.slider && this.storeData.slider['Hair Services'])  {
                     this.sliderData = this.storeData.slider['Hair Services']
                 }
             }  
+            setTimeout(()=> {  
+                this.showContacts =true
+            }, 1000);
         },
         components: {
+            contacts,
             sliders,   
             Carousel,
             Slide,

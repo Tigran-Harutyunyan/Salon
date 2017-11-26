@@ -1,7 +1,7 @@
 <div>
     <!-- CONTACTS  -->
     <section id="contacts" class="contact-section">
-        <img :src="parallaxImgSrc"  v-parallax.absY="0.2">
+        <img :src="parallaxImgSrc"  v-parallax.absY="0.2" v-if="showParallax">
         <div class="contacts-inner"> 
             <div class="contact-left">
                 <div class="section-title">

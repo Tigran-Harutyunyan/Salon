@@ -71,7 +71,7 @@
                                            <span>Price: <span v-if="employee.service">${{ employee.service.price }}</span> </span> 
                                        </div>
                                         <div class="filter-item filter5">
-                                             <a v-show="employee.availability.length" @click="bookEmployee(employee)" class="btn customer-search-btn">{{bookBtnText}}</a>
+                                             <a v-show="employee.availability.length" @click="showConfirmation(employee)" class="btn customer-search-btn">Confirm</a>
                                         </div> 
                                    </div>
                                 </div> 
@@ -80,22 +80,61 @@
                                     <h3>Available hours:</h3>  
                                     <div class="availabilities">
                                          <div class="availability-item" v-for="(item, index) in employee.availability" >
-                                            <input type="checkbox" :id="index" @click='proccessCheckboxes(item)' v-model="item.isChecked"/>
-                                            <label :for="index" class="filter-label">
-                                                <span></span>{{item.time}}</label>
+                                            <input type="checkbox"
+                                                 :id="index" 
+                                                 @change="proccessCheckboxes(item)" 
+                                              
+                                                 :value="item.isChecked"
+                                                 :checked="item.isChecked"
+                                                 />
+                                            <label :for="index" class="filter-label"><span></span>{{item.time}}</label>
                                         </div> 
                                     </div>  
                                 </div>
                                  <div class="filter-item btn-mobile-booking filter5">
-                                        <a v-show="employee.availability.length" @click="bookEmployee(employee)" class="btn customer-search-btn">{{bookBtnText}}</a>
+                                        <a v-show="employee.availability.length" @click="showConfirmation(employee)" class="btn customer-search-btn">Confirm</a>
                                 </div>  
                            </li>
                        </ul>
-                    </div>
+                    </div> 
                     <div class="filter-spacer"></div>
                 </div>
             </div>
         </transition> 
+        <transition name="modal">
+            <div class="login-page-container modal-container filters-window" v-if="isConfirmation">
+                <div class="popup-close" @click="closeFilter()"  v-show="isConfirmation"></div>
+                <!-- CONFIRMATION LIST -->
+                <div class="confirmation-step" > 
+                    <div class="popup-title-container">
+                        <h5>Confirmation</h5>
+                        <div class="title-elements-container">
+                            <span></span><span></span>
+                        </div>  
+                    </div>
+                    <ul class="confirmation-list-items">
+                        <li>Your name: <span>{{userInfo.first_name }} {{userInfo.last_name }}</span></li>
+                        <li>Email:<span>{{ userInfo.email }}</span></li>
+                        <li>Phone:<span>{{ userInfo.phone_number}}</span></li>
+                        <li>Service:<span>{{ selectedService.name}}</span></li> 
+                        <li>Service Duration:<span>{{ selectedService.duration}}min.</span></li>
+                        <li>Date:<span>{{  selectedDate | moment("dddd, MMMM Do YYYY") }}</span></li>
+                        <li>Start Time:<span>{{ checkedTime }}</span></li>
+                        <li>Provider:<span>{{selectedEmployee.first_name}} {{selectedEmployee.last_name}}</span></li>  
+                        <li>*Price:<span>${{ selectedService.price}}</span></li> 
+                    </ul>      
+                  <div class="graphical-elements-2"><span></span> <span></span></div>
+                    <p>
+                        *Prices and Duration are starting point quotes. <br>
+                        *Request: Appointments are pending for service Provider Acceptance.
+                    </p>
+                    <div class="filter-item confirmation-btns filter5">
+                        <a @click="goBack" class="btn customer-search-btn">Back</a>
+                        <a @click="bookEmployee()" class="btn customer-search-btn">{{bookBtnText}}</a>
+                    </div>  
+               </div> 
+            </div>
+        </transition>
         <div class="mobile-backdrop" v-if="isPopupVisible" @click="closeFilter()"></div>
     </div>
  </template> 
@@ -109,6 +148,7 @@ export default {
             showFilter: false,
             isPopupVisible: false,
             selected: null,
+            isConfirmation:false,
             storeData: {},
             employees: [],
             allEmployees:[],
@@ -125,14 +165,19 @@ export default {
             datePickerConfig: {
                 weekNumbers: true,
                 minDate: 'today',
-                defaultDate: 'today'
+                defaultDate: 'today' 
             },
             datePickerPlaceholder: "Select date",
             searchResults: [],
             zeroResults: null,
             bookBtnText: "book",
             fitlerBtnText:"search",
-            loading: false
+            loading: false,
+            userInfo: {
+                first_name:"",
+                last_name: ""
+            },
+            checkedTime:""
         }
     },  
     computed:{
@@ -141,44 +186,55 @@ export default {
         }
     },
     methods: {
-        proccessCheckboxes (item){  
-            if(!item.isChecked){ 
-                this.searchResults[0].availability.forEach((element)=>{ 
-                if(element.time !== item.time ){
-                        element.isChecked = false;
-                    }
-                });
+        showConfirmation (employee) { 
+            if (!this.getUserData()){
+                return;
             } 
+            this.checkedTime = "";
+            this.searchResults[0].availability.forEach((element) =>{
+                if(element.isChecked){
+                    this.checkedTime = element.time
+                }
+            });
+            if(!this.checkedTime.length){
+                this.$toast.info({message: `Please select a preferred hour from the available hours`});  
+                return; 
+            }
+            $(document).scrollTop(0); 
+            this.isConfirmation = true;
+            this.showFilter = false;
+        },
+        goBack(){
+            this.isConfirmation = false;
+            this.showFilter = true;
+        },
+        proccessCheckboxes (item){ 
+            this.searchResults[0].availability.forEach((element)=>{  
+                    element.isChecked = element.time !== item.time? false : true; 
+            }); 
         },
         getToday(){
           let today = new Date();
           let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
           return date;
         },
-        bookEmployee (employee){ 
-            let checkedTime = "";
-            this.searchResults[0].availability.forEach((element) =>{
-                if(element.isChecked){
-                    checkedTime = element.time
-                }
-            });
-            if(!checkedTime.length){
-                this.$toast.info({message: `Please select a preferred hour from the available hours`});  
-                return; 
-            }
- 
-            let storageData = localStorage.getItem('userInfo');
-            let token;  
-
-            if (storageData){
-                token = JSON.parse(storageData).token;
+        getUserData(){ 
+           let storageData = localStorage.getItem('userInfo'); 
+            if (storageData){ 
+                return JSON.parse(storageData);
             } else {
                 this.$toast.info({message: `You are not logged in. Please login first`}); 
                 EventBus.$emit('unAuthorized'); 
                 this.closeFilter();
-                EventBus.$emit('openAuth', 'login');
-               return;
+                EventBus.$emit('openAuth', 'login'); 
+                return false;
             } 
+        },
+        bookEmployee (){    
+            let userData = this.getUserData(); 
+            if (!userData){ 
+                return
+            }  
             this.loading = true;
             this.bookBtnText = "Booking"
             $.ajax({
@@ -188,25 +244,17 @@ export default {
                 data: { 
                     service_id: this.searchResults[0].service.id,
                     employee_id: this.searchResults[0].id,
-                    time: checkedTime, 
+                    time: this.checkedTime, 
                     date: this.selectedDate,
-                    token: token
+                    token: userData.token
                 },
             }).done((response) => {  
                 this.loading = false;  
                 this.bookBtnText = "book"
                     if (response.success) {  
-                         this.$toast.info({message: `Booking success.You can see your booking under 'Your own bokings' section.`});  
-                         if (this.searchResults[0]){
-                            this.searchResults[0].availability.forEach((element,index, array)=> {
-                                if(element.isChecked){
-                                    array.splice(index, 1);
-                                }
-                            });
-                         }    
-                         if (!this.searchResults[0].availability.length){
-                             this.searchResults=[];
-                         }
+                         this.$toast.info({message: `Booking success.You can see your booking under 'Your own bokings' section.`});
+                         this.removeHour();  
+                         this.closeFilter(); 
                     }  
                     if (response.error){
                         if(response.message == "Invalid token"){ 
@@ -217,6 +265,10 @@ export default {
                             return; 
                         } else if (response.message ==  "Another Booking Found") {
                            this.$toast.info({message: `Already booked.`}); 
+                            this.removeHour();  
+                        } else  if (response.message ==  "Invalid DateTime.") {
+                            this.$toast.info({message: 'Invalid date and time'}); 
+                            this.removeHour();  
                         }
                     }
             }).fail((xhr, status, error)=> {
@@ -267,11 +319,29 @@ export default {
                 this.showServices = true;
             } 
         },   
+        removeHour(){
+            if (this.searchResults[0]){
+                this.searchResults[0].availability.forEach((element,index, array)=> {
+                    if(element.isChecked){
+                        array.splice(index, 1);
+                    }
+                });
+                }    
+            if (!this.searchResults[0].availability.length){
+                this.searchResults=[];
+                $(document).scrollTop(0);
+            }  
+        },
         closeFilter() { 
-            this.isPopupVisible = this.showFilter = false; 
-            this.selectedService = "";
-            this.selectedEmployee = "";
-            this.searchResults = [];
+             if(this.isConfirmation){ 
+               this.isConfirmation = false;
+               this.showFilter = true; 
+            } else {
+                this.isPopupVisible = this.showFilter = this.isConfirmation =  false; 
+                this.selectedService = "";
+                this.selectedEmployee = "";
+                this.searchResults = [];
+            } 
             //$("html").removeClass('no-scroll');
         },
         filterService(){ 
@@ -348,7 +418,7 @@ export default {
                                 message: `Error whilie searching`
                             });
                         }    
-                }).fail((xhr, status, error)=> {
+                }).fail((xhr, status, error)=> { 
                    this.handleError();
                 }); 
             } 
@@ -389,24 +459,37 @@ export default {
             } 
         },
         handleError(error){
+            this.bookBtnText = "Booking"
+            this.fitlerBtnText = "Search";
             this.loading = false; 
             if(error){
                 this.$toast.error({ 
                     message: error
                 });
-            } 
+            }  else {
+                 this.$toast.error({ 
+                    message: "Error"
+                });
+            }
         },
         openFilterWindow(){
-            $("html").stop().animate({ scrollTop: 0 }, 0, 'swing', function() {}); 
+            $(document).scrollTop(0);
             this.isPopupVisible = true; 
             this.showFilter = true; 
         } 
     }, 
+    mounted(){ 
+      let storage = localStorage.getItem('userInfo');
+      if (storage){ 
+           this.userInfo = JSON.parse(storage);
+      }
+    },
     created() {
       let today = this.getToday();
       this.datePickerConfig.minDate =  today; 
       this.datePickerConfig.defaultDate =  today;
-      this.selectedDate =  today;  
+      this.selectedDate =  today;   
+     
         EventBus.$on('filterByService', serviceID => {  
             this.filterByServiceID(serviceID);
             this.activeFilter = "services";
@@ -414,14 +497,13 @@ export default {
         }); 
         EventBus.$on('filterByEmployeeByID', employeeID => {   
             this.selectedService="";  
-            this.employees=[];
+            this.employees=JSON.parse(JSON.stringify(this.allEmployees));
             this.allEmployees.forEach((element)=> {
                 if(employeeID){
                     if(element.id==employeeID){ 
-                        this.selectedEmployee = element;
-                        this.employees.push(element);
+                        this.selectedEmployee = element; 
                     }
-                } 
+                }  
             }); 
             
             this.activeFilter = "employees";   

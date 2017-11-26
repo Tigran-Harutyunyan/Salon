@@ -20,5 +20,18 @@ export default new Router({
     { path: '/service-providers', name: 'ServiceProviders', component: ServiceProviders },
     { path: '/employees', name: 'Employees', component: Workers },
     { path: '/service-provider/:id', name: 'ServiceProviderDetail', component: ServiceProvidersDetail }
-  ]
+  ],scrollBehavior (to, from, savedPosition) {
+    // return desired position
+      if (savedPosition) {
+        return savedPosition
+      } else {
+        return { x: 0, y: 0 }
+      }
+    /* if (to.hash) {
+      return {
+        selector: to.hash
+        
+      }
+    } */
+  }
 }) 

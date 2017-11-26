@@ -17,7 +17,7 @@
                 <div class="lines line-3"></div>
                 <div class="lines line-4"></div>
                 <div class="service-boxes-inner" id="service-boxes-inner">
-                    <div class="service-box-item animated" v-for="service in services">
+                    <div class="service-box-item animated" onclick="" v-for="service in services">
                         <img :src="service.imgSrc" :alt="service.name">
                         <h5>{{service.name}}</h5>
                         <a @click="filterByService(service.id)" class="box-btn">Book now</a>
@@ -58,8 +58,8 @@ export default {
     },
     watch: {
 		'$route': function   (to, from)  {  
-          // $("html, body").stop().animate({ scrollTop: 0 }, 0, 'swing', () => { });
-            if (this.servicesController){
+          // $("body").stop().animate({ scrollTop: 0 }, 0, 'swing', () => { });
+            if (this.servicesController.info){
                 this.servicesController.destroy(true);
                 this.servicesController = null;
             }
@@ -83,7 +83,7 @@ export default {
             } else if (docWidth >= 1000) {
                 this.initialiseScrollMagic(0);
             }
-            $("html, body").stop().animate({ scrollTop: 0 }, 500, 'swing', () => { });
+            $("body").stop().animate({ scrollTop: 0 }, 500, 'swing', () => { });
 		}
     }, 
     methods: {

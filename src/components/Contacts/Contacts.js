@@ -11,7 +11,8 @@ export default {
       subject: '',
       message: '',
       parallaxImgSrc: "",
-      isLoading: false
+      isLoading: false,
+      showParallax: true
     }
 
   },
@@ -23,6 +24,7 @@ export default {
   mounted() {
     this.setParallaxSrc();
     this.apiPath = this.$store.getters.getApiPath;
+    window.addEventListener('orientationchange', this.doOnOrientationChange);
   },
   computed: {
     isContactsValid() {
@@ -37,6 +39,13 @@ export default {
         this.parallaxImgSrc = "../../../static/images/parallax2.jpg"
       }
     },
+    doOnOrientationChange() {
+      this.showParallax = false;
+      setTimeout(() =>{
+          this.showParallax = true;
+          this.setParallaxSrc();
+      }, 200); 
+    }, 
     onSubmit() {
       // Contact form submit logic goes here
       if (this.isContactsValid && !this.isLoading) {

@@ -23,7 +23,7 @@ Vue.use(VueParallaxJs);
 Vue.use(require('vue-moment'));
 var toastrConfigs = {
   position: 'bottom right',
-  showDuration: 2000
+  showDuration: 5000
 }
 Vue.use(CxltToastr, toastrConfigs);
 Vue.use(VModal, { dialog: true })

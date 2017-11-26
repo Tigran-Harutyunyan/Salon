@@ -40,7 +40,7 @@
                             
                         <div class="row"  v-for="booking in bookings">
                             <div class="cell avatar-cell">
-                               <img :src="booking.bookingServiceProvider.image" :alt="booking.bookingServiceProvider.fullName" class="service-provider"> 
+                               <img @error="imageLoadError(booking)" :src="booking.bookingServiceProvider.image" :alt="booking.bookingServiceProvider.fullName" class="service-provider"> 
                             </div> 
                             <div class="cell">
                                 {{booking.bookingServiceProvider.fullName }}
@@ -62,13 +62,14 @@
                             </div>
                             <div class="cell">
                                <button  v-if="booking.status=='Opened'" @click="openConfirmation(booking.id)" class="btn customer-search-btn">Cancel</button>
-                               <span  v-if="booking.status=='Cancelled'">Canceled</span>
+                               <span  class="canceled-label" v-if="booking.status=='Cancelled'">Canceled</span>
                             </div>
                         </div> 
                     </div>
                          <!-- <a href=""> <img :src="booking.bookingServiceProvider.image" :alt="booking.bookingServiceProvider.fullName" class="service-provider"> </a> -->
                  </div>
                 <uib-pagination 
+                    v-show="totalItems > itemsPerPage"
                     @change="pageChanged()"
                     :max-size="maxSize" 
                     :boundary-links="false"
@@ -80,10 +81,11 @@
                     last-text=""
                     v-model="pagination" 
                     ></uib-pagination>
-                <div v-if="noBooking">
+                <div v-if="noBooking" class="no-bookings">
                     You don`t have not made any booking yet.    
                 </div>    
             </div> 
+             <contacts v-if="showContacts"></contacts>
             <services-list></services-list>
         </div>
         <v-dialog/> 
@@ -102,16 +104,24 @@ export default {
            bookings: [],
            storeData: {},
            noBooking: false,
-           deletableBookingID:"", 
+           cancelBookingID:"", 
            maxSize:7, 
            totalItems:0,
            itemsPerPage: 10,
            pagination: { currentPage: 1 },
-           allBookings:[]
+           allBookings:[],
+           showContacts: false
         }
     }, 
     
     methods: {
+        imageLoadError(booking){ 
+            this.bookings.forEach((element) =>{
+                if(element.id === booking.id){
+                    element.bookingServiceProvider.image = "./static/images/custom-avatar.png"
+                }   
+            });
+        },
         paginate (list, currentPage){
             let index = (currentPage - 1) * this.itemsPerPage;
             let x = list.slice(index, index + this.itemsPerPage);
@@ -136,7 +146,7 @@ export default {
             this.$modal.hide('dialog');
         },
         openConfirmation(bookingID){
-          this.deletableBookingID = bookingID;
+          this.cancelBookingID = bookingID;
           this.show();
         },
         setStatus(bookingID){
@@ -154,17 +164,19 @@ export default {
            } 
            this.loading = true;  
             $.ajax({
-                url: `${this.apiPath}api/getEmployeeByID`,
+                url: `${this.apiPath}api/cancelCustomerBookingByBookingId`,
                 dataType: 'json',
                 'type': 'POST', 
                 data: {   
-                    employee_id: this.deletableBookingID 
+                    booking_id: this.cancelBookingID,
+                    token: this.userInfo.token 
                 },
             }).done((response) => {   
                 if (response.success) {   
                     this.$toast.success({ 
                         message: 'Successfully canceled the booking.'
                     });
+                    this.setStatus(this.cancelBookingID);
                 }  
                 if (response.error && response.message){
                     this.handleError(response.message); 
@@ -224,7 +236,7 @@ export default {
                                 booking.bookingServiceProvider = this.addServiceProviderData(booking.employee_id);
                                 booking.bookingService = this.addServiceData(booking.service_id);
                             });
-                           response.customer_bookings.sort((a, b)=> new Date(b.startDate) - new Date(a.startDate));  
+                          // response.customer_bookings.sort((a, b)=> new Date(b.startDate) - new Date(a.startDate));  
                            this.allBookings =  response.customer_bookings;
                            this.totalItems = this.allBookings.length;
                            this.bookings  =   this.paginate( this.allBookings,this.pagination.currentPage);
@@ -235,7 +247,7 @@ export default {
                    if (response.error && response.message){
                         this.handleError(response.message); 
                    }
-                   $("html").stop().animate({ scrollTop: 0 }, 200, 'swing', function() {}); 
+                   $("body").stop().animate({ scrollTop: 0 }, 200, 'swing', function() {}); 
             }).fail((xhr, status, error)=> {
                 this.handleError();
             }); 
@@ -249,6 +261,9 @@ export default {
     mounted(){
         $('#appHeader, .section-footer').show();
         this.getCustomerBookings();
+         setTimeout(()=> {  
+                this.showContacts =true
+        }, 1000);
     },
     beforeRouteEnter(to, from, next){  
         if(localStorage.getItem('userInfo') === null){

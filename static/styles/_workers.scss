@@ -28,7 +28,7 @@
         }
     }
     .social-links {
-        padding-top: 37px;
+        padding-top: 34px;
         width: 169px;
         margin-left: 0;
     }
@@ -53,7 +53,10 @@
         }
     }
 }
-
+.avatar-place {
+    width: 400px;
+    height: 400px;
+}
 .worker-item-middle {
     max-width: 600px;
 }
@@ -146,7 +149,9 @@
         border-radius: 50%;
         padding: 0 !important;
         margin-right: 15px;
+        margin-left: 0
     }
+  
 }
  
 @media only screen and (max-width: 1610px) {
@@ -164,7 +169,7 @@
             width: 300px;
         } */
         .social-links {
-            width: 145px;
+            width: 133px;
         }
     }
     
@@ -203,25 +208,30 @@
     }
     .worker-name {
         font-size: 24px;
-        padding-bottom: 13px;
+        padding-bottom: 17px;
     }
     .worker-position {
-        font-size: 18px
+        font-size: 18px;
+        margin-bottom: 17px;
     }
     .worker-item-left .worker-info-place {
         margin-right: 40px;
     }
     .worker-bio { 
-        height: 314px
+        height: 303px
     } 
 }
 
 @media only screen and (max-width: 900px) {
+    .avatar-place {
+        width: 300px;
+        height: 300px;
+    }
     .worker-bio {
         font-size: 14px;
         line-height: 22px;
         padding-top: 11px;
-        height: 212px
+        height: 192px
     } 
     .windy-demo {
         li img {
@@ -313,23 +323,41 @@
     .works { 
         display: none; 
     }
+    .worker-item { 
+        padding-bottom: 38px;
+    }
 }
 @media only screen and (max-width: 400px) {
     .worker-alternative-slider {
         width: 151px !important
     } 
+    .avatar-place {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto;
+    }
     .worker-item-left{
         .worker-info-place {
             width: 100%;
             .worker-action-section {
                 flex-wrap: wrap
-            }
-            .btn-workers {
-                margin-right: auto
-            }
-        }
-       .social-links {
-           margin: 0 auto
-        }
+            } 
+        } 
+    }
+  
+}
+@media only screen and (max-width: 340px) { 
+    .worker-item-left .social-links {
+        margin-top: 0;
+        padding-top: 18px;
+    }
+    .worker-item-left .worker-info-place .btn-workers {
+        margin-left: auto;
+        margin-right: 0;
+        font-size: 16px;
+        line-height: 36px;
+        margin-top: 18px;
+        display: inline-block; 
+        display: block;
     }
 }

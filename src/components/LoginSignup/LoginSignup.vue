@@ -26,7 +26,7 @@
                                 <a @click="openPopup('forgot')" class="forgot">Forgot password?</a>
                                 <div class="login-btn-place">
                                     <!-- <a href="" class="btn">Cancel</a> -->
-                                    <input type="submit" class="btn btn-small-popup" v-bind:value="loginValue">
+                                    <button class="btn btn-small-popup">{{loginValue}}</button>
                                 </div>
                             </form>
                         </div>
@@ -73,7 +73,7 @@
                                     v-model="passwordRecoveryEmail" :class="{'has-error': $v.passwordRecoveryEmail.$error}">
                             <div class="input-space"></div>  
                             <div class="login-btn-place"> 
-                                <input type="submit" class="btn btn-small-popup" v-bind:value="resetValue">
+                                <button type="submit" class="btn btn-small-popup" >{{resetValue}}</button>
                             </div>
                         </form>
                     </div> 
@@ -144,10 +144,8 @@
                                     <!-- secret key - 6LdADzUUAAAAAHpcmkDIuiwe_vT-Ry6oysJpN_Gf -->
                                 </template>
 
-                                <div class="login-btn-place">
-                                    <!-- <a href="" class="btn">Cancel</a>  -->
-                                    <input type="submit" class="btn btn-small-popup" v-bind:value="signupValue">
-                                    <!--   :disabled="$v.$invalid" -->
+                                <div class="login-btn-place"> 
+                                    <button type="submit" class="btn btn-small-popup" >{{signupValue}}</button> 
                                 </div>
                             </div>
                         </div>
@@ -235,12 +233,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
                 }).done((response) => {  
                     this.isLoading = false;
                     if (response.success) {  
-                        this.$store.dispatch('setUserInfo', response);
-                        localStorage.setItem('userInfo', JSON.stringify(response));
-                        this.$toast.success({ 
-                            message: `Welcome ${response.first_name}`
-                        });
-                        EventBus.$emit('Authorized', response);
+                       this.handleAuthorization(response);
                         this.closePopups();
                     }  else { 
                         if(response.message == "User is not activated") {
@@ -339,17 +332,69 @@ https://developers.facebook.com/apps/523193884695053/settings/
         verify(recaptchaResponse) {
          
         },
+        handleAuthorization(response){
+            this.$store.dispatch('setUserInfo', response);
+            localStorage.setItem('userInfo', JSON.stringify(response));
+            this.$toast.success({ 
+                message: `Welcome ${response.first_name}`
+            });
+            EventBus.$emit('Authorized', response);
+        },
         onSignInSuccessFB(fBuser){
-            console.log(fBuser)
+            console.log(fBuser) 
+              $.ajax({
+                    url: `${this.apiPath}api/socialLogin`,
+                    dataType: 'json',
+                    'type': 'POST', 
+                    data: { 
+                        access_token: fBuser.authResponse.accessToken,
+                        type: "facebook"
+                    },
+                }).done((response) => {  
+                    this.isLoading = false; 
+                    if (response.success) {  
+                       this.handleAuthorization(response);
+                        this.closePopups();
+                    }  else {  
+                        this.$toast.error({ 
+                            message: `Error logging in`
+                        }); 
+                    } 
+                }); 
         },
         onSignInSuccess(googleUser) {
             // `googleUser` is the GoogleUser object that represents the just-signed-in user. 
             // See https://developers.google.com/identity/sign-in/web/reference#users 
-            const profile = googleUser.getBasicProfile() // etc etc 
+            const profile = googleUser.getBasicProfile(); // etc etc 
+            const googeleID = googleUser.getAuthResponse().id_token;
             console.log(profile);
-            /*    FB.api('/me', dude => {
-                   console.log(`Good to see you `)
-                 }) */
+            console.log(googeleID);
+            $.ajax({
+                url: `${this.apiPath}api/socialLogin`,
+                dataType: 'json',
+                'type': 'POST', 
+                data: { 
+                    access_token: googeleID,
+                    type: "google"
+                },
+            }).done((response) => {  
+                this.isLoading = false; 
+                if (response.success) {  
+                    this.handleAuthorization(response);
+                    this.closePopups();
+                }  else {  
+                    if(response.message === "You are already registered in our system"){
+                        this.$toast.info({ 
+                            message: `You are already registered in our system. If you forgot your password you can reset it.`
+                        }); 
+                    } else {
+                        this.$toast.error({ 
+                            message: `Error logging in`
+                        }); 
+                    }
+                    
+                } 
+            }); 
         },
         onSignInError(error) {
             // `error` contains any error occurred. 
@@ -367,13 +412,12 @@ https://developers.facebook.com/apps/523193884695053/settings/
             console.log('Expired')
         },
         resetRecaptcha() {
-            this.$refs.recaptcha.reset() // Direct call reset method
+            this.$refs.recaptcha.reset(); // Direct call reset method
         }
     }, 
     created() {
-        EventBus.$on('openAuth', windowType => {
-            //this.htmlElement.addClass('no-scroll');
-            $("html").stop().animate({ scrollTop: 0 }, 0, 'swing', function() {}); 
+        EventBus.$on('openAuth', windowType => { 
+            $(document).scrollTop(0); 
             this.isPopupVisible = true;
             if (windowType === 'login') {
                 this.showLogin = true;
@@ -381,7 +425,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
                 this.showSignUp = true;
             } 
         });
-        this.htmlElement = $('html');
+       
         //EventBus.$emit('setparent', false);
         this.apiPath = this.$store.getters.getApiPath; 
        

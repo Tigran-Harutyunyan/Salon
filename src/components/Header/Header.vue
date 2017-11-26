@@ -27,12 +27,17 @@
             </div>
         </nav>
         <!--MOBILE DROPDOWN-->
-            <div class="button_container" id="toggleMobileMEnu" @click="toggleMobileMenu" :class="{'active' :isMobileMenuVisible}"> 
+        <div class="button_container" id="toggleMobileMEnu" @click="toggleMobileMenu" v-if="!isMobileMenuVisible"> 
+            <span></span>
+            <span></span>
+            <span></span>
+        </div> 
+        <div class="overlay" id="overlay" :class="{'open' :isMobileMenuVisible}">
+            <div class="button_containe active" id="toggleMobileMEnu" @click="toggleMobileMenu"> 
                 <span></span>
                 <span></span>
                 <span></span>
             </div> 
-        <div class="overlay" id="overlay" :class="{'open' :isMobileMenuVisible}">
             <nav class="overlay-menu">
                 <ul>
                     <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/">Home</router-link></li>
@@ -60,7 +65,7 @@ export default {
             routes: [
                 { route: '/', text: "Home", visible: false }  
             ], 
-            parentElements: $("html, body"),
+            contactElement: {},
             isMobileMenuVisible: false,
             isAuthtorized:"",
             isLoading:false,
@@ -72,7 +77,7 @@ export default {
         hideMobileMenu() {
             this.isMobileMenuVisible = false;
         },
-        scrollToTop() {
+        scrollToTop() { 
             if (this.$router.history) { 
                 if (this.$router.history.current.fullPath === "/about") { 
                  //this.parentElements.stop().animate({ scrollTop: $("#about").offset().top }, 500, 'swing', function() {});
@@ -82,7 +87,7 @@ export default {
             }
         },
         toContactSection() {
-            this.parentElements.stop().animate({ scrollTop: $("#contacts").offset().top }, 500, 'swing', function() {});
+           $(document).scrollTop($("#contacts").offset().top);
         },
         toggleMobileMenu() {
             this.isMobileMenuVisible = !this.isMobileMenuVisible;
@@ -148,7 +153,7 @@ export default {
         this.apiPath = this.$store.getters.getApiPath;  
         this.scrollToTop();
         this.userInfo  =   JSON.parse(localStorage.getItem('userInfo'));
-        this.isAuthtorized = this.userInfo && this.userInfo.first_name ? true: false; 
+        this.isAuthtorized = this.userInfo && this.userInfo.first_name ? true: false;  
     }, 
     created(){
         EventBus.$on('Authorized', userInfo => { 

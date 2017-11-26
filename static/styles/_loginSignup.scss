@@ -34,8 +34,8 @@
 }
 
 .login-btn-place {
-  padding-top: 20px;
-  clear: both;
+  padding-top: 20px; 
+  float: right;
   a {
     font-size: 12px;
     padding: 5px 20px 4px;
@@ -59,7 +59,7 @@
 }
 
 .forgot {
-  float: right;
+  float: left;
 }
 
 .input-space {
@@ -98,9 +98,9 @@
 
 .decor-container-hor {
   height: 18px;
-  margin-top: 28px;
+  margin-top: 32px;
   position: relative;
-  margin-bottom: 28px;
+  margin-bottom: 31px;
   h5 {
     position: absolute;
     left: 139px;
@@ -184,8 +184,8 @@
   left: 50%;
   margin-left: -381px;
   top: 50%;
-  height: 350px;
-  margin-top: -175px;
+  height: 330px;
+  margin-top: -165px;
   .login-left,
   .login-right {
     width: 320px !important;
@@ -341,19 +341,25 @@
 
 .g-signin-button {
   /* This is where you control how the button looks. Be creative! */
+  background: url('/static/images/social-icons.png');
+  background-size: 24%;
+  background-position: 4px 5px;
+  background-repeat: no-repeat;
   display: inline-block;
   padding: 11px 32px;
   border-radius: 3px;
-  background-color: #3c82f7;
+  background-color: #e04a32;
   color: #fff;
   width: 145px;
   height: 40px;
   text-align: center;
-  cursor: pointer
+  cursor: pointer;
+  float:right
 }
 
 .fb-signin-button {
   /* This is where you control how the button looks. Be creative! */
+  background: url('/static/images/social-icons.png');
   display: inline-block;
   padding: 11px 32px;
   border-radius: 3px;
@@ -362,7 +368,10 @@
   width: 145px;
   height: 40px;
   text-align: center;
-  cursor: pointer
+  cursor: pointer;
+  background-size: 24%;
+  background-position: 4px -25px;
+  background-repeat: no-repeat
 }
 
 .popup-close {
@@ -406,6 +415,10 @@
 }
 
 @media only screen and (max-width: 870px) {
+ 
+  .btn.btn-small-popup, .forget-password-container .login-btn-place {
+    width:100%
+  }
   .signup-page-container {
     .login-left {
       padding-top: 0;
@@ -439,7 +452,7 @@
     margin-top: 0;
     width: 100%;
     border-radius: 0;
-    min-height: 1100px;
+    min-height: 1200px;
   }
   .login-page-container .popup-inner,
   .forget-password-container .popup-inner {
@@ -458,7 +471,9 @@
       height: 20px;
     }
     .login-btn-place {
-      text-align: center
+      text-align: center;
+      float: none;
+      margin-top: 20px;
     }
     .popup-inner {
       -ms-flex-wrap: wrap;
@@ -584,6 +599,8 @@
       top: 0;
       margin-top: 0;
       height: 100vh;
+      padding-left: 15px;
+      padding-right: 15px;
     }
   }
 }

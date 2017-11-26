@@ -265,7 +265,7 @@ Navigation
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(148, 148, 148, 0.5);
     height: 100vh;
 }
 
@@ -365,13 +365,17 @@ $button-width: 22px;
     color: $color1 !important;
 }
 
-#toggleMobileMEnu.active {
+.overlay #toggleMobileMEnu.active {
     background-position: -145px -279px;
     position: fixed;
     height: 22px;
     width: 22px;
     top: 30px;
     right: 30px;
+    transition: 0.2s  opacity linear 0.2s;
+    opacity: 1;
+    visibility: visible; 
+    cursor: pointer
 }
 
 .button_container.active {
@@ -383,20 +387,28 @@ $button-width: 22px;
 .overlay {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100%;
-    opacity: 1;
-    visibility: hidden;
+    right: -360px;
+    width: 360px; 
     background: #4e342e;
-    z-index: 50;
-    min-height: 660px;
-    border: 15px solid white;
-    &.open {
+    z-index: 50; 
+    height: 555px;
+    border: 15px solid #ffffff;
+    transition: right 0.1s linear;
+    #toggleMobileMEnu{
+        opacity: 0;
+        visibility: hidden; 
+        display: none;
+        
+    }
+    &.open {  
+        transition: right 0.2s linear;
+        right: 0; 
+        #toggleMobileMEnu {
+            display: block
+        }
         .overlay-menu {
             display: block
         }
-        opacity: 1;
-        visibility: visible;
         &:before {
             left: 0;
         }
@@ -449,12 +461,12 @@ $button-width: 22px;
             height: 100%;
             li {
                 display: block;
-                min-height: 63px;
+                min-height: 47px;
                 position: relative;
                 a {
                     position: relative;
                     color: #f2e7e1;
-                    font-size: 22px;
+                    font-size: 18px;
                     text-decoration: none;
                     overflow: hidden;
                     line-height: 20px;
@@ -530,7 +542,7 @@ $button-width: 22px;
         height: 20px;
         top: 13px;
         &:before { 
-            border-color: rgba(60,60,60,.5);
+            border-color: #4e342e;
             border-style: solid;
             border-width: 3px 3px 0 0;
             content: "";
@@ -688,9 +700,23 @@ a.menu-item.dropbtn {
 }
 
 @media only screen and (max-width: 480px) {
-    .overlay {
-        height: 100%
+    .mobile-backdrop {
+        display: none
     }
+    .overlay {
+        height: 100%; 
+        width: 100%;
+        right: -480px;
+        nav ul li {
+            min-height: 45px;
+            a {
+                font-size: 18px; 
+                line-height: 20px;
+            }
+    
+        }
+    }
+ 
     .call-us-block {
         padding-top: 22px !important;
     }

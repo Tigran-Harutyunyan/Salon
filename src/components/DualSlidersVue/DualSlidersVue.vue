@@ -1,31 +1,43 @@
 <template>
-<div class="slider-container home-slider" v-if="sliderData.length>0">
-    <div class="slider-inner">
-        <div class="owl-carousel owl-theme" id="slider1">
-            <div class="item" v-for="item in sliderData">
-                <div class="main-banner banner-large" v-bind:style="item.style"></div>
-                <!-- <div class="main-banner banner-medium" v-bind:style="item.style2"></div> -->
-            </div>
-        </div>
-        <div class="owl-carousel owl-theme" id="slider2">
-            <div class="item" v-for="item in sliderData">
-                <div class="slider-text-info-place">
-                    <span class="slide-caption slide-text-part1">{{ item.caption[0] }}</span>
-                    <span class="slide-caption slide-text-part2">{{ item.caption[1] }}</span>
-                    <p>{{ item.description }}
-                    </p>
-                    <a  class="btn"  @click="filterBy(-1)">Book now</a>
+    <div class="slider-container " v-if="sliderData.length>0"> 
+        <agile :arrows="true" :dots="false" :infinite="false" :speed="750"  ref="agile1" asNavFor="['agile2']"> 
+                <div class="item" v-for="item in sliderData">
+                     <div class="main-banner banner-large"  v-bind:style="item.style"></div>  
+                </div>
+            </agile>
+             <agile :arrows="false" :dots="false" :infinite="false" :speed="750"  ref="agile2"  > 
+                <div class="item" v-for="item in sliderData">
+                     <div class="main-banner banner-large"  v-bind:style="item.style"></div>  
+                </div>
+            </agile> 
+           <!--  <div class="owl-carousel owl-theme" id="slider1">
+                <div class="item" v-for="item in sliderData">
+                    <div class="main-banner banner-large" v-bind:style="item.style"></div> 
                 </div>
             </div>
-        </div>
+            <div class="owl-carousel owl-theme" id="slider2">
+                <div class="item" v-for="item in sliderData">
+                    <div class="slider-text-info-place">
+                        <span class="slide-caption slide-text-part1">{{ item.caption[0] }}</span>
+                        <span class="slide-caption slide-text-part2">{{ item.caption[1] }}</span>
+                        <p>{{ item.description }}
+                        </p>
+                        <a  class="btn"  @click="filterByService(-1)">Book now</a>
+                    </div>
+                </div>
+            </div> -->
+      
+        <div class="home-slider-nav-container" v-show="sliderData.length>1">
+            <div class="home-slider-nav">
+                <div class="owl-prev" @click="prevSlide()"> </div>
+                 <div class="owl-next" @click="nextSlide()"> </div>
+            </div>
+        </div> 
     </div>
-    <div class="home-slider-nav-container" v-show="sliderData.length>1">
-        <div class="home-slider-nav"></div>
-    </div> 
-</div>
 </template>   
 <script>
 import { EventBus } from '../../event-bus.js'; 
+import {Agile } from '../../Agile.vue'; 
 export default {
     data() {
         return {
@@ -39,14 +51,19 @@ export default {
 		'sliderData': function (to, from)  {    
             this.resetSliders()
         }
+    }, 
+    component: {
+        agile: Agile
     },
     methods: {
-        filterBy(serviceID){
-            if (this.$route.name == "Employees"){
-                 EventBus.$emit('filterByEmployeeByID', -1);
-            } else {
-                 EventBus.$emit('filterByService', -1);
-            } 
+        prevSlide(){
+            this.$refs.carousel.goTo(2, false)
+        },
+        nextSlide(){
+            this.$refs.carousel.goTo(1, false)
+        },
+        filterByService(serviceID){
+             EventBus.$emit('filterByService', -1);
         },
         resetSliders(){ 
            setTimeout(()=> {
@@ -90,7 +107,6 @@ export default {
                 items: 1,
                 autoHeight: false,
                 mouseDrag: false,
-                touchDrag: false,
                 onInitialized: (event) => {
                    // $("html, body").stop().animate({ scrollTop: 0 }, 500, 'swing', () => { });
                     setTimeout(() => {
@@ -111,13 +127,13 @@ export default {
                     }, 800);
                 } 
             }); 
-           /*  this.carousel.on('dragged.owl.carousel', (event)=>{
-                  if (event.relatedTarget.state.direction == 'left') {
+            this.carousel.on('dragged.owl.carousel', (event)=>{
+                  if (e.relatedTarget.state.direction == 'left') {
                      this.carousel2.trigger('next.owl.carousel')
                      } else {
                          this.carousel2.trigger('prev.owl.carousel')
                     }
-             });   */
+             });  
         }
     },
     mounted() {   

@@ -24,6 +24,7 @@
     "vue-router": "^3.0.1",
     "vue-select": "^2.3.0",
     "vue-toastr": "^2.0.9",
+    "vuejs-uib-pagination": "^1.0.4",
     "vuelidate": "^0.6.1",
     "vuex": "^3.0.0"
   },

@@ -28,6 +28,11 @@
        
     }
 }
+.VueCarousel-dot-container {
+    .VueCarousel-dot:first-child {
+        padding-left: 0 !important
+    }
+}
 @media only screen and (max-width:1300px) {
     .worker-alternative-slider { 
             display: block;
@@ -41,9 +46,9 @@
     }
 }
 
-@media only screen and (max-width:768px) {
+@media only screen and (max-width:580px) {
     .worker-alternative-slider {  
-            width: 315px; 
+            width: 309px; 
     }
 }
 
