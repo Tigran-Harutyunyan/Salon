@@ -473,6 +473,29 @@
     }
 }
 @media only screen and (max-width: 825px) {
+    .service-box-item {
+        width:284px;
+        height: 174px; 
+        margin-bottom: 50px;
+        .shirma, .shirma-dark {
+            width:284px;
+            height: 174px; 
+        }
+        h5 { 
+            font-size: 26px; 
+            padding: 35px 10px 0;
+        }
+        .shirma {
+            p {
+                padding-top: 57px;
+                font-size: 26px;
+            }
+        }
+        .box-btn {
+            bottom: 15px
+        }
+        
+    }
     #slider2 {
         padding-bottom: 70px;
         .owl-item .item {
@@ -509,7 +532,7 @@
         }
     }
     .service-boxes-inner {
-        width: 320px;
+        width: 590px;
     }
     .lines.line-2,
     .lines.line-1 {
@@ -718,7 +741,11 @@
     }
    
 }
-
+@media only screen and (max-width: 750px) {
+    .service-boxes-inner {
+        width: 284px;
+    }
+}
 @media only screen and (max-width: 625px) {
     .banner-medium,.main-banner, .owl-carousel, 
     .main-banner, .owl-carousel,.slider-inner {

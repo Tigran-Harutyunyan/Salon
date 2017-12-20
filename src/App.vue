@@ -17,11 +17,11 @@
                             </ul>
                     </div>
                     <div class="footer-right">
-                        <div class="copyright-place  ">
+                        <div class="copyright-place">
                             <p class="footer-links"> © 2017 My Salon</p> <span class="vert-bar"></span>
                         </div>
                         <div class="website-author-place">
-                            <p class="footer-links">Website by </p><a href="http://platinuminkdesign.com" class="footer-links"><span>PLATINUN INK DESIGN</span></a>
+                            <p class="footer-links">Website by </p><a href="http://platinuminkdesign.com" class="footer-links"><span>PLATINUM INK DESIGN</span></a>
                         </div>
                     </div>
                 </div>
