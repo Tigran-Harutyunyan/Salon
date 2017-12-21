@@ -35,7 +35,7 @@ export default {
         }
     },
     props:['sliderData'],
-      watch: {
+    watch: {
 		'sliderData': function (to, from)  {    
             this.resetSliders()
         }

@@ -108,10 +108,7 @@
                                 <!-- <label for="email" class="popup-label">Email Login</label> -->
                                 <input type="text" id="email" placeholder="*Email" class="def-input" v-model="signupEmail" :class="{'has-error': $v.signupEmail.$error}">
                                 <div class="input-space"></div>
-
-                                <!--    <label for="confirmLogin" class="popup-label">Confirm Login</label>
-                            <input type="text" id="confirmLogin" class="def-input">
-                            <div class="input-space"></div> -->
+ 
                                 <!-- <label for="phone" class="popup-label">Phone number</label> -->
                                 <input type="text" id="phone" placeholder="*Phone number" class="def-input" v-model="signupPhoneNumber" :class="{'has-error': $v.signupPhoneNumber.$error}">
                                 <div class="radio-btn-place">
@@ -133,7 +130,33 @@
                                 <!-- <label for="confirm_pass" class="popup-label">Confirm password</label> -->
                                 <input type="password" id="confirm_pass" class="def-input" placeholder="*Confirm password" v-model="signupPasswordRepeat" :class="{'has-error': $v.signupPasswordRepeat.$error}">
                                 <div class="input-space"></div> 
-
+                                <h5 class="birthday-lbl">Birthday:</h5>
+                                <div class="birthday-dropdowns">
+                                    <div class="select-wrapper sw1"> 
+                                        <select class="popup-outer-container def-input " 
+                                            v-model="birthdayControls.day.value" :class="{'has-error': !birthdayControls.day.valid}"> 
+                                            <option value="">Day</option>
+                                            <option v-for="day in days" :value="day">{{ day }}</option>
+                                        </select>  
+                                        <i class="open-indicator"></i>
+                                    </div>  
+                                    <div class="select-wrapper sw1"> 
+                                         <select v-model="birthdayControls.month.value" class="popup-outer-container def-input" 
+                                              :class="{'has-error': !birthdayControls.month.valid}">
+                                            <option value="">Nonth</option>
+                                            <option v-for="month in months" :value="month.id">{{ month.name }}</option>
+                                        </select>
+                                        <i class="open-indicator"></i>
+                                    </div>  
+                                    <div class="select-wrapper">  
+                                       <select v-model="birthdayControls.year.value" class="popup-outer-container def-input" 
+                                                :class="{'has-error': !birthdayControls.year.valid}"> 
+                                            <option value="">Year</option>
+                                            <option v-for="year in years" :value="year">{{ year }}</option>
+                                        </select>
+                                        <i class="open-indicator"></i>
+                                    </div>   
+                                </div>
                                 <template>
                                     <vue-recaptcha  class="recaptcha-element"
                                         sitekey="6LdADzUUAAAAAOqvJ2GscYI610Lpch6AHyr1Ehxu" 
@@ -174,7 +197,7 @@ export default {
             isPopupVisible: false,
             googleSignInParams: {
                 client_id: '611284140430-okvicp2ah34lk7796cqlv5sci2jbj91d.apps.googleusercontent.com'
-            },
+            }, 
             fbSignInParams: {},
             signupFirstName: "",
             signupLastName: "",
@@ -195,20 +218,86 @@ export default {
             signupValue: "Sign Up",
             resetValue:"Reset password",
             loginValue:"Log In",
-            loading: false
+            loading: false, 
+            days: _.range(1, 31, 1),
+            years: _.range(1930, 2015, 1),
+            months: [
+                 {
+                    id:'01',
+                    name:"January"
+                 },
+                  {
+                    id:'02',
+                    name:"February"
+                 },
+                  {
+                    id:'03',
+                    name:"March"
+                 },
+                  {
+                    id:'04',
+                    name:"April"
+                 },
+                  {
+                    id:'05',
+                    name:"May"
+                 },
+                  {
+                    id:'06',
+                    name:"June"
+                 },
+                 {
+                    id:'07',
+                    name:"July"
+                 },
+                  {
+                    id:'08',
+                    name:"August"
+                 },
+                  {
+                    id:'09',
+                    name:"September"
+                 },
+                  {
+                    id:'10',
+                    name:"October"
+                 },
+                  {
+                    id:'11',
+                    name:"November"
+                 },
+                  {
+                    id:'12',
+                    name:"December"
+                 }
+            ], 
+            birthdayControls:{
+                day: {
+                    valid: true,
+                    value: ""
+                },
+                 month: {
+                    valid: true,
+                    value: ""
+                },
+                 year: {
+                    valid: true,
+                    value: ""
+                }
+            }
+        }
+    }, 
+    watch: {
+        'birthdayControls.day.value': function (to, from)  {   
+            this.birthdayControls.day.valid  =  to=== "" ? false :true;
+        },
+        'birthdayControls.month.value': function (to, from)  {    
+            this.birthdayControls.month.valid  =  to ==="" ? false :true;
+        },
+        'birthdayControls.year.value': function (to, from)  {    
+            this.birthdayControls.year.valid  =  to==="" ? false :true;
         }
     },
-/*
-https://developers.facebook.com/apps/523193884695053/settings/
-*/
-    /*
-    Идентификатор клиента	
-    611284140430-okvicp2ah34lk7796cqlv5sci2jbj91d.apps.googleusercontent.com
-    Секрет клиента	
-    zCB1g8lyao_G1DEttxBg-vNz
-    Дата создания	
-    15 окт. 2017 г., 11:30:16
-    */
     computed: {
         isLoginValid() {
             return (!this.$v.loginUsername.$invalid && !this.$v.loginPassword.$invalid);
@@ -217,6 +306,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
             return (!this.$v.signUpUserName.$invalid  && !this.$v.signupFirstName.$invalid && !this.$v.signupLastName.$invalid && !this.$v.signupEmail.$invalid && !this.$v.signupPhoneNumber.$invalid && !this.$v.signupPassword.$invalid && !this.$v.signupPasswordRepeat.$invalid);
         } 
     },
+  
     methods: { 
         onSubmitLogin() {
             if (this.isLoginValid && !this.isLoading) { 
@@ -252,8 +342,23 @@ https://developers.facebook.com/apps/523193884695053/settings/
             }
         },
         onSubmitSignup() { 
-            if (this.isSignupValid) {
+            let isBirthDayValid = true;
+            
+            if (this.birthdayControls.day.value=="") {
+                this.birthdayControls.day.valid = false;
+                isBirthDayValid = false;
+            } 
+            if (this.birthdayControls.month.value == ""){
+                this.birthdayControls.month.valid = false;
+                isBirthDayValid = false;
+            } 
+            if (this.birthdayControls.year.value == ""){ 
+                this.birthdayControls.year.valid = false;
+                isBirthDayValid = false;
+            }
+            if (this.isSignupValid && isBirthDayValid && !this.isLoading) {
                 this.signupValue = "Wait...";
+                this.isLoading = true;
                 $.ajax({
                     url: `${this.apiPath}api/register`,
                     dataType: 'json',
@@ -266,10 +371,12 @@ https://developers.facebook.com/apps/523193884695053/settings/
                         password: this.signupPassword,
                         email: this.signupEmail,
                         gender: this.gender, 
+                        birthday:  `${this.birthdayControls.year.value}-${this.birthdayControls.month.value}-${this.birthdayControls.day.value}`,
                         recaptcha: this.recaptchaResponse 
                     },
                 }).done((response) => {  
                     this.signupValue = "Sign Up";
+                    this.isLoading = false;
                     if (response.success) { 
                        this.$toast.success({ 
                             message: `Thank you! Your message has been sent successfully.`
@@ -416,6 +523,7 @@ https://developers.facebook.com/apps/523193884695053/settings/
         }
     }, 
     created() {
+      
         EventBus.$on('openAuth', windowType => { 
             $(document).scrollTop(0); 
             this.isPopupVisible = true;
@@ -469,7 +577,18 @@ https://developers.facebook.com/apps/523193884695053/settings/
         },
         passwordRecoveryEmail: {
            required,email 
-        }
+        }  
     }
 }
+/*
+https://developers.facebook.com/apps/523193884695053/settings/
+*/
+    /*
+    Идентификатор клиента	
+    611284140430-okvicp2ah34lk7796cqlv5sci2jbj91d.apps.googleusercontent.com
+    Секрет клиента	
+    zCB1g8lyao_G1DEttxBg-vNz
+    Дата создания	
+    15 окт. 2017 г., 11:30:16
+    */
 </script>

@@ -228,7 +228,37 @@ textarea.def-input {
   top: 20px;
   right: 17px;
 }
-
+.sw1{
+  margin-right: 15px
+}
+.select-wrapper {
+  width: 30%;   
+  position: relative; 
+} 
+.birthday-dropdowns {
+  display: flex;
+  padding-bottom: 20px;
+  .open-indicator:before {
+    border-color: #4e342e;
+    border-style: solid;
+    border-width: 3px 3px 0 0;
+    content: "";
+    height: 10px;
+    vertical-align: top;
+    transform: rotate(133deg);
+    box-sizing: inherit;
+    display: inline-block;
+    width: 10px;
+    position: absolute;
+    right: 9px;
+    top: 13px;
+}
+ 
+}
+.birthday-lbl {
+  padding-bottom: 10px;
+  font-size: 14px;
+}
 .btn-link,
 .btn-submit {
   @extend .main-font;
@@ -401,6 +431,7 @@ textarea.def-input {
   .contact-section {
     height: 1000px !important;
   }
+ 
   .contact-section img {
     width: auto !important;
     left: -470px !important;

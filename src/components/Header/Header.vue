@@ -126,11 +126,11 @@ export default {
                         } 
                         this.userInfo = {}; 
                         this.isAuthtorized = false;
-                        if(response.message){
+                       /*  if(response.message){
                              this.$toast.error({ 
                                 message: response.message 
                             });
-                        } 
+                        }  */
                     }
                 }).fail((xhr, status, error)=> {
                     this.isLoading = false;  

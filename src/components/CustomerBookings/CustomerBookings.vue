@@ -49,7 +49,7 @@
                                {{ booking.bookingService.name }}
                             </div>
                             <div class="cell">
-                                ${{ booking.bookingService.price }}
+                                ${{ booking.price }}
                             </div>
                             <div class="cell">
                                 {{ booking.bookingService.duration }}min.
@@ -201,7 +201,7 @@ export default {
         addServiceData(serviceID){
             let currentService = null; 
             this.storeData.allServices.forEach((service)=> {
-                if(service.id==serviceID){
+                if (service.id == serviceID){
                     currentService = service;
                 }
             });
