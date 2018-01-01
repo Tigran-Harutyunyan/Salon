@@ -6,20 +6,15 @@
         <span></span> <span></span>
     </div>
     <div class="home-section-container">
-        <div class="service-box">
-            <a href="/#/hair-services">
-                <img src="../../../static/images/pics/service-box1.jpg" alt="Hair Services">
-                <span class="service-name">Hair Services</span>
+        <div class="service-box" v-for="item in serviceTypes"  @click="redirectTo(item[0].id)">
+            <a> 
+                <img  :src="item[0].imgSrc" :alt="item[0].name">
+                <span class="service-name">{{ item[0].name}}</span>
                 <span class="service-link-title">See services here</span>
             </a> 
-        </div>
-        <div class="service-box">
-             <a href="/#/makeup-services">
-                <img src="../../../static/images/pics/service-box2.jpg" alt="Makeup services">
-                <span class="service-name">Makeup Services</span>
-                <span class="service-link-title">See services here</span>
-             </a>   
-        </div>
+            <!-- <div class="shirma-landing-page"></div> -->
+            <div class="shirma-dark"></div>
+        </div> 
     </div>  
 </div>
 </template> 
@@ -28,10 +23,21 @@
     import { EventBus } from '../../event-bus.js';
     export default {
         data() {
-            return {}
-        } ,
+            return {
+                serviceTypes: {}
+            }
+        },
+        methods:{
+            redirectTo(id){
+                this.$router.push({name: 'Service', params: {id: id}})
+            }
+        },
         created(){ 
-            EventBus.$emit('setparent', false);
+            let  storeData = this.$store.getters.appData; 
+            if (storeData.service_types) { 
+                this.serviceTypes = storeData.service_types;  
+            } 
+           EventBus.$emit('setparent', false);
         } 
     } 
 </script>

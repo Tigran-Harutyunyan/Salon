@@ -11,9 +11,8 @@ Vue.use(Router);
 export default new Router({
   //mode: 'history',
   routes: [
-    { path: '/', name: 'Landing', component: LandingPage },
-    { path: '/hair-services', name: 'HairServices', component: Services },
-    { path: '/makeup-services', name: 'MakeupServices', component: Services },
+    { path: '/', name: 'Landing', component: LandingPage }, 
+    { path: '/services/:id', name: 'Service', component: Services },
     { path: '/service/:id', name: 'Workers', component: Workers },
     { path: '/about', name: 'About', component: Services }, 
     { path: '/my-bookings', name: 'MyBookings', component: CustomerBookings },

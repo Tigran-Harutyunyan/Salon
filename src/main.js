@@ -22,7 +22,7 @@ Vue.use(FBSignInButton);
 Vue.use(VueParallaxJs);
 Vue.use(require('vue-moment'));
 var toastrConfigs = {
-  position: 'bottom right',
+  position: 'top right',
   showDuration: 5000
 }
 Vue.use(CxltToastr, toastrConfigs);

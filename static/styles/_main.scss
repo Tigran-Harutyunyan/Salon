@@ -397,7 +397,9 @@ section {
   clear: both;
   float: left;
 }
-
+.no-slider-block {
+  height: 100px
+}
 .slide-info-container {
   float: left;
   margin-left: 810px;
@@ -982,7 +984,6 @@ span.no-filter-results {
   margin-left: 25px;
   position: relative;
   height: 200px;
-  max-width: 234px;
   .employee-proffession {
     font-family: "OpenSans-Regular";
     font-size: 20px;
@@ -1011,7 +1012,7 @@ span.no-filter-results {
 
 .search-results-right {
   float: left;
-  margin-left: 120px;
+ // margin-left: 120px;
   * {
     font-family: 'open_sanssemibold';
     color: #4e342e;
@@ -1025,7 +1026,6 @@ span.no-filter-results {
     padding-top: 10px;
   }
 }
-
 
 .employees-title {
   padding-bottom: 50px !important

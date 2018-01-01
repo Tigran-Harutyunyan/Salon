@@ -7,7 +7,7 @@
                     <div class="sub-section">
                         <ul>
                             <li v-for="item in splittedHairServices[0]">
-                                <a :href="item.route"> {{ item.name}} </a>
+                                <a href="/#/employees"> {{ item.name}} </a>
                             </li>  
                         </ul>
                     </div>

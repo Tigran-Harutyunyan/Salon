@@ -118,7 +118,7 @@
                         <li>Phone:<span>{{ userInfo.phone_number}}</span></li>
                         <li>Service:<span>{{ selectedService.name}}</span></li> 
                         <li>Service Duration:<span>{{ selectedService.duration}}min.</span></li>
-                        <li>Date:<span>{{  selectedDate | moment("dddd, MMMM Do YYYY") }}</span></li>
+                        <li>Date:<span>{{  selectedDate | moment("MM-DD-YYYY") }}</span></li>
                         <li>Start Time:<span>{{ checkedTime }}</span></li>
                         <li>Provider:<span>{{selectedEmployee.first_name}} {{selectedEmployee.last_name}}</span></li>  
                         <li>*Price:<span>${{ selectedService.price}}</span></li> 
@@ -165,7 +165,9 @@ export default {
             datePickerConfig: {
                 weekNumbers: true,
                 minDate: 'today',
-                defaultDate: 'today' 
+                defaultDate: 'today',
+                altInput: true, 
+                altFormat: 'm-d-Y'
             },
             datePickerPlaceholder: "Select date",
             searchResults: [],

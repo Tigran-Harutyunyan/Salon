@@ -50,7 +50,7 @@ export default {
         }
     },
     methods: {
-         splitServices(parsedData) {
+        splitServices(parsedData) {
             let splittedHairServices = [];
             let services = parsedData.services['Hair Services'];
             let devider = Math.floor(services.length / 2); 
@@ -64,50 +64,36 @@ export default {
             return parsedData 
         },
         setAttributes(services){
-            services.forEach(function(element) {
-                element.imgSrc = `http://api.mysalonla.com/images/services/${element.image}`;//'./static/images/service-item.jpg';
+            services.forEach((element)=> {
+                element.imgSrc = `${this.apiPath}/images/services/${element.image}`; 
                 element.route = `/#/service/${element.id}`
             });
             return services
         },
         setSliderImgPath(data){ 
-            if(data.slider['Hair Services'])  {
-                data.slider['Hair Services'].forEach(function(element) { 
+             for (var key in  data.slider) {  
+                data.slider[key].forEach((element)=>{ 
                     element.style = {
-                        'background-image': `url(http://api.mysalonla.com/images/sliders/${element.image})` 
+                        'background-image': `url(${this.apiPath}/images/sliders/${element.image})` 
                     };  
-                    element.caption= element.title.split(" "); 
-                });
-            }
-             if(data.slider['Makeup Services'])  {
-                data.slider['Makeup Services'].forEach(function(element) {
-                    element.style = {
-                        'background-image': `url(http://api.mysalonla.com/images/sliders/${element.image})` 
-                    };
                     element.caption= element.title.split(" "); 
                 });
             } 
             return data; 
         },
         joinServices(parsedData){
-             parsedData.allServices = [];
-                if ( parsedData.services['Hair Services'] ){
-                     parsedData.services['Hair Services'].forEach(function(element) {
-                       parsedData.allServices.push(element)
-                    }); 
-                }
-                if (parsedData.services['Makeup Services']){
-                    parsedData.services['Makeup Services'].forEach(function(element) {
-                       parsedData.allServices.push(element)
-                    }); 
-                }  
-                 
-            return parsedData
+            parsedData.allServices = [];
+            for (var key in  parsedData.services) {  
+                parsedData.services[key].forEach((element)=> {
+                    parsedData.allServices.push(element)
+                });  
+            }  
+            return parsedData;
         },
         setEmployeeData(EMPLOYEES){ 
             let employees = EMPLOYEES; 
             for (let index = 0; index < employees.length; index++) {
-                employees[index].image = `${this.apiPath}images/${employees[index].image}`;   
+                employees[index].image = `${this.apiPath}/images/${employees[index].image}`;   
                 employees[index].url = `/#/service-provider/${employees[index].id}`;   
              } 
             return employees;
@@ -123,7 +109,7 @@ export default {
         EventBus.$on('setparent', show => { 
             this.showHeader = show;
         });
-        fetch('http://api.mysalonla.com/api/getAllData', {
+        fetch( `${this.apiPath}/api/getAllData`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -132,26 +118,33 @@ export default {
             return response.json();
         }).then((parsedData) => { 
              if (parsedData) {
-                 let allServices = [];
+                 let allServices = []; 
                 if (parsedData.services) {
-                    if( parsedData.services['Hair Services'] ){
+                    if ( parsedData.services['Hair Services'] ){
                        if (parsedData.services['Hair Services'].length > 15){
                            parsedData = this.splitServices(parsedData);
-                       }
-                       parsedData.services['Hair Services'] = this.setAttributes(parsedData.services['Hair Services']);
-                       parsedData.services['Hair Services'].sort((a, b)=> a.name.localeCompare(b.name)); 
-                    }
-                    if (parsedData.services['Makeup Services']){
-                        parsedData.services['Makeup Services'] = this.setAttributes(parsedData.services['Makeup Services']);
-                        parsedData.services['Makeup Services'].sort((a, b)=> a.name.localeCompare(b.name)); 
+                       } 
                     } 
+                    for (var key in  parsedData.services) {   
+                       if (key !== 'splittedHairServices') {
+                           parsedData.services[key] = this.setAttributes(parsedData.services[key]); 
+                           parsedData.services[key].sort((a, b)=> a.name.localeCompare(b.name)); 
+                       } 
+                    }    
                 } 
                 if (parsedData.slider){
                    parsedData = this.setSliderImgPath(parsedData);  
                 }
+
                 parsedData = this.joinServices(parsedData);
+                 
+                if (parsedData.service_types) {
+                    for (var key in  parsedData.service_types) { 
+                        parsedData.service_types[key][0].imgSrc = `${this.apiPath}/images/service_types/${parsedData.service_types[key][0].image}`; 
+                    } 
+                }  
                 
-                if(parsedData.employees){
+                if (parsedData.employees){
                     parsedData.employees.employees = this.setEmployeeData(parsedData.employees.employees)
                 }
                 this.$store.dispatch('setData', parsedData)

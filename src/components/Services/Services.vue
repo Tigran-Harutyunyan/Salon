@@ -1,10 +1,11 @@
 <template>
     <div class="container-inner" :class="{'is-visible': showMainSection}">
         <div class="home-slider-container">
-            <sliders v-on:sliderReady="showMainSection=true" :sliderData="sliderData" v-if="sliderData"></sliders> 
+            <sliders v-on:sliderReady="showMainSection = true" :sliderData="sliderData" v-if="sliderData"></sliders> 
         </div>
         <div class="main-section-area">
-            <div class="service-items-section">
+            <div class="no-slider-block" v-if="noSlider"> </div>
+            <div class="service-items-section" >
                 <div class="section-title">
                     <h1>{{sectionTitle}}</h1>
                     <div class="section-elements-container">
@@ -12,10 +13,13 @@
                         <span class="diz-elem elem-right"></span>
                     </div>
                 </div>
-                <div class="lines line-1"></div>
-                <div class="lines line-2"></div>
-                <div class="lines line-3"></div>
-                <div class="lines line-4"></div>
+                <div v-show="services.length>0">
+                    <div class="lines line-1"></div>
+                    <div class="lines line-2"></div>
+                    <div class="lines line-3"></div>
+                    <div class="lines line-4"></div>
+                </div>
+                
                 <div class="service-boxes-inner" id="service-boxes-inner">
                     <div class="service-box-item animated" onclick="" v-for="service in services">
                         <img :src="service.imgSrc" :alt="service.name">
@@ -45,15 +49,13 @@ export default {
             boxes: {},
             showMainSection: false,
             showContacts: false, 
-            services:[], 
-            sectionTitle:"", 
-            sliderData:[],
-            storeData:{},
-            servicesController:{},
-            sceneServices:{}, 
-            hairServices:[],
-            makeUpServices:[]
-
+            services: [], 
+            sectionTitle: "", 
+            sliderData: [],
+            storeData: {},
+            servicesController: {},
+            sceneServices: {}, 
+            noSlider: false 
         }
     },
     watch: {
@@ -62,21 +64,9 @@ export default {
             if (this.servicesController.info){
                 this.servicesController.destroy(true);
                 this.servicesController = null;
-            }
+            } 
+            this.getServiceData();
             
-			if (to.name == "MakeupServices") { 
-               this.services = this.makeUpServices; 
-               this.sectionTitle = "Makeup services"; 
-                if(this.storeData.slider['Makeup Services'])  {
-                    this.sliderData = this.storeData.slider['Makeup Services']
-                }
-			} else {
-                this.services = this.hairServices; 
-                this.sectionTitle = "Hair services";
-                 if(this.storeData.slider['Hair Services'])  {
-                    this.sliderData = this.storeData.slider['Hair Services']
-                }
-            }
             let docWidth = $(document).width();
             if (docWidth > 480 && docWidth < 1000) {
                 this.initialiseScrollMagic(100);
@@ -140,6 +130,36 @@ export default {
             $(window).on('resize', () => {
                 this.setElementPositions();
             });
+        },
+        getServiceData(){ 
+            let serviceID = this.$route.params.id; 
+            for (var key in this.storeData.service_types) {
+                if (this.storeData.service_types[key][0].id == serviceID) {
+                     this.sectionTitle = this.storeData.service_types[key][0].name;  
+                    if (this.storeData.services.hasOwnProperty(key)){
+                        setTimeout(()=> { 
+                            this.initThings(); 
+                        }, 1000);
+                        this.services = this.storeData.services[key]; 
+                        if (this.services.length === 0){ 
+                            this.showMainSection = true; 
+                        }   
+                    } else {
+                        this.services = [];
+                    }
+                    if (this.services.length === 0){ 
+                         this.showMainSection = true; 
+                    }  
+                    if (this.storeData.slider && this.storeData.slider.hasOwnProperty(key))  {
+                        this.sliderData = this.storeData.slider[key];
+                        this.noSlider = false;
+                    } else {
+                        this.sliderData  = [];
+                        this.noSlider = true; 
+                    }
+                     $("document").stop().animate({ scrollTop: 0 }, 500, 'swing', () => { });
+                 }
+            }
         }
     },
     created() {
@@ -147,23 +167,9 @@ export default {
     },
     mounted() {  
        this.storeData = this.$store.getters.appData; 
-        if (this.storeData.services){ 
-            this.hairServices = this.storeData.services['Hair Services'];
-            this.makeUpServices = this.storeData.services['Makeup Services'];
-            if (this.$route.name == "HairServices"){
-                this.services = this.storeData.services['Hair Services']; 
-                this.sectionTitle = "Hair Services";
-                if(this.storeData.slider && this.storeData.slider['Hair Services'])  {
-                    this.sliderData = this.storeData.slider['Hair Services']
-                }
-            } else {
-                this.services = this.storeData.services['Makeup Services'];  
-                this.sectionTitle = "Makeup Services";
-                 if(this.storeData.slider && this.storeData.slider['Makeup Services'])  {
-                    this.sliderData = this.storeData.slider['Makeup Services']
-                }
-            }  
-        }
+       if (this.storeData && this.storeData.service_types && this.storeData.service_types){ 
+           this.getServiceData();
+        } 
        
         let docWidth = $(document).width();
         if (docWidth > 480 && docWidth < 1000) {
@@ -171,9 +177,8 @@ export default {
         } else if (docWidth >= 1000) {
             this.initialiseScrollMagic(0);
         }
-        setTimeout(()=> {
-            this.initThings();
-            this.showContacts =true
+        setTimeout(()=> {  
+            this.showContacts = true;
         }, 1000);
 
     },

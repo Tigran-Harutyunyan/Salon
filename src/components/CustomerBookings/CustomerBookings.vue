@@ -190,7 +190,7 @@ export default {
              if (errorMessage === "Not authorized"){
                 this.$toast.info({message: `You are not logged in. Please login first`}); 
                 EventBus.$emit('unAuthorized'); 
-                this.$router.push({name:'HairServices'})
+                this.$router.push({name: 'Service', params: {id: 1}})
             } else {
                     this.$toast.error({ 
                     message: 'Server error'
@@ -258,7 +258,7 @@ export default {
         this.userInfo  =   JSON.parse(localStorage.getItem('userInfo')); 
         this.storeData = this.$store.getters.appData; 
     },
-    mounted(){
+    mounted(){ 
         $('#appHeader, .section-footer').show();
         this.getCustomerBookings();
          setTimeout(()=> {  
@@ -267,7 +267,7 @@ export default {
     },
     beforeRouteEnter(to, from, next){  
         if(localStorage.getItem('userInfo') === null){
-            next('/hair-services'); 
+            next('/services/1'); 
         } else {
             next();
         }

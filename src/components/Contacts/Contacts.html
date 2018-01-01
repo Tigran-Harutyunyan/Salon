@@ -10,13 +10,7 @@
                     <span class="diz-elem elem-right"></span>
                 </div>
                 <ul class="working-hours">
-                    <li>Mon: 8am - 9pm </li>
-                    <li>Tue: 8am - 9pm</li>
-                    <li>Wed: 8am - 9pm</li>
-                    <li>Thu: 8am - 9pm</li>
-                    <li>Fri: 8am - 9pm</li>
-                    <li>Sat: 8am - 9pm </li>
-                    <li>Sun: 8am - 9pm </li>
+                    <li v-for="item in workingHours"> {{ item }} </li> 
                 </ul> 
                 <form v-on:submit.prevent="onSubmitSubscription" class="contact-form subscribe-form"   name="subscribe_form" @submit="$v.subscriptionEmail.$touch();">  
                     <input class="def-input" type="email" placeholder="Your Email" name="subscribe" v-model="subscriptionEmail" :class="{'has-error': $v.subscriptionEmail.$error}">

@@ -12,7 +12,8 @@ export default {
       message: '',
       parallaxImgSrc: "",
       isLoading: false,
-      showParallax: true
+      showParallax: true,
+      workingHours: []
     }
 
   },
@@ -24,7 +25,12 @@ export default {
   mounted() {
     this.setParallaxSrc();
     this.apiPath = this.$store.getters.getApiPath;
-    window.addEventListener('orientationchange', this.doOnOrientationChange);
+    window.addEventListener('orientationchange', this.doOnOrientationChange); 
+    if(this.$store.getters.appData && this.$store.getters.appData.custom_data &&  this.$store.getters.appData.custom_data.working_hours){
+      let str = this.$store.getters.appData.custom_data.working_hours;
+      this.workingHours = str.split("\n");  
+    }
+   
   },
   computed: {
     isContactsValid() {
@@ -33,7 +39,7 @@ export default {
   },
   methods: {
     setParallaxSrc() {
-      if (this.$route.name == "HairServices") {
+      if (this.$route.params.id == 1) {
         this.parallaxImgSrc = "../../../static/images/parallax1.jpg"
       } else {
         this.parallaxImgSrc = "../../../static/images/parallax2.jpg"

@@ -11,13 +11,14 @@
                         <li><a class="menu-item">About Us<span></span> </a></li>
                         <li class="dropdown">
                            <a class="menu-item dropbtn">Services <i class="open-indicator"></i> </a>
-                           <div class="dropdown-content">
-                                <router-link class="menu-item" to="/hair-services">Hair Services<span></span> </router-link>
-                                <router-link class="menu-item" to="/makeup-services">Makeup Services<span></span> </router-link> 
+                           <div class="dropdown-content"> 
+                                <router-link class="menu-item" v-for="(item, index) in serviceTypes" exact v-bind:to="item[0].url" :key="index"><span></span> {{ item[0].name}} </router-link>  
                             </div>
                         </li>
                         <li> <router-link class="menu-item" to="/employees">Employees<span></span> </router-link> </li>  
-                        <li v-show="isAuthtorized"><router-link class="menu-item" to="/my-bookings">Your Own Booking<span></span> </router-link></li>
+                        <li v-show="isAuthtorized"><router-link class="menu-item" to="/my-bookings">Your Own Booking<span></span> </router-link>
+                         <!--  <span class="notification-bubble">12</span> -->
+                        </li>
                         <li><a class="menu-item" v-on:click="toContactSection">Contact Us<span></span> </a></li>
                         <li v-if="!isAuthtorized"><a class="menu-item login-link" @click="openAuth('login')">Log In/</a></li>
                         <li v-if="!isAuthtorized"><a class="menu-item signup-link" @click="openAuth('signup')">Sign Up</a></li>
@@ -41,11 +42,11 @@
             <nav class="overlay-menu">
                 <ul>
                     <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/">Home</router-link></li>
-                    <li v-on:click="hideMobileMenu"><a href="/#/about" class="link2">About Us</a></li>
-                    <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/hair-services">Hair Services</router-link> </li>
-                    <li v-on:click="hideMobileMenu"><router-link class="menu-item" exact to="/makeup-services">Makeup Services</router-link></li>
+                    <li v-on:click="hideMobileMenu"><a href="/#/about" class="link2">About Us</a></li> 
+                    <li v-on:click="hideMobileMenu" v-for="item in serviceTypes"><router-link class="menu-item" exact v-bind:to="item[0].url">{{ item[0].name}}</router-link></li> 
                     <li v-on:click="hideMobileMenu"><router-link class="menu-item" to="/employees">Employees<span></span> </router-link></li> 
-                    <li v-on:click="hideMobileMenu" v-if="isAuthtorized"><router-link class="menu-item" exact to="/my-bookings">Your Own Booking</router-link></li>
+                    <li v-on:click="hideMobileMenu" v-if="isAuthtorized"><router-link class="menu-item" exact to="/my-bookings">Your Own Booking</router-link> 
+                    </li>
                     <li v-on:click="hideMobileMenu"><a v-on:click="toContactSection" class="link2">Contact Us</a></li> 
                     <li v-on:click="hideMobileMenu" v-if="!isAuthtorized"><a @click="openAuth('login')" class="link2">Log In</a></li>
                     <li v-on:click="hideMobileMenu" v-if="!isAuthtorized"><a @click="openAuth('signup')"class="link2">Sign Up</a></li>
@@ -70,7 +71,8 @@ export default {
             isAuthtorized:"",
             isLoading:false,
             apiPath:"",
-            userInfo:{} 
+            userInfo:{},
+            serviceTypes: {} 
         }
     },
     methods: {
@@ -114,11 +116,8 @@ export default {
                         } 
                         this.userInfo = {};
                         this.isAuthtorized = false;
-                        this.$store.dispatch('setUserInfo', {}); 
-                        // this.$toast.success({ 
-                        //     message: `Logged out`
-                        // }); 
-                        this.$router.push({name:'HairServices'});
+                        this.$store.dispatch('setUserInfo', {});  
+                        this.$router.push({name: 'Service', params: {id: 1}})
                     }  
                      if (response.error){ 
                         if(_window.localStorage){
@@ -138,7 +137,7 @@ export default {
                         message: "Server error"
                     }); 
                     if(window.localStorage){
-                            window.localStorage.clear();
+                       window.localStorage.clear();
                     } 
                 });
             } 
@@ -154,6 +153,15 @@ export default {
         this.scrollToTop();
         this.userInfo  =   JSON.parse(localStorage.getItem('userInfo'));
         this.isAuthtorized = this.userInfo && this.userInfo.first_name ? true: false;  
+        let  storeData = this.$store.getters.appData; 
+        if (storeData && storeData.service_types){
+            this.serviceTypes = storeData.service_types
+            for (var key in storeData.service_types) {
+                if (storeData.service_types.hasOwnProperty(key)) {
+                    storeData.service_types[key][0].url=`/services/${storeData.service_types[key][0].id}`; 
+                }
+            }
+        }
     }, 
     created(){
         EventBus.$on('Authorized', userInfo => { 

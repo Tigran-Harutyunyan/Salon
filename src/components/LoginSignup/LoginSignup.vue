@@ -183,7 +183,7 @@
         </transition>
         <div class="mobile-backdrop" v-if="isPopupVisible" @click="closePopups()"></div>
     </div>
- </template> 
+</template> 
 <script> 
 import { EventBus } from '../../event-bus.js';
 import VueRecaptcha from 'vue-recaptcha';
@@ -289,13 +289,13 @@ export default {
     }, 
     watch: {
         'birthdayControls.day.value': function (to, from)  {   
-            this.birthdayControls.day.valid  =  to=== "" ? false :true;
+            this.birthdayControls.day.valid  =  to === "" ? false :true;
         },
         'birthdayControls.month.value': function (to, from)  {    
-            this.birthdayControls.month.valid  =  to ==="" ? false :true;
+            this.birthdayControls.month.valid  =  to === "" ? false :true;
         },
         'birthdayControls.year.value': function (to, from)  {    
-            this.birthdayControls.year.valid  =  to==="" ? false :true;
+            this.birthdayControls.year.valid  =  to === "" ? false :true;
         }
     },
     computed: {
