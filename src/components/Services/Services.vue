@@ -27,7 +27,7 @@
                         <a @click="filterByService(service.id)" class="box-btn">Book now</a>
                         <div class="shirma-dark"></div>
                         <div class="shirma">
-                            <p>{{service.duration}} min ${{service.price}}</p>
+                            <p>{{service.duration}} min {{service.price}}</p>
                         </div>
                     </div> 
                 </div>

@@ -121,7 +121,7 @@
                         <li>Date:<span>{{  selectedDate | moment("MM-DD-YYYY") }}</span></li>
                         <li>Start Time:<span>{{ checkedTime }}</span></li>
                         <li>Provider:<span>{{selectedEmployee.first_name}} {{selectedEmployee.last_name}}</span></li>  
-                        <li>*Price:<span>${{ selectedService.price}}</span></li> 
+                        <li>*Price:<span>{{ selectedService.price}}</span></li> 
                     </ul>      
                   <div class="graphical-elements-2"><span></span> <span></span></div>
                     <p>

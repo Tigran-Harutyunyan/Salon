@@ -49,7 +49,7 @@
                                {{ booking.bookingService.name }}
                             </div>
                             <div class="cell">
-                                ${{ booking.price }}
+                                {{ booking.price }}
                             </div>
                             <div class="cell">
                                 {{ booking.bookingService.duration }}min.
