@@ -147,7 +147,16 @@ export default {
                 if (parsedData.employees){
                     parsedData.employees.employees = this.setEmployeeData(parsedData.employees.employees)
                 }
-                this.$store.dispatch('setData', parsedData)
+                 
+                this.$store.dispatch('setData', parsedData);
+                if (parsedData.custom_data){
+                    if(parsedData.custom_data.phone){
+                        parsedData.custom_data.phoneFormated = 'tel:'+ parsedData.custom_data.phone
+                    }
+                     if(parsedData.custom_data.email){
+                        parsedData.custom_data.emailFormated = 'mailto:'+ parsedData.custom_data.email
+                    } 
+                }
                 this.customData = parsedData.custom_data;
                 this.showApp = true;
             } 

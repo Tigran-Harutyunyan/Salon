@@ -36,10 +36,10 @@
                                 <p>{{customData.address}}</p>
                             </li>
                             <li><span></span>
-                                <p>{{customData.phone}}</p>
+                            <a :href ="customData.phoneFormated">{{customData.phone}}</a> 
                             </li>
                             <li><span></span>
-                                <p>{{customData.email}}</p>
+                                <a :href="customData.emailFormated">{{customData.email}}</a>
                             </li>
                         </ul>
                     </div>
